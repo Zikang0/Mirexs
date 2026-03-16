@@ -1,0 +1,193 @@
+# config/system/platform_configs/cross_platform.yaml
+# 跨平台通用配置
+
+# 通用路径配置
+paths:
+  # 数据目录
+  data:
+    windows: "${LOCALAPPDATA}\\Mirexs\\data"
+    linux: "${HOME}/.local/share/mirexs"
+    macos: "${HOME}/Library/Application Support/Mirexs"
+    mobile: "data/data/team.mirexs.app"
+
+  # 配置目录
+  config:
+    windows: "${LOCALAPPDATA}\\Mirexs\\config"
+    linux: "${HOME}/.config/mirexs"
+    macos: "${HOME}/Library/Preferences/Mirexs"
+    mobile: "shared_prefs"
+
+  # 日志目录
+  logs:
+    windows: "${LOCALAPPDATA}\\Mirexs\\logs"
+    linux: "${HOME}/.local/share/mirexs/logs"
+    macos: "${HOME}/Library/Logs/Mirexs"
+    mobile: "logs"
+
+  # 缓存目录
+  cache:
+    windows: "${LOCALAPPDATA}\\Mirexs\\cache"
+    linux: "${HOME}/.cache/mirexs"
+    macos: "${HOME}/Library/Caches/Mirexs"
+    mobile: "cache"
+
+  # 模型目录
+  models:
+    windows: "${LOCALAPPDATA}\\Mirexs\\models"
+    linux: "${HOME}/.local/share/mirexs/models"
+    macos: "${HOME}/Library/Application Support/Mirexs/Models"
+    mobile: "models"
+
+# 通用性能配置
+performance:
+  # 缓存策略
+  caching:
+    memory_cache_size_mb: 512
+    disk_cache_size_mb: 1024
+    model_cache_size_mb: 2048
+
+  # 线程配置
+  threading:
+    max_worker_threads: 8
+    io_threads: 4
+    compute_threads: 2
+
+  # 资源限制
+  resource_limits:
+    max_memory_mb: 4096
+    max_file_descriptors: 1024
+    max_processes: 100
+
+# 通用网络配置
+network:
+  # 连接配置
+  connections:
+    timeout_seconds: 30
+    retry_attempts: 3
+    retry_delay: 1
+
+  # 代理配置
+  proxy:
+    auto_detect: true
+    environment_variables: true
+
+  # DNS配置
+  dns:
+    cache_enabled: true
+    cache_size: 1000
+    cache_ttl: 300
+
+# 通用安全配置
+security:
+  # 加密配置
+  encryption:
+    algorithm: "AES-256-GCM"
+    key_derivation: "pbkdf2_sha256"
+    iterations: 100000
+
+  # 证书配置
+  certificates:
+    verify_ssl: true
+    ca_bundle: "auto"
+
+  # 数据保护
+  data_protection:
+    encrypt_at_rest: true
+    encrypt_in_transit: true
+
+# 通用国际化配置
+internationalization:
+  # 语言支持
+  languages:
+    default: "zh-CN"
+    fallback: "en-US"
+
+  # 日期时间
+  datetime:
+    timezone: "auto"
+    format: "iso8601"
+
+  # 数字格式
+  numbers:
+    decimal_separator: "."
+    thousands_separator: ","
+    currency_symbol: "$"
+
+# 通用日志配置
+logging:
+  # 日志级别
+  level: "INFO"
+
+  # 日志格式
+  format:
+    timestamp: "iso8601"
+    include_pid: true
+    include_thread: false
+
+  # 日志轮转
+  rotation:
+    max_size_mb: 100
+    backup_count: 10
+    compress: true
+
+# 通用更新配置
+update:
+  # 更新检查
+  check:
+    enabled: true
+    interval_hours: 24
+    channel: "stable"
+
+  # 下载配置
+  download:
+    resume: true
+    verify_checksum: true
+    max_retries: 3
+
+  # 安装配置
+  install:
+    require_restart: true
+    rollback_on_failure: true
+
+# 通用错误处理
+error_handling:
+  # 错误报告
+  reporting:
+    enabled: true
+    anonymize: true
+    include_stack_trace: true
+
+  # 恢复策略
+  recovery:
+    auto_recovery: true
+    max_attempts: 3
+    cool_down_seconds: 60
+
+  # 用户反馈
+  user_feedback:
+    enabled: true
+    prompt_on_crash: true
+    feedback_channel: "email"
+
+# 通用用户体验
+user_experience:
+  # 界面配置
+  interface:
+    theme: "auto"  # auto, light, dark
+    animation: true
+    tooltips: true
+
+  # 辅助功能
+  accessibility:
+    screen_reader: true
+    high_contrast: true
+    font_scaling: true
+
+  # 键盘快捷键
+  shortcuts:
+    global:
+      activate: "Ctrl+Shift+M"
+      mute: "Ctrl+Shift+S"
+    in_app:
+      new_chat: "Ctrl+N"
+      settings: "Ctrl+,"

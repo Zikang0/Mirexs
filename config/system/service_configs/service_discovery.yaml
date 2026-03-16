@@ -1,0 +1,326 @@
+# config/system/service_configs/service_discovery.yaml
+# 服务发现配置
+# 管理微服务注册、发现和负载均衡
+
+# 服务注册中心
+registry:
+  # 注册中心类型：consul, etcd, zookeeper, eureka, nacos
+  type: "consul"
+
+  # 注册中心配置
+  config:
+    # Consul配置
+    consul:
+      host: "localhost"
+      port: 8500
+      token: ""
+      scheme: "http"
+      datacenter: "dc1"
+
+    # etcd配置
+    etcd:
+      hosts:
+        - "localhost:2379"
+      username: ""
+      password: ""
+      ca_cert: ""
+
+    # ZooKeeper配置
+    zookeeper:
+      hosts:
+        - "localhost:2181"
+      timeout: 10
+      chroot: "/mirexs"
+
+    # Eureka配置
+    eureka:
+      service_url:
+        defaultZone: "http://localhost:8761/eureka/"
+      instance:
+        hostname: "localhost"
+
+    # Nacos配置
+    nacos:
+      server_addr: "localhost:8848"
+      namespace: "public"
+      group: "DEFAULT_GROUP"
+
+# 服务注册配置
+service_registration:
+  # 服务信息
+  service:
+    name: "mirexs-service"
+    id: "mirexs-service-${HOSTNAME}"
+    tags:
+      - "ai"
+      - "digital-lifeform"
+      - "microservice"
+    meta:
+      version: "1.0.0"
+      environment: "development"
+
+  # 健康检查
+  health_check:
+    http:
+      path: "/health"
+      interval: "10s"
+      timeout: "5s"
+      deregister_critical_service_after: "30s"
+
+    tcp:
+      interval: "10s"
+      timeout: "5s"
+
+    grpc:
+      interval: "10s"
+      timeout: "5s"
+
+  # 心跳配置
+  heartbeat:
+    enabled: true
+    interval: 30
+    timeout: 10
+    max_failures: 3
+
+  # 注销配置
+  deregistration:
+    enabled: true
+    delay_seconds: 30
+
+# 服务发现配置
+service_discovery:
+  # 发现策略
+  strategy:
+    cache: true
+    cache_ttl: 30
+    refresh_interval: 10
+    fail_fast: false
+
+  # 服务筛选
+  filtering:
+    tags:
+      required: ["ai"]
+      optional: ["version:1.0.0"]
+    health: "passing"  # passing, warning, critical, any
+    node_meta: {}
+
+  # 负载均衡
+  load_balancing:
+    strategy: "round_robin"  # round_robin, random, least_conn, consistent_hash
+    health_check: true
+    circuit_breaker: true
+
+  # 服务观察
+  watch:
+    enabled: true
+    type: "service"  # service, key, keyprefix, event
+    handler_type: "http"  # http, grpc, script
+
+# 配置中心
+config_center:
+  enabled: true
+
+  # 配置存储
+  storage:
+    type: "consul"  # consul, etcd, zookeeper, file
+    prefix: "config/mirexs/"
+
+  # 配置格式
+  format: "yaml"  # yaml, json, properties
+
+  # 动态配置
+  dynamic:
+    enabled: true
+    refresh_interval: 30
+    watch_keys:
+      - "database"
+      - "cache"
+      - "logging"
+
+  # 配置版本
+  versioning:
+    enabled: true
+    strategy: "timestamp"  # timestamp, sequential, git_sha
+
+  # 配置加密
+  encryption:
+    enabled: false
+    algorithm: "aes-256-gcm"
+    key_path: "secrets/config_key"
+
+# 命名服务
+naming_service:
+  # 域名服务
+  dns:
+    enabled: true
+    ttl: 60
+    srv_records: true
+
+  # 服务别名
+  aliases:
+    cognitive: "mirexs-cognitive-service"
+    speech: "mirexs-speech-service"
+    vision: "mirexs-vision-service"
+    threed: "mirexs-3d-service"
+
+  # 服务路由
+  routing:
+    enabled: true
+    rules:
+      - pattern: "*.mirexs.local"
+        service: "mirexs-service"
+      - pattern: "api.*"
+        service: "api-gateway"
+
+# 服务网格配置
+service_mesh:
+  enabled: false
+
+  # 边车代理
+  sidecar:
+    enabled: true
+    image: "envoyproxy/envoy:v1.27.0"
+    resources:
+      cpu: "100m"
+      memory: "128Mi"
+
+  # 流量管理
+  traffic_management:
+    canary_release: true
+    circuit_breaker: true
+    retry_policy: true
+    timeout_policy: true
+
+  # 可观测性
+  observability:
+    metrics: true
+    tracing: true
+    logging: true
+
+# 健康检查配置
+health_checks:
+  # HTTP健康检查
+  http:
+    endpoint: "/health"
+    expected_status: 200
+    timeout: 5
+    interval: 30
+
+  # TCP健康检查
+  tcp:
+    port: 8080
+    timeout: 5
+    interval: 30
+
+  # 自定义健康检查
+  custom:
+    enabled: false
+    script: "health_check.sh"
+    timeout: 10
+    interval: 60
+
+  # 聚合健康检查
+  aggregated:
+    enabled: true
+    checks:
+      - "database"
+      - "cache"
+      - "external_api"
+    threshold: 0.8
+
+# 故障转移配置
+failover:
+  enabled: true
+
+  # 故障检测
+  detection:
+    interval: 10
+    timeout: 5
+    failures: 3
+
+  # 故障转移策略
+  strategy:
+    type: "active_passive"  # active_passive, active_active
+    auto_failover: true
+    manual_override: true
+
+  # 恢复策略
+  recovery:
+    auto_recovery: true
+    health_threshold: 0.9
+    cool_down_period: 300
+
+# 服务版本管理
+version_management:
+  # 版本控制
+  control:
+    enabled: true
+    strategy: "semantic"  # semantic, timestamp, sequential
+
+  # 版本路由
+  routing:
+    enabled: true
+    rules:
+      - header: "X-API-Version"
+        value: "v1"
+        service_version: "1.0.0"
+      - header: "X-API-Version"
+        value: "v2"
+        service_version: "2.0.0"
+
+  # 版本灰度发布
+  canary:
+    enabled: true
+    traffic_percent: 10
+    duration_hours: 24
+    metrics_threshold: 0.95
+
+# 服务监控
+monitoring:
+  enabled: true
+
+  # 服务指标
+  metrics:
+    - "request_count"
+    - "error_rate"
+    - "latency"
+    - "throughput"
+    - "service_health"
+
+  # 依赖监控
+  dependencies:
+    enabled: true
+    timeout: 5
+    circuit_breaker: true
+
+  # 告警配置
+  alerts:
+    error_rate_threshold: 0.05
+    latency_threshold_ms: 1000
+    service_down: true
+
+# 安全配置
+security:
+  # 服务认证
+  authentication:
+    enabled: true
+    type: "mtls"  # mtls, jwt, oauth2
+    certificate_authority: "certs/ca.crt"
+
+  # 服务授权
+  authorization:
+    enabled: true
+    policies:
+      - service: "cognitive"
+        allow: ["speech", "vision", "tools"]
+      - service: "api-gateway"
+        allow: ["*"]
+
+  # 服务审计
+  audit:
+    enabled: true
+    events:
+      - "service_register"
+      - "service_deregister"
+      - "config_change"
+      - "access_denied"

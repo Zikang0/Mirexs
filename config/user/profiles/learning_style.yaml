@@ -1,0 +1,78 @@
+# 用户学习风格配置
+# 更新时间: {{ current_timestamp }}
+
+# 学习偏好 (0-100分，0=不喜欢，100=非常喜欢)
+preferences:
+  learning_modes:
+    visual: 85  # 视觉学习偏好
+    auditory: 70  # 听觉学习偏好
+    kinesthetic: 60  # 动手学习偏好
+    reading_writing: 90  # 读写学习偏好
+
+  content_types:
+    video: 80  # 视频内容偏好
+    audio: 75  # 音频内容偏好
+    text: 85  # 文本内容偏好
+    interactive: 95  # 交互式内容偏好
+    examples: 90  # 示例/案例偏好
+
+  difficulty_levels:
+    beginner: 20  # 初学者级别
+    intermediate: 60  # 中级水平
+    advanced: 75  # 高级水平
+    expert: 50  # 专家级别
+
+# 学习节奏
+learning_pace:
+  preferred_session_duration: 45  # 偏好的单次学习时长(分钟)
+  breaks_frequency: 15  # 每15分钟休息一次
+  daily_capacity: 180  # 每日最大学习容量(分钟)
+  preferred_time_slots:  # 偏好学习时间段
+    - "09:00-11:00"
+    - "14:00-16:00"
+    - "19:00-21:00"
+
+# 认知特征
+cognitive_traits:
+  attention_span: 8  # 注意力持续时长(1-10)
+  memory_retention: 7  # 记忆保持能力(1-10)
+  pattern_recognition: 9  # 模式识别能力(1-10)
+  abstraction: 6  # 抽象思维能力(1-10)
+  detail_oriented: 8  # 注重细节程度(1-10)
+
+# 反馈偏好
+feedback_preferences:
+  immediate_feedback: true  # 是否喜欢即时反馈
+  detailed_explanations: true  # 是否喜欢详细解释
+  error_correction: "step_by_step"  # 纠错方式: step_by_step, highlight_only, minimal
+  positive_reinforcement: true  # 是否喜欢正面强化
+  progress_tracking: true  # 是否跟踪进度
+
+# 知识巩固偏好
+reinforcement_preferences:
+  review_frequency: "daily"  # 复习频率: hourly, daily, weekly, monthly
+  repetition_method: "spaced"  # 重复方法: spaced, massed, varied
+  practice_style: "progressive"  # 练习风格: progressive, random, mixed
+
+# 学习环境偏好
+environment_preferences:
+  noise_level: "quiet"  # 噪声级别: quiet, moderate, background
+  lighting: "natural"  # 光线: natural, bright, dim
+  organization_style: "structured"  # 组织风格: structured, flexible
+
+# 元认知策略
+metacognitive_strategies:
+  self_assessment: true  # 是否进行自我评估
+  goal_setting: true  # 是否设置目标
+  monitoring: true  # 是否监控学习过程
+  regulation: true  # 是否调节学习策略
+
+# 历史记录
+history:
+  created_at: "{{ creation_date }}"
+  last_updated: "{{ update_date }}"
+  total_learning_sessions: 0
+  avg_session_duration: 0
+  most_effective_modes: []
+  adaptation_count: 0
+

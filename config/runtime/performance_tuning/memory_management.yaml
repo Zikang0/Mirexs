@@ -1,0 +1,234 @@
+# 内存管理配置
+# 优化系统内存使用和分配
+
+enabled: true
+memory_architecture: hybrid_pool
+default_alignment: 64
+
+allocation_strategies:
+  ai_models:
+    memory_pool: true
+    chunk_size_mb: 256
+    alignment: 256
+    preallocation: true
+    
+    pool_config:
+      initial_size_mb: 1024
+      max_size_mb: 8192
+      growth_factor: 1.5
+      shrink_threshold: 0.3
+      
+    optimization:
+      reuse_buffers: true
+      zero_copy: true
+      pinned_memory: true
+      unified_memory: false
+  
+  rendering:
+    memory_pool: true
+    chunk_size_mb: 128
+    alignment: 128
+    preallocation: true
+    
+    pool_config:
+      initial_size_mb: 512
+      max_size_mb: 4096
+      growth_factor: 1.2
+      shrink_threshold: 0.4
+      
+    optimization:
+      texture_atlas: true
+      geometry_instancing: true
+      occlusion_culling: true
+      frustum_culling: true
+  
+  data_processing:
+    memory_pool: true
+    chunk_size_mb: 64
+    alignment: 64
+    preallocation: false
+    
+    pool_config:
+      initial_size_mb: 256
+      max_size_mb: 2048
+      growth_factor: 1.1
+      shrink_threshold: 0.5
+      
+    optimization:
+      streaming: true
+      incremental_processing: true
+      data_sharding: true
+      compression_in_memory: true
+  
+  general_purpose:
+    memory_pool: false
+    chunk_size_mb: 4
+    alignment: 16
+    preallocation: false
+    
+    allocation_library: jemalloc
+    config:
+      narenas: 4
+      dirty_decay_ms: 10000
+      muzzy_decay_ms: 10000
+
+garbage_collection:
+  enabled: true
+  strategy: generational
+  gc_threshold: 0.8
+  full_gc_interval: 3600
+  min_free_memory_mb: 1024
+  
+  generational_config:
+    young_generation:
+      size_mb: 512
+      collection_threshold: 0.9
+      promotion_age: 3
+      
+    old_generation:
+      size_mb: 2048
+      collection_threshold: 0.8
+      compaction: true
+    
+  algorithms:
+    mark_sweep:
+      enabled: true
+      parallel: true
+      incremental: true
+      
+    reference_counting:
+      enabled: false
+      cycle_detection: true
+      
+    copying:
+      enabled: false
+      survivor_ratio: 8
+
+swap_management:
+  swap_enabled: false
+  swap_path: /tmp/mirexs_swap
+  max_swap_gb: 20
+  swappiness: 10
+  
+  swap_policies:
+    priority_based: true
+    least_recently_used: true
+    compression: true
+    encryption: false
+    
+  monitoring:
+    swap_usage_threshold: 0.5
+    swap_io_threshold: 1000  # IOPS
+    alert_on_heavy_swap: true
+
+memory_protection:
+  enabled: true
+  protection_level: high
+  
+  features:
+    address_space_layout_randomization: true
+    data_execution_prevention: true
+    stack_protection: true
+    heap_protection: true
+    
+  bounds_checking:
+    enabled: true
+    check_on_allocation: true
+    check_on_deallocation: true
+    check_on_access: false
+    
+  memory_poisoning:
+    enabled: true
+    poison_on_free: true
+    poison_pattern: 0xdeadbeef
+
+monitoring:
+  enabled: true
+  sampling_interval: 5
+  retention_days: 7
+  
+  metrics_to_track:
+    - total_memory
+    - used_memory
+    - free_memory
+    - cache_memory
+    - buffer_memory
+    - swap_memory
+    - allocation_count
+    - deallocation_count
+    - fragmentation_ratio
+    - gc_cycles
+  
+  alerts:
+    - metric: used_memory
+      condition: "> 0.9"
+      severity: critical
+      action: force_gc_and_alert
+      
+    - metric: fragmentation_ratio
+      condition: "> 0.3"
+      severity: warning
+      action: defragment_memory
+      
+    - metric: gc_cycles
+      condition: "> 10 per minute"
+      severity: warning
+      action: increase_heap_size
+
+profiling:
+  enabled: true
+  profile_interval: 3600  # 1小时
+  profile_duration: 60  # 1分钟
+  
+  tools:
+    - memory_profiler
+    - heap_analyzer
+    - leak_detector
+    - allocation_tracker
+  
+  output:
+    format: json
+    directory: /profiles/memory
+    retention_days: 30
+    compression: true
+
+optimization_profiles:
+  performance:
+    allocation_strategies:
+      ai_models:
+        memory_pool: true
+        chunk_size_mb: 512
+        preallocation: true
+      rendering:
+        memory_pool: true
+        chunk_size_mb: 256
+        preallocation: true
+    gc_threshold: 0.9
+    min_free_memory_mb: 512
+    
+  balanced:
+    allocation_strategies:
+      ai_models:
+        memory_pool: true
+        chunk_size_mb: 256
+        preallocation: true
+      rendering:
+        memory_pool: true
+        chunk_size_mb: 128
+        preallocation: true
+    gc_threshold: 0.8
+    min_free_memory_mb: 1024
+    
+  memory_saver:
+    allocation_strategies:
+      ai_models:
+        memory_pool: true
+        chunk_size_mb: 128
+        preallocation: false
+      rendering:
+        memory_pool: false
+        chunk_size_mb: 64
+        preallocation: false
+    gc_threshold: 0.7
+    min_free_memory_mb: 2048
+    swap_enabled: true

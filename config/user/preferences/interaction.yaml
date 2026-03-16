@@ -1,0 +1,297 @@
+# config/user/preferences/interaction.yaml
+# 交互偏好配置
+# 管理用户与系统的交互方式和行为
+
+# 输入偏好
+input:
+  # 主要输入方法
+  primary_method: "voice_primary"  # voice_primary, text_primary, mixed, gesture
+
+  # 语音输入
+  voice:
+    auto_start_listening: false
+    continuous_listening: false
+    wake_word: "hey mirexs"
+    voice_activity_detection: true
+    noise_cancellation: true
+    voice_authentication: false
+
+  # 文本输入
+  text:
+    auto_complete: true
+    predictive_text: true
+    spell_check: true
+    grammar_check: false
+    emoji_suggestions: true
+
+  # 手势输入
+  gesture:
+    enabled: false
+    sensitivity: 0.5  # 0-1
+    custom_gestures: []
+    gesture_feedback: true
+
+  # 混合输入
+  mixed:
+    auto_switch: true
+    switch_threshold: 0.7
+    context_aware: true
+
+# 响应偏好
+response:
+  # 响应速度
+  speed: "balanced"  # slow, balanced, fast, instant
+
+  # 速度具体配置
+  speed_settings:
+    slow:
+      thinking_time_ms: 3000
+      typing_speed_wpm: 30
+
+    balanced:
+      thinking_time_ms: 1500
+      typing_speed_wpm: 60
+
+    fast:
+      thinking_time_ms: 500
+      typing_speed_wpm: 120
+
+    instant:
+      thinking_time_ms: 100
+      typing_speed_wpm: 999  # 立即显示
+
+  # 响应风格
+  style:
+    verbosity: "balanced"  # concise, balanced, detailed, verbose
+    formality: "casual"    # casual, neutral, formal
+    personality: "friendly" # friendly, professional, humorous, serious
+
+  # 响应内容
+  content:
+    include_explanations: true
+    include_examples: true
+    include_references: false
+    include_disclaimers: true
+
+# 确认偏好
+confirmation:
+  # 确认级别
+  level: "medium"  # low, medium, high
+
+  # 需要确认的操作
+  operations:
+    destructive_actions: true  # 删除、覆盖等
+    system_changes: true       # 系统设置更改
+    external_connections: true # 外部连接
+    data_sharing: true         # 数据共享
+    purchases: true            # 购买操作
+
+  # 确认方式
+  method:
+    dialog: true      # 显示确认对话框
+    voice: false      # 语音确认
+    gesture: false    # 手势确认
+    timeout: 30       # 确认超时（秒）
+
+  # 确认内容
+  content:
+    show_consequences: true
+    show_alternatives: true
+    show_risk_level: true
+
+# 反馈偏好
+feedback:
+  # 反馈级别
+  level: "detailed"  # minimal, basic, detailed, verbose
+
+  # 视觉反馈
+  visual:
+    progress_indicators: true
+    status_messages: true
+    animation_effects: true
+    highlight_changes: true
+
+  # 听觉反馈
+  auditory:
+    sound_effects: true
+    voice_feedback: false
+    notification_sounds: true
+    error_sounds: true
+
+  # 触觉反馈
+  haptic:
+    enabled: false
+    vibration_pattern: "default"
+    intensity: 0.5
+
+  # 即时反馈
+  immediate:
+    typing_feedback: true
+    voice_feedback: true
+    gesture_feedback: true
+
+# 对话偏好
+conversation:
+  # 对话风格
+  style:
+    interactive: true
+    proactive: true
+    empathetic: true
+    humorous: false
+
+  # 对话流程
+  flow:
+    allow_interruptions: true
+    follow_up_questions: true
+    topic_transitions: true
+    conversation_history: true
+
+  # 对话记忆
+  memory:
+    remember_context: true
+    remember_preferences: true
+    remember_history: true
+    retention_period: "30_days"
+
+# 界面交互
+ui_interaction:
+  # 交互元素
+  elements:
+    hover_effects: true
+    click_effects: true
+    focus_indicators: true
+    drag_drop_visuals: true
+
+  # 交互响应
+  responsiveness:
+    instant_feedback: true
+    smooth_animations: true
+    progressive_disclosure: true
+    contextual_help: true
+
+  # 交互模式
+  modes:
+    touch_mode: false
+    keyboard_mode: true
+    gamepad_mode: false
+    accessibility_mode: false
+
+# 智能交互
+smart_interaction:
+  # 预测与建议
+  prediction:
+    next_word_prediction: true
+    action_prediction: true
+    content_suggestion: true
+    shortcut_suggestion: true
+
+  # 上下文感知
+  context_awareness:
+    location_based: false
+    time_based: true
+    activity_based: true
+    device_based: true
+
+  # 学习与适应
+  learning:
+    learn_preferences: true
+    adapt_to_patterns: true
+    personalize_interactions: true
+    improve_over_time: true
+
+# 错误处理
+error_handling:
+  # 错误反馈
+  feedback:
+    show_error_details: true
+    suggest_solutions: true
+    provide_help_links: true
+    log_errors: true
+
+  # 恢复选项
+  recovery:
+    auto_recovery: true
+    undo_actions: true
+    alternative_suggestions: true
+    fallback_options: true
+
+  # 错误预防
+  prevention:
+    validation: true
+    confirmation: true
+    warnings: true
+    safety_checks: true
+
+# 个性化交互
+personalized_interaction:
+  # 个性化设置
+  settings:
+    adapt_to_mood: false
+    adapt_to_energy: false
+    adapt_to_focus: false
+    time_of_day_adaptation: true
+
+  # 交互模式
+  modes:
+    work_mode:
+      enabled: false
+      settings:
+        formality: "professional"
+        verbosity: "concise"
+        notifications: "minimal"
+
+    casual_mode:
+      enabled: true
+      settings:
+        formality: "casual"
+        verbosity: "balanced"
+        notifications: "normal"
+
+    focus_mode:
+      enabled: false
+      settings:
+        interruptions: "none"
+        feedback: "minimal"
+        speed: "fast"
+
+  # 场景适配
+  scenarios:
+    meeting:
+      auto_enable: false
+      settings:
+        voice_only: true
+        background_noise_reduction: true
+
+    driving:
+      auto_enable: false
+      settings:
+        hands_free: true
+        voice_priority: true
+
+    public:
+      auto_enable: false
+      settings:
+        privacy_mode: true
+        discreet_notifications: true
+
+# 高级交互
+advanced_interaction:
+  # 多模态交互
+  multimodal:
+    enabled: true
+    fusion_method: "late"  # early, late, hybrid
+    fallback_strategy: "graceful"
+
+  # 生物识别
+  biometrics:
+    enabled: false
+    types:
+      - "voice_print"
+      - "face_recognition"
+      - "gesture_pattern"
+
+  # 脑机接口（实验性）
+  bci:
+    enabled: false
+    mode: "eeg"
+    calibration_required: true

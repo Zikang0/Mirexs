@@ -1,0 +1,180 @@
+# 用户兴趣领域配置
+# 兴趣级别: 0=不感兴趣, 1=轻度兴趣, 2=一般兴趣, 3=较强兴趣, 4=非常感兴趣, 5=极度热爱
+# 更新时间: {{ current_timestamp }}
+
+# 技术兴趣领域
+technology_interests:
+  programming_and_development:
+    python_development: 5
+    machine_learning: 5
+    web_development: 4
+    mobile_app_development: 3
+    game_development: 2
+    embedded_systems: 3
+    blockchain: 2
+
+  ai_and_ml:
+    natural_language_processing: 5
+    computer_vision: 4
+    reinforcement_learning: 3
+    generative_ai: 5
+    explainable_ai: 4
+    edge_ai: 3
+    ai_ethics: 4
+
+  infrastructure_and_devops:
+    cloud_computing: 4
+    containerization: 4
+    kubernetes: 4
+    monitoring_and_observability: 3
+    ci_cd: 4
+    infrastructure_as_code: 3
+
+# 非技术兴趣
+non_technology_interests:
+  science_and_math:
+    mathematics: 4
+    physics: 3
+    biology: 3
+    astronomy: 4
+    data_science: 5
+
+  arts_and_creativity:
+    creative_writing: 3
+    digital_art: 3
+    music: 4
+    photography: 3
+    video_editing: 2
+
+  personal_development:
+    productivity: 4
+    mindfulness: 3
+    public_speaking: 3
+    leadership: 4
+    financial_literacy: 3
+
+  hobbies:
+    reading: 5
+    gaming: 3
+    cooking: 4
+    outdoor_activities: 3
+    travel: 4
+
+# 职业相关兴趣
+career_interests:
+  career_paths:
+    ai_researcher: 4
+    ml_engineer: 5
+    data_scientist: 4
+    software_architect: 3
+    product_manager: 2
+
+  industries:
+    technology: 5
+    healthcare_ai: 4
+    fintech: 3
+    education_technology: 4
+    entertainment: 3
+
+# 学习资源偏好
+learning_resource_preferences:
+  content_formats:
+    online_courses: 4
+    technical_books: 5
+    research_papers: 4
+    tutorials_and_guides: 5
+    podcasts: 3
+    video_tutorials: 4
+
+  platforms:
+    coursera: 4
+    udemy: 3
+    youtube_educational: 5
+    github: 5
+    arxiv: 4
+    medium: 3
+
+# 话题热点兴趣
+trending_topic_interests:
+  current_hot_topics:
+    large_language_models: 5
+    ai_agents: 5
+    multimodal_ai: 4
+    ai_safety: 4
+    quantum_computing: 3
+
+  emerging_technologies:
+    metaverse: 3
+    web3: 2
+    ar_vr: 3
+    iot: 3
+    robotics: 3
+
+# 社区和社交兴趣
+community_interests:
+  online_communities:
+    github: 5
+    stack_overflow: 4
+    reddit_tech: 4
+    discord_tech: 3
+    linkedin_learning: 4
+
+  events_and_conferences:
+    ai_conferences: 5
+    hackathons: 4
+    meetups: 3
+    workshops: 4
+
+# 兴趣深度分析
+interest_analysis:
+  interest_clusters:
+    - cluster: "ai_development"
+      intensity: 5.0
+      topics: ["machine_learning", "nlp", "generative_ai"]
+
+    - cluster: "software_engineering"
+      intensity: 4.2
+      topics: ["python_development", "web_development", "devops"]
+
+  interest_stability:
+    stable_interests: ["programming", "ai", "learning"]
+    fluctuating_interests: ["blockchain", "game_development"]
+    new_interests: ["ai_ethics", "explainable_ai"]
+
+  seasonal_variations:
+    winter: ["indoor_hobbies", "deep_learning"]
+    summer: ["outdoor_activities", "light_reading"]
+
+# 兴趣探索历史
+exploration_history:
+  recently_explored:
+    - topic: "vector_databases"
+      date: "2024-01-10"
+      duration_minutes: 120
+
+    - topic: "fastapi_advanced"
+      date: "2024-01-08"
+      duration_minutes: 90
+
+  frequently_visited_topics:
+    - "python_ml"
+    - "ai_tutorials"
+    - "system_design"
+
+  discovery_pattern:
+    weekly_new_topics: 3
+    average_exploration_depth: "moderate"
+
+# 兴趣匹配度
+interest_matching:
+  current_focus_match: 0.85  # 当前学习内容与兴趣的匹配度
+  recommendation_effectiveness: 0.78  # 推荐系统的效果
+  exploration_satisfaction: 0.82  # 探索新兴趣的满意度
+
+# 统计信息
+statistics:
+  total_interests_tracked: 0
+  primary_interest_domains: []
+  interest_diversity_score: 0.0
+  interest_evolution_rate: 0.0
+  last_interest_update: "{{ update_date }}"

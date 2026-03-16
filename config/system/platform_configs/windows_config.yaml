@@ -1,0 +1,290 @@
+# config/system/platform_configs/windows_config.yaml
+# Windows平台特定配置
+
+# 系统信息
+system:
+  name: "Windows"
+  min_version: "10"
+  recommended_version: "11"
+  architecture: "x86_64"
+  bitness: 64
+
+# 路径配置
+paths:
+  # 系统路径
+  system_root: "${SystemRoot}"
+  program_files: "${ProgramFiles}"
+  program_files_x86: "${ProgramFiles(x86)}"
+  appdata: "${APPDATA}"
+  local_appdata: "${LOCALAPPDATA}"
+  temp: "${TEMP}"
+  userprofile: "${USERPROFILE}"
+
+  # Mirexs特定路径
+  mirexs_data: "${LOCALAPPDATA}\\Mirexs\\data"
+  mirexs_config: "${LOCALAPPDATA}\\Mirexs\\config"
+  mirexs_logs: "${LOCALAPPDATA}\\Mirexs\\logs"
+  mirexs_cache: "${LOCALAPPDATA}\\Mirexs\\cache"
+  mirexs_models: "${LOCALAPPDATA}\\Mirexs\\models"
+
+  # 可执行文件路径
+  python_exe: "${ProgramFiles}\\Python\\Python39\\python.exe"
+  ffmpeg_path: "${ProgramFiles}\\ffmpeg\\bin\\ffmpeg.exe"
+
+  # 动态库路径
+  dll_paths:
+    - "${SystemRoot}\\System32"
+    - "${ProgramFiles}\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.0\\bin"
+    - "${ProgramFiles}\\NVIDIA Corporation\\NVIDIA Nsight Compute"
+
+# 图形配置
+graphics:
+  # 图形API
+  api:
+    primary: "directx"
+    versions:
+      directx: "12"
+      opengl: "4.6"
+      vulkan: "1.3"
+
+  # 显示配置
+  display:
+    dpi_scaling: true
+    high_dpi_aware: true
+    refresh_rate: 60
+
+  # 渲染配置
+  rendering:
+    hardware_acceleration: true
+    vsync: true
+    anti_aliasing: "msaa_4x"
+
+  # 性能优化
+  performance:
+    gpu_preference: "high_performance"
+    power_preference: "high_performance"
+    texture_quality: "high"
+
+# 音频配置
+audio:
+  # 音频API
+  api: "wasapi"
+
+  # 设备配置
+  devices:
+    input:
+      default: "麦克风阵列"
+      type: "microphone"
+    output:
+      default: "扬声器"
+      type: "speakers"
+
+  # 音频处理
+  processing:
+    echo_cancellation: true
+    noise_suppression: true
+    automatic_gain_control: true
+
+  # 格式配置
+  format:
+    sample_rate: 48000
+    channels: 2
+    bits_per_sample: 16
+
+# 输入配置
+input:
+  # 鼠标配置
+  mouse:
+    sensitivity: 1.0
+    acceleration: false
+    natural_scroll: false
+
+  # 键盘配置
+  keyboard:
+    layout: "us"
+    repeat_delay: 250
+    repeat_rate: 31
+
+  # 触摸配置
+  touch:
+    enabled: false
+    multi_touch: true
+    gesture_support: true
+
+# 网络配置
+network:
+  # 网络接口
+  interfaces:
+    priority: "ethernet"  # ethernet, Wi-Fi, cellular
+
+  # Windows特定网络服务
+  services:
+    wsl_integration: false
+    hyperv_networking: false
+
+  # 防火墙配置
+  firewall:
+    auto_configure: true
+    rules_group: "Mirexs Rules"
+
+# 安全配置
+security:
+  # 用户账户控制 (UAC)
+  uac:
+    enabled: true
+    level: "default"
+
+  # Windows Defender集成
+  defender:
+    integration: true
+    exclusions:
+      - "${LOCALAPPDATA}\\Mirexs"
+      - "C:\\Program Files\\Mirexs"
+
+  # 权限配置
+  permissions:
+    require_admin: false
+    integrity_level: "medium"
+
+# 系统集成
+integration:
+  # 任务栏集成
+  taskbar:
+    pin_to_taskbar: true
+    progress_indicator: true
+    jump_list: true
+
+  # 通知中心
+  notifications:
+    enabled: true
+    sound: true
+    duration: 5
+
+  # 系统托盘
+  system_tray:
+    enabled: true
+    show_notifications: true
+    quick_actions: true
+
+  # 开始菜单
+  start_menu:
+    pin_to_start: true
+    live_tile: false
+
+  # 文件关联
+  file_associations:
+    .mirexs: "Mirexs Project File"
+    .mirexscfg: "Mirexs Configuration File"
+
+# 性能优化
+performance:
+  # 电源管理
+  power:
+    plan: "high_performance"
+    sleep_inhibit: true
+    screen_timeout: 300
+
+  # 内存管理
+  memory:
+    large_address_aware: true
+    working_set_trimming: false
+
+  # 进程优先级
+  process:
+    priority: "normal"  # idle, below_normal, normal, above_normal, high, realtime
+    affinity: "auto"
+
+  # 磁盘优化
+  disk:
+    write_cache: true
+    defragmentation: false
+
+# 开发工具
+development:
+  # Visual Studio集成
+  visual_studio:
+    integration: false
+    version: "2022"
+
+  # .NET集成
+  dotnet:
+    required: false
+    version: "6.0"
+
+  # WSL集成
+  wsl:
+    enabled: false
+    version: "2"
+    distribution: "Ubuntu-22.04"
+
+# 更新配置
+update:
+  # Windows更新集成
+  windows_update:
+    defer_updates: false
+    active_hours:
+      start: 8
+      end: 18
+
+  # Mirexs更新
+  mirexs_update:
+    service: "windows_update"  # windows_update, custom
+    schedule: "weekly"
+
+  # 驱动程序更新
+  driver_updates:
+    automatic: false
+    manufacturer: "nvidia"
+
+# 兼容性配置
+compatibility:
+  # 兼容模式
+  modes:
+    - version: "windows8"
+      enabled: false
+    - version: "windows7"
+      enabled: false
+
+  # DPI兼容性
+  dpi:
+    high_dpi_override: "application"
+    scaling_override: "system"
+
+  # 管理员模式
+  admin_mode:
+    run_as_admin: false
+    require_admin: false
+
+# 注册表配置
+registry:
+  # 自动启动
+  autostart:
+    key: "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+    value_name: "Mirexs"
+    enabled: true
+
+  # 环境变量
+  environment:
+    path: "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment"
+    add_to_path: true
+
+  # 文件关联
+  file_types:
+    .mirexs:
+      command: '"C:\\Program Files\\Mirexs\\mirexs.exe" "%1"'
+      friendly_name: "Mirexs Project"
+
+# 服务配置
+services:
+  # Windows服务
+  windows_service:
+    enabled: true
+    name: "MirexsService"
+    display_name: "Mirexs AI Service"
+    description: "Mirexs全栈AI数字生命体服务"
+    start_type: "automatic"  # automatic, manual, disabled
+
+  # 后台任务
+  background_tasks:
+    enabled: true
+    trigger: "logon"  # logon, idle, time

@@ -1,0 +1,267 @@
+# 网络优化配置
+# 优化网络性能和可靠性
+
+enabled: true
+network_stack: tcp_ip
+protocol_versions:
+  ipv4: true
+  ipv6: false
+
+tcp_optimization:
+  tcp_congestion: bbr
+  tcp_window_scaling: true
+  tcp_timestamps: true
+  tcp_sack: true
+  tcp_fast_open: true
+  
+  buffer_sizes:
+    send_buffer_kb: 1024
+    receive_buffer_kb: 1024
+    max_buffer_kb: 4096
+    
+  keepalive:
+    enabled: true
+    idle_seconds: 60
+    interval_seconds: 30
+    count: 5
+    
+  fast_retransmit:
+    enabled: true
+    duplicate_ack_threshold: 3
+    early_retransmit: true
+
+bandwidth_management:
+  qos_enabled: true
+  traffic_shaping: true
+  rate_limiting: true
+  
+  traffic_classes:
+    
+    realtime:
+      priority: 7
+      bandwidth_percent: 40
+      latency_ms: 20
+      jitter_ms: 5
+      packet_loss: 0.001
+      burst_size_kb: 100
+      
+      services:
+        - voice_call
+        - video_conference
+        - gaming
+        - remote_desktop
+    
+    interactive:
+      priority: 5
+      bandwidth_percent: 30
+      latency_ms: 100
+      jitter_ms: 20
+      packet_loss: 0.01
+      burst_size_kb: 500
+      
+      services:
+        - web_browsing
+        - email
+        - chat
+        - file_transfer_small
+    
+    bulk:
+      priority: 3
+      bandwidth_percent: 20
+      latency_ms: 500
+      jitter_ms: 100
+      packet_loss: 0.05
+      burst_size_kb: 1024
+      
+      services:
+        - backup
+        - software_update
+        - media_streaming
+        - file_transfer_large
+    
+    background:
+      priority: 1
+      bandwidth_percent: 10
+      latency_ms: 1000
+      jitter_ms: 200
+      packet_loss: 0.1
+      burst_size_kb: 100
+      
+      services:
+        - logging
+        - metrics
+        - synchronization
+        - maintenance
+
+connection_pooling:
+  enabled: true
+  max_pool_size: 100
+  max_connections_per_host: 10
+  connection_timeout: 30
+  keepalive: true
+  
+  pool_config:
+    idle_timeout: 300
+    max_lifetime: 3600
+    eviction_interval: 60
+    
+  ssl_config:
+    enabled: true
+    verify: true
+    cert_reqs: required
+    ssl_version: TLSv1_2
+    ciphers: HIGH:!aNULL:!MD5
+    
+  retry_config:
+    enabled: true
+    max_retries: 3
+    backoff_factor: 0.5
+    retryable_status_codes: [408, 429, 500, 502, 503, 504]
+
+dns_optimization:
+  enabled: true
+  caching: true
+  cache_ttl: 300
+  prefetching: true
+  
+  resolver_config:
+    nameservers:
+      - 8.8.8.8
+      - 8.8.4.4
+    timeout: 5
+    attempts: 3
+    
+  dnssec:
+    enabled: false
+    validation: false
+    
+  protocol_support:
+    udp: true
+    tcp: true
+    tls: false
+    https: false
+
+compression:
+  enabled: true
+  algorithm: zstd
+  level: 3
+  min_size_bytes: 1024
+  
+  compressible_content_types:
+    - text/html
+    - text/css
+    - text/javascript
+    - application/json
+    - application/xml
+    - text/plain
+    
+  excluded_content_types:
+    - image/jpeg
+    - image/png
+    - image/gif
+    - video/*
+    - audio/*
+    - application/zip
+
+monitoring:
+  enabled: true
+  sampling_interval: 1
+  
+  metrics_to_track:
+    - bandwidth_in
+    - bandwidth_out
+    - packets_in
+    - packets_out
+    - errors_in
+    - errors_out
+    - latency
+    - jitter
+    - packet_loss
+    - connection_count
+    - retransmission_rate
+  
+  alerts:
+    - metric: packet_loss
+      condition: "> 0.05"
+      duration: 10
+      severity: critical
+      action: switch_route_and_alert
+      
+    - metric: latency
+      condition: "> 200"
+      duration: 30
+      severity: warning
+      action: optimize_route_and_alert
+      
+    - metric: connection_count
+      condition: "> max_pool_size * 0.9"
+      severity: warning
+      action: increase_pool_size
+
+security:
+  enabled: true
+  firewall: true
+  intrusion_detection: false
+  
+  firewall_rules:
+    - action: allow
+      protocol: tcp
+      port: 443
+      source: any
+      
+    - action: allow
+      protocol: tcp
+      port: 80
+      source: any
+      
+    - action: deny
+      protocol: any
+      port: any
+      source: any
+  
+  ddos_protection:
+    enabled: true
+    rate_limiting: true
+    max_connections_per_ip: 100
+    connection_rate_limit: 10
+
+profiles:
+  high_performance:
+    tcp_optimization:
+      tcp_congestion: bbr
+      buffer_sizes:
+        send_buffer_kb: 2048
+        receive_buffer_kb: 2048
+    bandwidth_management:
+      traffic_classes:
+        realtime:
+          bandwidth_percent: 50
+    compression:
+      level: 1
+    
+  balanced:
+    tcp_optimization:
+      tcp_congestion: cubic
+      buffer_sizes:
+        send_buffer_kb: 1024
+        receive_buffer_kb: 1024
+    bandwidth_management:
+      traffic_classes:
+        realtime:
+          bandwidth_percent: 40
+    compression:
+      level: 3
+    
+  low_latency:
+    tcp_optimization:
+      tcp_congestion: bbr
+      buffer_sizes:
+        send_buffer_kb: 512
+        receive_buffer_kb: 512
+    bandwidth_management:
+      traffic_classes:
+        realtime:
+          bandwidth_percent: 60
+          latency_ms: 10
+    compression:
+      enabled: false

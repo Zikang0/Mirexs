@@ -1,0 +1,228 @@
+# 动态扩缩容配置
+# 根据负载自动调整资源规模
+
+enabled: true
+scaling_mode: auto  # auto, manual, scheduled
+
+scaling_policies:
+  cpu_utilization:
+    scale_up_threshold: 0.8
+    scale_down_threshold: 0.3
+    scale_up_factor: 1.5
+    scale_down_factor: 0.7
+    cooldown_seconds: 300
+    measurement_period: 60
+    samples_required: 5
+  
+  memory_utilization:
+    scale_up_threshold: 0.85
+    scale_down_threshold: 0.4
+    scale_up_factor: 2.0
+    scale_down_factor: 0.8
+    cooldown_seconds: 600
+    measurement_period: 60
+    samples_required: 5
+  
+  request_rate:
+    scale_up_threshold: 1000  # requests/second
+    scale_down_threshold: 200
+    scale_up_factor: 1.8
+    scale_down_factor: 0.6
+    cooldown_seconds: 300
+    measurement_period: 60
+    samples_required: 10
+  
+  queue_length:
+    scale_up_threshold: 1000
+    scale_down_threshold: 100
+    scale_up_factor: 1.3
+    scale_down_factor: 0.8
+    cooldown_seconds: 180
+    measurement_period: 30
+    samples_required: 3
+  
+  error_rate:
+    scale_up_threshold: 0.05  # 5%
+    scale_down_threshold: 0.01  # 1%
+    scale_up_factor: 1.2
+    scale_down_factor: 0.9
+    cooldown_seconds: 600
+    measurement_period: 120
+    samples_required: 10
+
+scaling_limits:
+  min_instances: 1
+  max_instances: 10
+  min_resources:
+    cpu: 1
+    memory_gb: 2
+    gpu: 0
+    disk_gb: 20
+  max_resources:
+    cpu: 16
+    memory_gb: 64
+    gpu: 2
+    disk_gb: 1000
+
+scaling_strategies:
+  horizontal:
+    enabled: true
+    max_instances: 10
+    min_instances: 1
+    instance_type: auto
+    
+    instance_types:
+      small:
+        cpu: 2
+        memory_gb: 4
+        gpu: 0
+        cost_factor: 1.0
+        
+      medium:
+        cpu: 4
+        memory_gb: 8
+        gpu: 0
+        cost_factor: 2.0
+        
+      large:
+        cpu: 8
+        memory_gb: 16
+        gpu: 0
+        cost_factor: 4.0
+        
+      gpu_small:
+        cpu: 4
+        memory_gb: 16
+        gpu: 1
+        cost_factor: 8.0
+        
+      gpu_large:
+        cpu: 8
+        memory_gb: 32
+        gpu: 2
+        cost_factor: 16.0
+  
+  vertical:
+    enabled: false
+    max_cpu: 16
+    max_memory_gb: 64
+    max_gpu: 2
+    
+    resource_steps:
+      cpu: 1
+      memory_gb: 2
+      gpu: 1
+  
+  predictive:
+    enabled: true
+    prediction_horizon: 3600  # 1小时
+    prediction_interval: 300  # 5分钟
+    confidence_threshold: 0.8
+    
+    algorithms:
+      - linear_regression
+      - time_series
+      - machine_learning
+
+service_scaling:
+  inference_service:
+    scaling_policy: cpu_utilization
+    min_instances: 1
+    max_instances: 5
+    instance_type: medium
+    health_check_path: /health/inference
+    
+  rendering_service:
+    scaling_policy: cpu_utilization
+    min_instances: 1
+    max_instances: 3
+    instance_type: gpu_small
+    health_check_path: /health/rendering
+    
+  database_service:
+    scaling_policy: memory_utilization
+    min_instances: 1
+    max_instances: 3
+    instance_type: large
+    health_check_path: /health/database
+    
+  api_gateway:
+    scaling_policy: request_rate
+    min_instances: 2
+    max_instances: 5
+    instance_type: medium
+    health_check_path: /health/api
+
+scheduled_scaling:
+  enabled: false
+  
+  schedules:
+    - name: business_hours
+      schedule: "0 9 * * 1-5"  # 工作日9点
+      action: scale_up
+      instances: 3
+      
+    - name: evening
+      schedule: "0 18 * * 1-5"  # 工作日18点
+      action: scale_down
+      instances: 2
+      
+    - name: weekend
+      schedule: "0 0 * * 6-7"  # 周末
+      action: scale_down
+      instances: 1
+
+cost_optimization:
+  enabled: true
+  budget_per_hour: 10.0  # 美元
+  cost_aware_scaling: true
+  
+  optimization_strategies:
+    - strategy: spot_instances
+      enabled: false
+      max_price_ratio: 0.7
+      
+    - strategy: reserved_instances
+      enabled: false
+      commitment_years: 1
+      
+    - strategy: auto_shutdown
+      enabled: true
+      idle_timeout: 3600  # 1小时
+
+monitoring:
+  enabled: true
+  metrics_interval: 60
+  retention_days: 30
+  
+  metrics_to_track:
+    - instance_count
+    - resource_utilization
+    - scaling_events
+    - cost_per_hour
+    - performance_metrics
+  
+  alerts:
+    - condition: "instance_count >= max_instances"
+      severity: critical
+      action: notify_and_review
+      
+    - condition: "cost_per_hour > budget_per_hour"
+      severity: warning
+      action: notify_and_optimize
+      
+    - condition: "scaling_failures > 3"
+      severity: critical
+      action: notify_and_investigate
+
+logging:
+  enabled: true
+  level: info
+  log_scaling_events: true
+  log_resource_metrics: true
+  log_cost_metrics: true
+  
+  audit_log:
+    enabled: true
+    retention_days: 90
+    encryption: true

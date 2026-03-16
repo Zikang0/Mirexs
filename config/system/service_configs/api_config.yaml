@@ -1,0 +1,383 @@
+# config/system/service_configs/api_config.yaml
+# API服务配置
+# 管理所有REST API、WebSocket等接口配置
+
+# API网关配置
+gateway:
+  # 网关服务
+  service:
+    host: "localhost"
+    port: 8000
+    workers: 4
+    ssl:
+      enabled: false
+      cert_path: "certs/server.crt"
+      key_path: "certs/server.key"
+    cors:
+      enabled: true
+      origins: ["*"]
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+      headers: ["*"]
+
+  # 路由配置
+  routing:
+    prefix: "/api/v1"
+    versioning:
+      enabled: true
+      header: "X-API-Version"
+      default: "v1"
+
+  # 负载均衡
+  load_balancing:
+    enabled: true
+    strategy: "round_robin"  # round_robin, least_connections, ip_hash
+    health_check:
+      enabled: true
+      interval_seconds: 30
+      timeout_seconds: 5
+
+# 端点配置
+endpoints:
+  # 认知服务
+  cognitive:
+    host: "localhost"
+    port: 8001
+    path: "/cognitive"
+    ssl: false
+    timeout: 30
+    rate_limit: 1000
+    authentication:
+      required: true
+      type: "jwt"
+
+  # 语音服务
+  speech:
+    host: "localhost"
+    port: 8002
+    path: "/speech"
+    ssl: false
+    timeout: 60
+    rate_limit: 500
+    features:
+      asr: true
+      tts: true
+      emotion: true
+
+  # 视觉服务
+  vision:
+    host: "localhost"
+    port: 8003
+    path: "/vision"
+    ssl: false
+    timeout: 60
+    rate_limit: 300
+    features:
+      face_recognition: true
+      object_detection: true
+      image_generation: true
+
+  # 3D服务
+  threed:
+    host: "localhost"
+    port: 8004
+    path: "/3d"
+    ssl: false
+    timeout: 30
+    rate_limit: 200
+    features:
+      avatar_render: true
+      animation: true
+      lip_sync: true
+
+  # 工具服务
+  tools:
+    host: "localhost"
+    port: 8005
+    path: "/tools"
+    ssl: false
+    timeout: 60
+    rate_limit: 200
+    features:
+      document_generation: true
+      code_assistance: true
+      system_automation: true
+
+  # 数据服务
+  data:
+    host: "localhost"
+    port: 8006
+    path: "/data"
+    ssl: false
+    timeout: 30
+    rate_limit: 1000
+    features:
+      vector_search: true
+      graph_query: true
+      time_series: true
+
+# 认证配置
+authentication:
+  # JWT配置
+  jwt:
+    enabled: true
+    algorithm: "HS256"
+    secret_key: "your-secret-key-change-in-production"
+    access_token_expire_minutes: 30
+    refresh_token_expire_days: 7
+    issuer: "mirexs-api"
+    audience: "mirexs-client"
+
+  # OAuth配置
+  oauth:
+    enabled: false
+    providers:
+      google:
+        client_id: ""
+        client_secret: ""
+        redirect_uri: "http://localhost:8000/auth/google/callback"
+      github:
+        client_id: ""
+        client_secret: ""
+        redirect_uri: "http://localhost:8000/auth/github/callback"
+
+  # API密钥
+  api_keys:
+    enabled: true
+    rotation_days: 90
+    max_keys_per_user: 5
+
+# 速率限制
+rate_limiting:
+  enabled: true
+
+  # 全局限制
+  global:
+    requests_per_minute: 1000
+    burst_size: 100
+
+  # 用户限制
+  user:
+    requests_per_minute: 100
+    burst_size: 20
+
+  # IP限制
+  ip:
+    requests_per_minute: 200
+    burst_size: 50
+
+  # 存储后端
+  storage:
+    type: "redis"
+    prefix: "ratelimit:"
+    reset_interval: 60
+
+# 请求验证
+validation:
+  # 请求大小限制
+  request_size:
+    max_body_size_mb: 10
+    max_upload_size_mb: 100
+
+  # 参数验证
+  parameters:
+    max_query_params: 50
+    max_header_size: 8192
+
+  # 内容类型
+  content_types:
+    allowed: ["application/json", "multipart/form-data", "application/x-www-form-urlencoded"]
+    strict: true
+
+# 响应处理
+response:
+  # 格式配置
+  format:
+    default: "json"
+    supported: ["json", "xml", "yaml"]
+
+  # 压缩配置
+  compression:
+    enabled: true
+    algorithms: ["gzip", "deflate"]
+    min_size_bytes: 1024
+
+  # 缓存配置
+  caching:
+    enabled: true
+    max_age_seconds: 3600
+    vary: ["Accept-Encoding", "Authorization"]
+
+# 日志配置
+logging:
+  # 访问日志
+  access:
+    enabled: true
+    format: '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s" %(D)s'
+    rotation:
+      when: "midnight"
+      interval: 1
+      backup_count: 30
+
+  # 错误日志
+  error:
+    enabled: true
+    level: "ERROR"
+    rotation:
+      when: "midnight"
+      interval: 1
+      backup_count: 30
+
+  # 审计日志
+  audit:
+    enabled: true
+    events: ["authentication", "authorization", "data_access", "configuration_change"]
+
+# 监控配置
+monitoring:
+  # 指标收集
+  metrics:
+    enabled: true
+    endpoint: "/metrics"
+    port: 9000
+    collect_interval: 10
+
+  # 健康检查
+  health:
+    enabled: true
+    endpoint: "/health"
+    checks:
+      - "database"
+      - "cache"
+      - "storage"
+
+  # 性能追踪
+  tracing:
+    enabled: false
+    provider: "jaeger"
+    endpoint: "http://localhost:14268/api/traces"
+    sample_rate: 0.1
+
+# WebSocket配置
+websocket:
+  enabled: true
+  path: "/ws"
+  ping_interval: 30
+  max_message_size: 1048576  # 1MB
+  compression: true
+
+  # 事件类型
+  events:
+    - "chat_message"
+    - "task_update"
+    - "notification"
+    - "system_status"
+
+  # 连接管理
+  connections:
+    max_connections: 1000
+    idle_timeout: 300
+
+# GraphQL配置
+graphql:
+  enabled: false
+  path: "/graphql"
+  playground: true
+  introspection: true
+
+  # 查询限制
+  query:
+    max_depth: 10
+    max_complexity: 1000
+    max_length: 5000
+
+# gRPC配置
+grpc:
+  enabled: false
+  port: 50051
+  reflection: true
+  max_message_length: 4194304  # 4MB
+
+  # 服务定义
+  services:
+    - "cognitive.CognitiveService"
+    - "speech.SpeechService"
+    - "vision.VisionService"
+
+# 文档配置
+documentation:
+  # OpenAPI/Swagger
+  openapi:
+    enabled: true
+    path: "/docs"
+    title: "Mirexs API"
+    version: "1.0.0"
+    description: "Mirexs全栈AI数字生命体API文档"
+
+  # Redoc
+  redoc:
+    enabled: true
+    path: "/redoc"
+
+  # API Blueprint
+  blueprint:
+    enabled: false
+    path: "/apiary"
+
+# 安全配置
+security:
+  # 头部安全
+  headers:
+    x_frame_options: "DENY"
+    x_content_type_options: "nosniff"
+    x_xss_protection: "1; mode=block"
+    strict_transport_security: "max-age=31536000; includeSubDomains"
+
+  # CORS安全
+  cors:
+    allow_credentials: false
+    expose_headers: ["X-Request-ID"]
+
+  # CSRF保护
+  csrf:
+    enabled: true
+    cookie_name: "csrf_token"
+    header_name: "X-CSRF-Token"
+
+# 错误处理
+error_handling:
+  # 错误响应格式
+  format:
+    include_traceback: false
+    include_request_id: true
+
+  # 自定义错误页
+  custom_pages:
+    404: "errors/404.html"
+    500: "errors/500.html"
+
+  # 错误通知
+  notification:
+    enabled: false
+    slack_webhook: ""
+    email_recipients: []
+
+# 性能优化
+performance:
+  # 连接池
+  connection_pool:
+    enabled: true
+    max_size: 100
+    max_overflow: 50
+    pool_recycle: 3600
+
+  # 缓存
+  caching:
+    enabled: true
+    backend: "redis"
+    default_ttl: 300
+
+  # 压缩
+  compression:
+    enabled: true
+    level: 6
+    min_size: 1024

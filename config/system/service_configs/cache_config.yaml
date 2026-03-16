@@ -1,0 +1,322 @@
+# config/system/service_configs/cache_config.yaml
+# 缓存配置
+# 管理多级缓存系统和策略
+
+# 多级缓存配置
+multi_level_cache:
+  enabled: true
+  levels:
+    - name: "memory"
+      priority: 1
+      backend: "local_memory"
+      max_size_mb: 1024
+      default_ttl: 300
+
+    - name: "redis"
+      priority: 2
+      backend: "redis"
+      max_size_mb: 4096
+      default_ttl: 3600
+
+    - name: "disk"
+      priority: 3
+      backend: "local_disk"
+      max_size_mb: 10240
+      default_ttl: 86400
+
+# 内存缓存配置
+memory_cache:
+  # 本地内存缓存
+  local:
+    enabled: true
+    max_size_mb: 1024
+    default_ttl: 300
+    eviction_policy: "lru"  # lru, lfu, fifo, random
+    statistics: true
+
+  # 共享内存缓存
+  shared:
+    enabled: false
+    size_mb: 512
+    name: "/mirexs_cache"
+
+  # 缓存分区
+  partitions:
+    model_cache:
+      size_percent: 30
+      ttl: 3600
+
+    session_cache:
+      size_percent: 20
+      ttl: 1800
+
+    data_cache:
+      size_percent: 50
+      ttl: 300
+
+# Redis缓存配置
+redis_cache:
+  # 主Redis配置
+  primary:
+    host: "localhost"
+    port: 6379
+    db: 1
+    password: ""
+    ssl: false
+    socket_timeout: 5
+    socket_connect_timeout: 5
+
+  # 从Redis配置（用于只读）
+  replica:
+    enabled: false
+    host: "localhost"
+    port: 6380
+    db: 1
+
+  # 连接池
+  connection_pool:
+    max_connections: 50
+    max_connections_per_node: 10
+    retry_on_timeout: true
+    health_check_interval: 30
+
+  # 缓存策略
+  strategy:
+    key_prefix: "mirexs:cache:"
+    compression: true
+    serialize: "pickle"  # pickle, json, msgpack
+
+  # 内存管理
+  memory:
+    max_memory: "4gb"
+    eviction_policy: "volatile-lru"
+    no_eviction: false
+
+# 磁盘缓存配置
+disk_cache:
+  # 本地磁盘缓存
+  local:
+    enabled: true
+    directory: "data/cache/disk"
+    max_size_mb: 10240
+    default_ttl: 86400
+    cleanup_interval: 3600
+
+  # 压缩配置
+  compression:
+    enabled: true
+    algorithm: "zstd"
+    level: 3
+
+  # 文件组织
+  organization:
+    sharding: true
+    shards: 16
+    subdirectory_levels: 2
+
+# 模型缓存配置
+model_cache:
+  enabled: true
+
+  # 模型缓存策略
+  strategy:
+    preload: ["whisper-small", "yolov8n", "qwen-7b-chat"]
+    lazy_load: true
+    keep_in_memory: true
+
+  # 内存管理
+  memory:
+    max_size_mb: 2048
+    eviction_policy: "least_recently_used"
+
+  # 持久化
+  persistence:
+    enabled: true
+    directory: "data/cache/models"
+    format: "safetensors"
+
+# 会话缓存配置
+session_cache:
+  enabled: true
+
+  # 会话存储
+  storage:
+    type: "redis"  # redis, memory, database
+    ttl: 1800
+    cookie_name: "session_id"
+
+  # 安全配置
+  security:
+    encrypt: true
+    sign: true
+    http_only: true
+    secure: false
+
+  # 会话数据
+  data:
+    max_size_kb: 64
+    serialize: "json"
+
+# 分布式缓存配置
+distributed_cache:
+  enabled: false
+
+  # 集群配置
+  cluster:
+    nodes:
+      - host: "cache-node-1"
+        port: 6379
+      - host: "cache-node-2"
+        port: 6379
+      - host: "cache-node-3"
+        port: 6379
+
+  # 分片策略
+  sharding:
+    enabled: true
+    algorithm: "consistent_hashing"
+    virtual_nodes: 160
+
+  # 复制配置
+  replication:
+    enabled: true
+    factor: 2
+    sync: "async"
+
+# 缓存策略配置
+cache_policies:
+  # 默认策略
+  default:
+    ttl: 300
+    stale_while_revalidate: 60
+    stale_if_error: 86400
+
+  # 模型数据策略
+  model_data:
+    ttl: 3600
+    stale_while_revalidate: 300
+
+  # 用户数据策略
+  user_data:
+    ttl: 1800
+    stale_while_revalidate: 120
+
+  # 静态资源策略
+  static_resources:
+    ttl: 86400
+    immutable: true
+
+  # 实时数据策略
+  realtime_data:
+    ttl: 10
+    no_cache: true
+
+# 缓存失效策略
+invalidation:
+  # 主动失效
+  active:
+    enabled: true
+    pattern: "namespace:*"
+
+  # 被动失效
+  passive:
+    enabled: true
+    ttl_based: true
+    lru_based: true
+
+  # 批量失效
+  batch:
+    enabled: true
+    batch_size: 100
+    delay_seconds: 1
+
+  # 失效传播
+  propagation:
+    enabled: true
+    methods: ["pubsub", "http"]
+    timeout: 5
+
+# 缓存监控配置
+monitoring:
+  enabled: true
+
+  # 指标收集
+  metrics:
+    - "hit_rate"
+    - "miss_rate"
+    - "eviction_count"
+    - "memory_usage"
+    - "response_time"
+
+  # 告警配置
+  alerts:
+    hit_rate_threshold: 0.8
+    memory_threshold_percent: 80
+    response_time_threshold_ms: 50
+
+  # 日志记录
+  logging:
+    enabled: true
+    level: "INFO"
+    slow_query_threshold_ms: 100
+
+# 性能优化
+performance:
+  # 连接优化
+  connection:
+    pool_size: 50
+    timeout: 5
+    retry_attempts: 3
+
+  # 序列化优化
+  serialization:
+    compressor: "zstd"
+    serializer: "msgpack"
+
+  # 批量操作
+  batch_operations:
+    enabled: true
+    max_batch_size: 100
+    pipeline: true
+
+# 安全配置
+security:
+  # 访问控制
+  access_control:
+    enabled: false
+    password_protected: true
+    ip_whitelist:
+      - "127.0.0.1"
+      - "192.168.1.0/24"
+
+  # 数据加密
+  encryption:
+    enabled: false
+    algorithm: "AES-256-GCM"
+
+  # 审计日志
+  audit:
+    enabled: true
+    events: ["clear", "flush", "config_change"]
+
+# 备份与恢复
+backup:
+  enabled: true
+
+  # 备份策略
+  strategy:
+    schedule: "0 3 * * *"  # 每天凌晨3点
+    retention_days: 7
+    incremental: true
+
+  # 备份存储
+  storage:
+    local:
+      directory: "data/backups/cache"
+    cloud:
+      enabled: false
+
+  # 恢复策略
+  recovery:
+    auto_recovery: true
+    point_in_time: true

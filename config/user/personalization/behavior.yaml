@@ -1,0 +1,311 @@
+# config/user/personalization/behavior.yaml
+# 行为设置配置
+# 管理系统启动、关闭、会话管理等行为
+
+# 启动行为
+startup:
+  # 自动启动
+  auto_start:
+    enabled: false
+    delay_seconds: 0
+
+  # 启动模式
+  mode:
+    normal: true
+    minimized: false
+    hidden: false
+
+  # 启动检查
+  checks:
+    check_updates: true
+    check_disk_space: true
+    check_internet: true
+
+  # 启动优化
+  optimization:
+    preload_models: true
+    warmup_cache: true
+    background_loading: true
+
+# 关闭行为
+shutdown:
+  # 确认关闭
+  confirm_exit:
+    enabled: true
+    when_working: true
+    always: false
+
+  # 关闭前操作
+  before_exit:
+    save_session: true
+    backup_data: false
+    clear_cache: false
+
+  # 关闭超时
+  timeout:
+    enabled: true
+    seconds: 30
+
+# 会话管理
+session:
+  # 会话保存
+  save_session:
+    enabled: true
+    auto_save: true
+    interval_minutes: 5
+
+  # 会话恢复
+  restore_session:
+    enabled: true
+    on_startup: true
+    ask_user: false
+
+  # 会话数据
+  data:
+    include_conversations: true
+    include_files: true
+    include_settings: true
+    max_size_mb: 50
+
+# 空闲行为
+idle:
+  # 空闲检测
+  detection:
+    enabled: true
+    timeout_minutes: 30
+
+  # 空闲操作
+  actions:
+    go_to_sleep: true
+    reduce_power: true
+    pause_processing: false
+
+  # 唤醒操作
+  wakeup:
+    require_interaction: false
+    restore_state: true
+
+# 后台操作
+background:
+  # 后台运行
+  operation:
+    enabled: true
+    priority: "low"  # low, normal, high
+
+  # 资源限制
+  resource_limits:
+    cpu_percent: 25
+    memory_mb: 512
+    network_kbps: 100
+
+  # 任务调度
+  scheduling:
+    enabled: true
+    times:
+      maintenance: "02:00"
+      backup: "03:00"
+      update_check: "12:00"
+
+# 电源管理
+power:
+  # 电源模式
+  mode: "balanced"  # power_saver, balanced, high_performance
+
+  # 电池优化
+  battery:
+    optimize_for_battery: true
+    low_battery_threshold: 20
+    critical_battery_threshold: 10
+
+  # 节能措施
+  saving:
+    reduce_refresh_rate: true
+    dim_display: true
+    suspend_background: true
+
+# 窗口管理
+windows:
+  # 窗口位置记忆
+  remember_positions:
+    enabled: true
+    per_monitor: true
+
+  # 多显示器支持
+  multi_monitor:
+    enabled: true
+    primary_monitor: "auto"
+    span_windows: false
+
+  # 窗口排列
+  arrangement:
+    snap_to_grid: true
+    snap_distance: 10
+    arrange_windows: false
+
+# 通知行为
+notifications:
+  # 显示行为
+  display:
+    duration_seconds: 5
+    position: "bottom-right"
+    stack: true
+
+  # 交互行为
+  interaction:
+    auto_dismiss: true
+    require_action: false
+    sound_on_receive: true
+
+  # 历史记录
+  history:
+    enabled: true
+    max_items: 100
+    retention_days: 7
+
+# 错误处理
+error_handling:
+  # 自动恢复
+  auto_recovery:
+    enabled: true
+    max_attempts: 3
+    delay_seconds: 5
+
+  # 错误报告
+  error_reporting:
+    enabled: true
+    include_details: true
+    auto_send: false
+
+  # 降级策略
+  fallback_strategies:
+    model_fallback: true
+    service_fallback: true
+    offline_mode: true
+
+# 自动化规则
+automation:
+  # 规则引擎
+  rules:
+    enabled: true
+    max_rules: 50
+
+  # 触发器
+  triggers:
+    time_based: true
+    event_based: true
+    condition_based: true
+
+  # 动作
+  actions:
+    system_actions: true
+    custom_scripts: false
+    external_commands: false
+
+# 隐私行为
+privacy_behavior:
+  # 隐私保护
+  protection:
+    clear_history_on_exit: false
+    incognito_mode: false
+    do_not_track: true
+
+  # 数据收集
+  data_collection:
+    anonymize_data: true
+    limit_collection: true
+    allow_telemetry: false
+
+# 网络行为
+network_behavior:
+  # 连接管理
+  connections:
+    auto_reconnect: true
+    max_retries: 3
+    timeout_seconds: 30
+
+  # 带宽管理
+  bandwidth:
+    limit_uploads: false
+    limit_downloads: false
+    schedule_heavy_tasks: true
+
+  # 代理设置
+  proxy:
+    auto_detect: true
+    use_system_proxy: true
+
+# 性能行为
+performance_behavior:
+  # 资源监控
+  monitoring:
+    enabled: true
+    alert_thresholds:
+      cpu: 80
+      memory: 90
+      disk: 95
+
+  # 优化策略
+  optimization:
+    cache_aggressive: false
+    preemptive_loading: true
+    lazy_loading: true
+
+  # 清理策略
+  cleanup:
+    auto_cleanup: true
+    schedule: "weekly"
+    max_age_days: 30
+
+# 安全行为
+security_behavior:
+  # 认证行为
+  authentication:
+    auto_lock: true
+    lock_timeout_minutes: 15
+    require_password: false
+
+  # 会话安全
+  session_security:
+    limit_sessions: true
+    max_sessions: 3
+    session_timeout_hours: 24
+
+  # 数据安全
+  data_security:
+    encrypt_sensitive: true
+    secure_deletion: false
+    backup_encryption: true
+
+# 更新行为
+update_behavior:
+  # 自动更新
+  auto_update:
+    enabled: false
+    check_interval_hours: 24
+
+  # 更新策略
+  strategy:
+    notify_first: true
+    download_auto: false
+    install_auto: false
+
+  # 回滚策略
+  rollback:
+    enabled: true
+    keep_versions: 3
+    auto_rollback: false
+
+# 自定义脚本
+custom_scripts:
+  # 脚本执行
+  execution:
+    enabled: false
+    sandbox: true
+    timeout_seconds: 30
+
+  # 事件挂钩
+  hooks:
+    on_startup: ""
+    on_shutdown: ""
+    on_idle: ""
+    on_error: ""

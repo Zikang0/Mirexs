@@ -1,0 +1,357 @@
+# config/system/service_configs/network_config.yaml
+# 网络配置
+# 管理网络连接、代理、DNS等配置
+
+# 网络接口配置
+interfaces:
+  # 主网络接口
+  primary:
+    name: "eth0"
+    ip: "auto"
+    mtu: 1500
+    duplex: "full"
+
+  # 备用接口
+  backup:
+    enabled: false
+    name: "wlan0"
+    ip: "dhcp"
+
+  # 虚拟接口
+  virtual:
+    enabled: false
+    vlan_id: 100
+    bridge: "br0"
+
+# DNS配置
+dns:
+  # DNS服务器
+  servers:
+    primary: "8.8.8.8"
+    secondary: "1.1.1.1"
+    tertiary: "9.9.9.9"
+
+  # DNS缓存
+  cache:
+    enabled: true
+    size: 1000
+    ttl: 300
+    negative_ttl: 60
+
+  # DNS查询
+  query:
+    timeout: 5
+    attempts: 3
+    rotate: true
+
+  # 本地解析
+  local:
+    enabled: true
+    hosts_file: "/etc/hosts"
+    domains:
+      - "localhost"
+      - "mirexs.local"
+
+# 代理配置
+proxy:
+  # HTTP代理
+  http:
+    enabled: false
+    host: "proxy.example.com"
+    port: 8080
+    username: ""
+    password: ""
+
+  # HTTPS代理
+  https:
+    enabled: false
+    host: "proxy.example.com"
+    port: 8080
+    username: ""
+    password: ""
+
+  # SOCKS代理
+  socks:
+    enabled: false
+    host: "proxy.example.com"
+    port: 1080
+    version: 5
+
+  # 代理例外
+  bypass:
+    - "localhost"
+    - "127.0.0.1"
+    - "192.168.*"
+    - "10.*"
+    - "*.local"
+
+  # 自动检测
+  auto_detect:
+    enabled: false
+    script_url: "https://wpad.example.com/wpad.dat"
+
+# 防火墙配置
+firewall:
+  enabled: true
+
+  # 入站规则
+  inbound:
+    - port: 22
+      protocol: "tcp"
+      action: "allow"
+      source: "192.168.1.0/24"
+      description: "SSH access"
+
+    - port: 80
+      protocol: "tcp"
+      action: "allow"
+      source: "any"
+      description: "HTTP access"
+
+    - port: 443
+      protocol: "tcp"
+      action: "allow"
+      source: "any"
+      description: "HTTPS access"
+
+    - port: 8000-8010
+      protocol: "tcp"
+      action: "allow"
+      source: "any"
+      description: "API ports"
+
+  # 出站规则
+  outbound:
+    default: "allow"
+    rules:
+      - port: 53
+        protocol: "udp"
+        action: "allow"
+        description: "DNS"
+
+      - port: 80
+        protocol: "tcp"
+        action: "allow"
+        description: "HTTP"
+
+      - port: 443
+        protocol: "tcp"
+        action: "allow"
+        description: "HTTPS"
+
+  # 高级配置
+  advanced:
+    stateful: true
+    log_dropped: true
+    log_accepted: false
+
+# 负载均衡配置
+load_balancing:
+  enabled: false
+
+  # 负载均衡算法
+  algorithm: "round_robin"  # round_robin, least_connections, ip_hash, weighted
+
+  # 后端服务器
+  backends:
+    - host: "backend1.example.com"
+      port: 8000
+      weight: 1
+      health_check: "/health"
+
+    - host: "backend2.example.com"
+      port: 8000
+      weight: 1
+      health_check: "/health"
+
+  # 健康检查
+  health_check:
+    interval: 10
+    timeout: 5
+    rise: 2
+    fall: 3
+
+  # 会话保持
+  session_persistence:
+    enabled: true
+    method: "cookie"  # cookie, source_ip
+    timeout: 3600
+
+# 服务质量 (QoS)
+qos:
+  enabled: false
+
+  # 带宽限制
+  bandwidth:
+    upload_mbps: 100
+    download_mbps: 100
+
+  # 优先级队列
+  priority:
+    realtime:
+      bandwidth_percent: 40
+      protocols: ["ssh", "rtp", "sip"]
+
+    interactive:
+      bandwidth_percent: 30
+      protocols: ["http", "https", "websocket"]
+
+    bulk:
+      bandwidth_percent: 20
+      protocols: ["ftp", "smtp"]
+
+    background:
+      bandwidth_percent: 10
+      protocols: ["dns", "ntp"]
+
+# 网络监控
+monitoring:
+  enabled: true
+
+  # 监控指标
+  metrics:
+    - "bandwidth_usage"
+    - "packet_loss"
+    - "latency"
+    - "jitter"
+    - "error_rate"
+
+  # 监控间隔
+  interval: 60
+
+  # 告警配置
+  alerts:
+    bandwidth_threshold_percent: 80
+    packet_loss_threshold_percent: 1
+    latency_threshold_ms: 100
+
+  # 网络诊断
+  diagnostics:
+    ping: true
+    traceroute: true
+    mtr: false
+
+# 安全配置
+security:
+  # DDoS防护
+  ddos_protection:
+    enabled: true
+    rate_limit:
+      requests_per_second: 100
+      burst_size: 50
+    syn_flood_protection: true
+    udp_flood_protection: true
+
+  # 入侵检测
+  intrusion_detection:
+    enabled: false
+    ruleset: "emerging-threats"
+    alert_threshold: "high"
+
+  # VPN配置
+  vpn:
+    enabled: false
+    type: "openvpn"  # openvpn, wireguard, ipsec
+    server: "vpn.example.com"
+    username: ""
+    password: ""
+
+# 网络优化
+optimization:
+  # TCP优化
+  tcp:
+    window_scaling: true
+    selective_ack: true
+    timestamp: true
+    fast_open: true
+    keepalive:
+      enabled: true
+      idle: 7200
+      interval: 75
+      count: 9
+
+  # UDP优化
+  udp:
+    buffer_size: 4194304
+    checksum: true
+
+  # 网络缓冲区
+  buffers:
+    receive: 4194304
+    send: 4194304
+
+  # 连接复用
+  connection_reuse:
+    enabled: true
+    max_idle: 100
+    max_age: 3600
+
+# 路由配置
+routing:
+  # 静态路由
+  static:
+    - network: "10.0.0.0/8"
+      gateway: "192.168.1.1"
+      metric: 100
+
+    - network: "172.16.0.0/12"
+      gateway: "192.168.1.1"
+      metric: 100
+
+  # 动态路由
+  dynamic:
+    enabled: false
+    protocol: "ospf"  # ospf, bgp, rip
+
+  # 多路径路由
+  multipath:
+    enabled: false
+    equal_cost: true
+
+# 无线网络配置
+wireless:
+  enabled: false
+
+  # Wi-Fi配置
+  wifi:
+    ssid: "your_wifi"
+    password: "your_password"
+    security: "WPA2"
+    hidden: false
+
+  # 蓝牙配置
+  bluetooth:
+    enabled: false
+    discoverable: true
+    pairing_mode: "just_works"
+
+# 网络时间协议 (NTP)
+ntp:
+  enabled: true
+  servers:
+    - "pool.ntp.org"
+    - "time.google.com"
+    - "time.windows.com"
+
+  # 同步配置
+  sync:
+    interval: 64
+    timeout: 5
+    max_offset: 1000
+
+# 网络发现
+discovery:
+  # mDNS (Bonjour/Avahi)
+  mdns:
+    enabled: true
+    domain: "local"
+
+  # UPnP
+  upnp:
+    enabled: false
+    port_mapping: true
+
+  # SSDP
+  ssdp:
+    enabled: false
+    search_target: "upnp:rootdevice"

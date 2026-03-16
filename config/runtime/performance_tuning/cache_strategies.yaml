@@ -1,0 +1,264 @@
+# 缓存策略配置
+# 优化系统缓存以提高性能
+
+enabled: true
+cache_architecture: multi_level
+default_ttl_seconds: 300
+
+cache_levels:
+  l1:
+    type: memory
+    size_mb: 512
+    eviction_policy: lru
+    ttl_seconds: 60
+    compression: lz4
+    compression_level: 1
+    
+    implementation:
+      backend: python_dict
+      max_entries: 10000
+      preallocation: true
+      
+    monitoring:
+      enabled: true
+      metrics:
+        - hit_rate
+        - miss_rate
+        - eviction_count
+        - memory_usage
+  
+  l2:
+    type: disk
+    size_mb: 10240
+    eviction_policy: lru
+    ttl_seconds: 300
+    compression: zstd
+    compression_level: 3
+    
+    implementation:
+      backend: sqlite
+      database_path: /cache/l2_cache.db
+      journal_mode: WAL
+      synchronous: NORMAL
+      
+    monitoring:
+      enabled: true
+      metrics:
+        - hit_rate
+        - io_operations
+        - disk_usage
+        - compression_ratio
+  
+  l3:
+    type: redis
+    size_mb: 102400
+    eviction_policy: volatile-lru
+    ttl_seconds: 3600
+    compression: zstd
+    compression_level: 5
+    
+    implementation:
+      backend: redis
+      host: localhost
+      port: 6379
+      db: 0
+      password: ""
+      connection_pool: true
+      max_connections: 100
+      
+    monitoring:
+      enabled: true
+      metrics:
+        - hit_rate
+        - connection_count
+        - memory_fragmentation
+        - network_latency
+
+caching_policies:
+  ai_models:
+    cache_weights: true
+    cache_embeddings: true
+    cache_results: true
+    compression: zstd
+    compression_level: 3
+    
+    weight_cache:
+      enabled: true
+      format: quantized
+      quantization_bits: 8
+      group_size: 128
+      
+    embedding_cache:
+      enabled: true
+      dimension: 768
+      similarity_threshold: 0.8
+      
+    result_cache:
+      enabled: true
+      max_results: 10000
+      similarity_threshold: 0.9
+  
+  user_data:
+    cache_profiles: true
+    cache_preferences: true
+    cache_history: true
+    encryption: true
+    encryption_algorithm: AES-256-GCM
+    
+    profile_cache:
+      enabled: true
+      ttl_seconds: 86400  # 1天
+      max_profiles: 1000
+      
+    preference_cache:
+      enabled: true
+      ttl_seconds: 3600
+      invalidation_strategy: on_change
+      
+    history_cache:
+      enabled: true
+      ttl_seconds: 604800  # 7天
+      max_entries: 10000
+      compression: true
+  
+  rendering:
+    cache_textures: true
+    cache_shaders: true
+    cache_meshes: true
+    cache_animations: true
+    
+    texture_cache:
+      enabled: true
+      max_size_mb: 1024
+      format: compressed
+      mipmaps: true
+      
+    shader_cache:
+      enabled: true
+      max_shaders: 1000
+      compilation_cache: true
+      binary_shaders: true
+      
+    mesh_cache:
+      enabled: true
+      max_meshes: 500
+      compression: meshopt
+      lod_levels: 3
+  
+  audio_processing:
+    cache_audio: true
+    cache_speech: true
+    cache_transcriptions: true
+    
+    audio_cache:
+      enabled: true
+      max_audio_files: 1000
+      max_duration_seconds: 3600
+      format: opus
+      
+    speech_cache:
+      enabled: true
+      max_transcriptions: 10000
+      language_detection: true
+
+optimization:
+  prefetch_enabled: true
+  prefetch_distance: 5
+  prefetch_algorithm: lru_predictive
+  
+  compression_enabled: true
+  compression_algorithm: zstd
+  compression_level: 3
+  min_compression_size_kb: 1
+  
+  deduplication_enabled: true
+  deduplication_algorithm: content_hash
+  hash_algorithm: sha256
+  
+  cache_warming:
+    enabled: true
+    warmup_strategy: predictive
+    warmup_period: 300  # 5分钟
+    warmup_items: 100
+
+invalidation_strategies:
+  time_based:
+    enabled: true
+    ttl_seconds: 300
+    sliding_expiration: true
+    
+  event_based:
+    enabled: true
+    events:
+      - data_change
+      - model_update
+      - user_logout
+      - system_update
+    
+  version_based:
+    enabled: true
+    version_scheme: semantic
+    check_interval: 60
+
+monitoring:
+  enabled: true
+  metrics_interval: 60
+  
+  metrics_to_track:
+    - hit_rate_all
+    - miss_rate_all
+    - cache_size_all
+    - eviction_rate_all
+    - compression_ratio_all
+    - access_latency_all
+  
+  alerts:
+    - metric: hit_rate.l1
+      condition: "< 0.7"
+      severity: warning
+      action: increase_cache_size
+      
+    - metric: cache_size.l1
+      condition: "> 0.9"
+      severity: warning
+      action: increase_eviction_rate
+      
+    - metric: access_latency.l3
+      condition: "> 100"
+      severity: critical
+      action: check_network
+
+profiles:
+  performance:
+    cache_levels:
+      l1:
+        size_mb: 1024
+      l2:
+        size_mb: 20480
+      l3:
+        size_mb: 204800
+    prefetch_distance: 10
+    compression_level: 1
+    
+  balanced:
+    cache_levels:
+      l1:
+        size_mb: 512
+      l2:
+        size_mb: 10240
+      l3:
+        size_mb: 102400
+    prefetch_distance: 5
+    compression_level: 3
+    
+  memory_saver:
+    cache_levels:
+      l1:
+        size_mb: 256
+      l2:
+        size_mb: 5120
+      l3:
+        size_mb: 51200
+    prefetch_distance: 2
+    compression_level: 5
+    compression_enabled: true

@@ -1,0 +1,134 @@
+# 用户技能水平配置
+# 技能级别: 1=新手, 2=初学者, 3=胜任, 4=熟练, 5=专家
+# 更新时间: {{ current_timestamp }}
+
+# 技术技能
+technical_skills:
+  programming_languages:
+    python:
+      level: 4
+      experience_years: 3.5
+      last_used: "2024-01-15"
+      projects_completed: 12
+    javascript:
+      level: 3
+      experience_years: 2
+      last_used: "2023-12-10"
+      projects_completed: 8
+    cpp:
+      level: 3
+      experience_years: 1.5
+      last_used: "2023-11-05"
+      projects_completed: 5
+
+  frameworks_and_libraries:
+    pytorch:
+      level: 4
+      projects: 6
+      proficiency_areas: ["model_training", "deployment"]
+    tensorflow:
+      level: 3
+      projects: 4
+      proficiency_areas: ["keras_api", "tf_serving"]
+    fastapi:
+      level: 3
+      projects: 5
+      proficiency_areas: ["rest_apis", "authentication"]
+
+  tools_and_platforms:
+    docker:
+      level: 4
+      experience: "production_deployment"
+    kubernetes:
+      level: 3
+      experience: "basic_management"
+    git:
+      level: 5
+      experience: "team_collaboration"
+
+# 人工智能技能
+ai_skills:
+  machine_learning:
+    supervised_learning: 4
+    unsupervised_learning: 3
+    reinforcement_learning: 2
+    deep_learning: 4
+
+  nlp:
+    text_classification: 4
+    text_generation: 3
+    sentiment_analysis: 4
+    named_entity_recognition: 3
+
+  computer_vision:
+    image_classification: 3
+    object_detection: 3
+    image_segmentation: 2
+    face_recognition: 3
+
+# 软技能
+soft_skills:
+  communication:
+    technical_writing: 4
+    presentation: 3
+    team_communication: 4
+
+  problem_solving:
+    analytical_thinking: 4
+    creative_solutions: 3
+    debugging_skills: 5
+
+  collaboration:
+    team_leadership: 3
+    mentoring: 3
+    cross_team_collaboration: 4
+
+# 专业领域
+domain_expertise:
+  domains:
+    software_development: 4
+    ai_research: 3
+    devops: 3
+    data_science: 4
+
+  specialized_knowledge:
+    mlops: 3
+    nlp_applications: 4
+    computer_vision_applications: 3
+    backend_development: 4
+
+# 技能评估历史
+skill_assessment:
+  last_assessment_date: "{{ assessment_date }}"
+  assessment_method: "self_reported"  # self_reported, test_based, project_based
+  confidence_level: 0.8  # 对技能评估的置信度(0-1)
+  improvement_areas: ["reinforcement_learning", "image_segmentation"]
+  strengths: ["python_programming", "debugging", "text_classification"]
+
+# 学习路径
+learning_paths:
+  current_focus:
+    - "advanced_ml_techniques"
+    - "cloud_infrastructure"
+
+  completed_paths:
+    - "python_fundamentals"
+    - "machine_learning_basics"
+    - "web_development"
+
+  planned_paths:
+    - "mlops_engineering"
+    - "large_language_models"
+
+# 认证和证书
+certifications:
+  completed: []
+  in_progress: []
+  planned: ["aws_machine_learning", "google_ai_certificate"]
+
+# 统计信息
+statistics:
+  total_skills_tracked: 0
+  avg_skill_level: 0.0
+  skill_growth_rate: 0.0  # 每月技能增长速率
+  last_skill_update: "{{ update_date }}"

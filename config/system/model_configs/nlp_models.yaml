@@ -1,0 +1,397 @@
+# config/system/model_configs/nlp_models.yaml
+# NLP模型配置
+# 包含语言模型、文本嵌入、分词器等
+
+# 通用NLP配置
+general:
+  # 文本处理配置
+  text:
+    max_length: 4096
+    truncation: true
+    padding: true
+
+  # 编码配置
+  encoding:
+    default_encoding: "utf-8"
+    fallback_encoding: "gbk"
+    normalize_unicode: true
+
+  # 清洗配置
+  cleaning:
+    remove_html: true
+    remove_urls: true
+    remove_emojis: false
+    remove_numbers: false
+    lowercase: true
+
+# 大语言模型 (LLM)
+language_models:
+  # 默认语言模型
+  default_model: "qwen-7b-chat"
+
+  # 语言模型列表
+  models:
+    # 大型模型（用于复杂推理）
+    - name: "qwen-72b-chat"
+      type: "llm"
+      framework: "pytorch"
+      device: "multi_gpu"
+      path: "models/nlp/qwen-72b-chat"
+      url: "https://huggingface.co/Qwen/Qwen-72B-Chat"
+      version: "1.0"
+      enabled: true
+      priority: 0
+      memory_mb: 144000  # 144GB
+      requires_gpu: true
+      context_length: 32768
+      languages: ["zh", "en", "ja", "ko", "fr", "de", "es", "ru"]
+      quantization: "none"
+      features:
+        chat: true
+        reasoning: true
+        coding: true
+        creative_writing: true
+
+    - name: "llama-3-70b"
+      type: "llm"
+      framework: "pytorch"
+      device: "multi_gpu"
+      path: "models/nlp/llama-3-70b"
+      url: "https://huggingface.co/meta-llama/Meta-Llama-3-70B"
+      version: "1.0"
+      enabled: true
+      priority: 1
+      memory_mb: 140000
+      requires_gpu: true
+      context_length: 8192
+      languages: ["en", "es", "de", "fr"]
+      quantization: "none"
+
+    # 中型模型（平衡性能与能力）
+    - name: "qwen-14b-chat"
+      type: "llm"
+      framework: "pytorch"
+      device: "gpu"
+      path: "models/nlp/qwen-14b-chat"
+      url: "https://huggingface.co/Qwen/Qwen-14B-Chat"
+      version: "1.0"
+      enabled: true
+      priority: 2
+      memory_mb: 28000
+      requires_gpu: true
+      context_length: 8192
+      languages: ["zh", "en", "ja", "ko", "fr", "de", "es", "ru"]
+      quantization: "int8"
+
+    - name: "llama-3-8b"
+      type: "llm"
+      framework: "pytorch"
+      device: "gpu"
+      path: "models/nlp/llama-3-8b"
+      url: "https://huggingface.co/meta-llama/Meta-Llama-3-8B"
+      version: "1.0"
+      enabled: true
+      priority: 3
+      memory_mb: 16000
+      requires_gpu: true
+      context_length: 8192
+      languages: ["en", "es", "de", "fr"]
+      quantization: "int8"
+
+    # 小型模型（用于快速响应）
+    - name: "qwen-7b-chat"
+      type: "llm"
+      framework: "pytorch"
+      device: "gpu"
+      path: "models/nlp/qwen-7b-chat"
+      url: "https://huggingface.co/Qwen/Qwen-7B-Chat"
+      version: "1.0"
+      enabled: true
+      priority: 4
+      memory_mb: 14000
+      requires_gpu: true
+      context_length: 8192
+      languages: ["zh", "en", "ja", "ko", "fr", "de", "es", "ru"]
+      quantization: "int8"
+      features:
+        chat: true
+        reasoning: true
+        coding: true
+
+    - name: "mistral-7b"
+      type: "llm"
+      framework: "pytorch"
+      device: "gpu"
+      path: "models/nlp/mistral-7b"
+      url: "https://huggingface.co/mistralai/Mistral-7B-v0.1"
+      version: "0.1"
+      enabled: true
+      priority: 5
+      memory_mb: 14000
+      requires_gpu: true
+      context_length: 8192
+      languages: ["en", "fr", "de", "es", "it"]
+      quantization: "int8"
+
+    # 移动端/边缘模型
+    - name: "qwen-1.8b-chat"
+      type: "llm"
+      framework: "pytorch"
+      device: "cpu"
+      path: "models/nlp/qwen-1.8b-chat"
+      url: "https://huggingface.co/Qwen/Qwen-1_8B-Chat"
+      version: "1.0"
+      enabled: true
+      priority: 6
+      memory_mb: 3600
+      context_length: 2048
+      languages: ["zh", "en"]
+      quantization: "int4"
+      features:
+        chat: true
+        fast_inference: true
+        low_resource: true
+
+    - name: "llama-cpp-7b"
+      type: "llm"
+      framework: "llama.cpp"
+      device: "cpu"
+      path: "models/nlp/llama-7b.gguf"
+      url: "https://github.com/ggerganov/llama.cpp"
+      version: "1.0"
+      enabled: true
+      priority: 7
+      memory_mb: 5000
+      context_length: 2048
+      languages: ["en"]
+      quantization: "q4_0"
+
+    # 代码专用模型
+    - name: "codellama-7b"
+      type: "llm"
+      framework: "pytorch"
+      device: "gpu"
+      path: "models/nlp/codellama-7b"
+      url: "https://huggingface.co/codellama/CodeLlama-7b-hf"
+      version: "1.0"
+      enabled: true
+      priority: 8
+      memory_mb: 14000
+      requires_gpu: true
+      context_length: 16384
+      languages: ["code"]
+      features:
+        code_completion: true
+        code_generation: true
+        code_explanation: true
+        debugging: true
+
+    # 对话专用模型
+    - name: "chatglm3-6b"
+      type: "llm"
+      framework: "pytorch"
+      device: "gpu"
+      path: "models/nlp/chatglm3-6b"
+      url: "https://huggingface.co/THUDM/chatglm3-6b"
+      version: "3.0"
+      enabled: true
+      priority: 9
+      memory_mb: 12000
+      requires_gpu: true
+      context_length: 8192
+      languages: ["zh", "en"]
+      features:
+        chat: true
+        tool_calling: true
+        function_calling: true
+
+# 文本嵌入模型
+embedding_models:
+  # 默认嵌入模型
+  default_model: "bge-large-zh"
+
+  models:
+    - name: "bge-large-zh"
+      type: "embedding"
+      framework: "pytorch"
+      device: "gpu"
+      path: "models/nlp/bge-large-zh"
+      url: "https://huggingface.co/BAAI/bge-large-zh"
+      version: "1.0"
+      enabled: true
+      memory_mb: 1500
+      embedding_size: 1024
+      languages: ["zh"]
+      similarity_function: "cosine"
+
+    - name: "text-embedding-ada-002"
+      type: "embedding"
+      framework: "api"
+      device: "none"
+      path: ""
+      url: "https://api.openai.com/v1/embeddings"
+      version: "002"
+      enabled: false  # 需要API调用
+      embedding_size: 1536
+      languages: ["multi"]
+
+    - name: "all-MiniLM-L6-v2"
+      type: "embedding"
+      framework: "sentence_transformers"
+      device: "cpu"
+      path: "models/nlp/all-MiniLM-L6-v2"
+      url: "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2"
+      version: "2.2"
+      enabled: true
+      memory_mb: 300
+      embedding_size: 384
+      languages: ["en"]
+      speed: "fast"
+
+# 分词器
+tokenizers:
+  models:
+    - name: "cl100k_base"
+      type: "tokenizer"
+      framework: "tiktoken"
+      device: "cpu"
+      path: ""
+      version: "1.0"
+      enabled: true
+      languages: ["en", "zh"]
+      max_tokens: 100000
+
+    - name: "bert-base-chinese"
+      type: "tokenizer"
+      framework: "transformers"
+      device: "cpu"
+      path: "models/nlp/bert-base-chinese"
+      url: "https://huggingface.co/bert-base-chinese"
+      version: "1.0"
+      enabled: true
+      languages: ["zh"]
+      vocab_size: 21128
+
+# 命名实体识别 (NER)
+ner_models:
+  models:
+    - name: "bert-base-chinese-ner"
+      type: "ner"
+      framework: "transformers"
+      device: "gpu"
+      path: "models/nlp/bert-base-chinese-ner"
+      url: "https://huggingface.co/ckiplab/bert-base-chinese-ner"
+      version: "1.0"
+      enabled: true
+      entities: ["PERSON", "LOCATION", "ORGANIZATION", "DATE", "TIME", "MONEY", "PERCENT"]
+      languages: ["zh"]
+
+# 情感分析模型
+sentiment_analysis:
+  models:
+    - name: "bert-base-chinese-sentiment"
+      type: "sentiment"
+      framework: "transformers"
+      device: "gpu"
+      path: "models/nlp/bert-base-chinese-sentiment"
+      url: "https://huggingface.co/uer/roberta-base-finetuned-dianping-chinese"
+      version: "1.0"
+      enabled: true
+      sentiments: ["positive", "negative", "neutral"]
+      languages: ["zh"]
+      accuracy: 0.92
+
+# 文本摘要模型
+summarization:
+  models:
+    - name: "bart-large-cnn"
+      type: "summarization"
+      framework: "transformers"
+      device: "gpu"
+      path: "models/nlp/bart-large-cnn"
+      url: "https://huggingface.co/facebook/bart-large-cnn"
+      version: "1.0"
+      enabled: true
+      languages: ["en"]
+      max_input_length: 1024
+      max_output_length: 142
+
+    - name: "mT5-small-zh"
+      type: "summarization"
+      framework: "transformers"
+      device: "gpu"
+      path: "models/nlp/mt5-small-zh"
+      url: "https://huggingface.co/csebuetnlp/mT5_multilingual_XLSum"
+      version: "1.0"
+      enabled: true
+      languages: ["zh", "en", "es", "fr", "de", "ru", "ar"]
+
+# 机器翻译模型
+translation:
+  models:
+    - name: "m2m100-418M"
+      type: "translation"
+      framework: "transformers"
+      device: "gpu"
+      path: "models/nlp/m2m100-418M"
+      url: "https://huggingface.co/facebook/m2m100_418M"
+      version: "1.0"
+      enabled: true
+      languages: 100
+      language_pairs: ["zh-en", "en-zh", "zh-ja", "ja-zh", "zh-ko", "ko-zh"]
+
+# 模型缓存配置
+cache:
+  enabled: true
+  max_size_mb: 8192  # NLP模型可能很大
+  ttl_hours: 72
+  preload: ["qwen-7b-chat", "bge-large-zh"]
+
+# 推理参数
+inference_parameters:
+  # 生成参数
+  generation:
+    max_new_tokens: 2048
+    temperature: 0.7
+    top_p: 0.9
+    top_k: 50
+    repetition_penalty: 1.1
+    do_sample: true
+
+  # 搜索参数
+  search:
+    num_beams: 1
+    early_stopping: true
+    no_repeat_ngram_size: 3
+
+  # 解码参数
+  decoding:
+    strategy: "sampling"  # greedy, sampling, beam_search
+    length_penalty: 1.0
+
+# 性能优化
+optimization:
+  # 推理优化
+  inference:
+    batch_size: 1  # LLM通常批处理为1
+    max_queue_size: 10
+    timeout_seconds: 120
+
+  # 内存优化
+  memory:
+    model_compression: true
+    quantization: "int8"
+    pruning: true
+    gradient_checkpointing: true
+
+  # 加速技术
+  acceleration:
+    flash_attention: true
+    vllm: false  # 需要vLLM支持
+    continuous_batching: true
+
+  # 分布式推理
+  distributed:
+    tensor_parallel: false
+    pipeline_parallel: false
+    model_sharding: false

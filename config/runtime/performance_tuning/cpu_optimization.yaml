@@ -1,0 +1,227 @@
+# CPU优化配置
+# 优化CPU使用和调度
+
+enabled: true
+architecture_aware: true
+numa_aware: true
+
+core_allocation:
+  strategy: dynamic
+  reserved_cores: 1
+  affinity_enabled: true
+  isolated_cores: []
+  
+  allocation_policies:
+    inference:
+      cores: [0, 1, 2, 3]
+      priority: high
+      isolation: false
+      
+    rendering:
+      cores: [4, 5]
+      priority: high
+      isolation: false
+      
+    data_processing:
+      cores: [6, 7]
+      priority: medium
+      isolation: false
+      
+    background:
+      cores: all
+      priority: low
+      isolation: false
+  
+  dynamic_allocation:
+    enabled: true
+    reallocation_interval: 60
+    load_threshold: 0.7
+    migration_cost: 0.1
+
+scheduling:
+  scheduler: cfs  # Completely Fair Scheduler
+  priority_levels:
+    realtime: 99
+    high: 80
+    normal: 50
+    low: 20
+    idle: 1
+  
+  cpu_quota_us: 100000  # 100ms
+  cpu_period_us: 1000000  # 1s
+  
+  fairness:
+    enabled: true
+    weight_based: true
+    min_granularity_us: 1000
+    wakeup_granularity_us: 2000
+  
+  latency_nice:
+    enabled: true
+    latency_sensitive: true
+    target_latency_us: 2000
+
+optimization_techniques:
+  vectorization:
+    enabled: true
+    simd_instruction_set: avx512
+    auto_vectorization: true
+    vector_width: 512
+    
+  parallelization:
+    enabled: true
+    max_threads: auto
+    thread_pool_size: cpu_count * 2
+    work_stealing: true
+    
+  branch_prediction:
+    enabled: true
+    prediction_algorithm: tournament
+    history_length: 4096
+    
+  cache_prefetching:
+    enabled: true
+    prefetch_distance: 32
+    hardware_prefetch: true
+    software_prefetch: true
+    
+  instruction_pipelining:
+    enabled: true
+    pipeline_depth: 14
+    out_of_order_execution: true
+    speculative_execution: true
+    
+  power_management:
+    enabled: true
+    frequency_scaling: true
+    governor: performance
+    energy_efficient: true
+
+performance_counters:
+  enabled: true
+  collection_interval: 1
+  
+  counters_to_monitor:
+    - instructions_per_cycle
+    - cache_misses
+    - branch_mispredictions
+    - cpu_cycles
+    - stalled_cycles
+    - context_switches
+    - migrations
+    
+  profiling:
+    enabled: true
+    sampling_rate: 0.01  # 1%
+    stack_traces: true
+    call_graph: true
+
+thermal_management:
+  enabled: true
+  temperature_limit: 85  # °C
+  throttle_threshold: 80
+  
+  cooling_strategies:
+    frequency_throttling: true
+    core_parking: true
+    task_migration: true
+    
+  monitoring:
+    temperature_sensors: all
+    polling_interval: 1
+    alert_threshold: 75
+
+profiles:
+  performance:
+    scheduler: cfs
+    priority_levels:
+      realtime: 99
+      high: 90
+      normal: 70
+    optimization_techniques:
+      vectorization:
+        simd_instruction_set: avx512
+      power_management:
+        governor: performance
+    
+  balanced:
+    scheduler: cfs
+    priority_levels:
+      realtime: 99
+      high: 80
+      normal: 50
+    optimization_techniques:
+      vectorization:
+        simd_instruction_set: avx2
+      power_management:
+        governor: powersave
+    
+  power_saver:
+    scheduler: cfs
+    priority_levels:
+      realtime: 99
+      high: 70
+      normal: 30
+    optimization_techniques:
+      vectorization:
+        simd_instruction_set: sse4
+      power_management:
+        governor: powersave
+      thermal_management:
+        temperature_limit: 70
+
+monitoring:
+  enabled: true
+  metrics_interval: 5
+  
+  metrics_to_track:
+    - cpu_usage_per_core
+    - cpu_usage_total
+    - context_switches
+    - interrupts
+    - softirqs
+    - load_average
+    - run_queue_length
+    - cpu_frequency
+    - cpu_temperature
+  
+  alerts:
+    - metric: cpu_usage_total
+      condition: "> 0.9"
+      duration: 30
+      severity: critical
+      action: scale_up_and_alert
+      
+    - metric: cpu_temperature
+      condition: "> 80"
+      duration: 10
+      severity: critical
+      action: throttle_and_alert
+      
+    - metric: load_average
+      condition: "> cpu_cores * 2"
+      duration: 60
+      severity: warning
+      action: investigate_load
+
+tuning_parameters:
+  scheduler_tuning:
+    sched_min_granularity_ns: 1000000
+    sched_latency_ns: 24000000
+    sched_wakeup_granularity_ns: 4000000
+    sched_migration_cost_ns: 500000
+    
+  interrupt_affinity:
+    enabled: true
+    spread_interrupts: true
+    balance_interrupts: true
+    
+  cpu_isolation:
+    enabled: false
+    isolated_cores: [0]
+    housekeeping_cores: [1]
+    
+  realtime_scheduling:
+    enabled: false
+    rt_runtime_us: 950000
+    rt_period_us: 1000000

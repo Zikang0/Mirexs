@@ -1,0 +1,165 @@
+# 资源分配配置
+# 动态管理系统资源分配
+
+enabled: true
+allocation_strategy: dynamic_weighted
+reallocation_interval: 60  # 1分钟
+
+resources:
+  cpu:
+    min_cores: 1
+    max_cores: auto  # 自动检测
+    priority: medium
+    affinity_enabled: true
+    isolated_cores: []  # 隔离的核心
+  
+  memory:
+    min_gb: 2
+    max_gb: auto  # 自动检测
+    reserved_percent: 10  # 保留10%给系统
+    swap_enabled: false
+    swap_path: /tmp/mirexs_swap
+    max_swap_gb: 20
+  
+  gpu:
+    enabled: true
+    min_memory_mb: 1024
+    priority_tasks:
+      - inference
+      - rendering
+      - training
+    memory_pool: true
+    max_split_size_mb: 256
+  
+  disk:
+    cache_size_gb: 10
+    temp_space_gb: 20
+    iops_target: 1000
+    throughput_mbps: 100
+  
+  network:
+    bandwidth_mbps: 1000
+    latency_ms: 50
+    qos_enabled: true
+
+scheduling:
+  task_priority:
+    critical: 10
+    high: 7
+    medium: 5
+    low: 3
+    background: 1
+  
+  preemption_enabled: true
+  preemption_delay: 10  # 10秒延迟
+  
+  fairness:
+    enabled: true
+    fairness_algorithm: drf  # Dominant Resource Fairness
+    weight_multiplier: 1.0
+
+allocation_policies:
+  inference_service:
+    cpu_weight: 0.4
+    memory_weight: 0.3
+    gpu_weight: 0.8
+    network_weight: 0.2
+    
+    constraints:
+      - "gpu_memory >= 2048"
+      - "cpu_cores >= 2"
+  
+  rendering_service:
+    cpu_weight: 0.6
+    memory_weight: 0.4
+    gpu_weight: 0.9
+    network_weight: 0.1
+    
+    constraints:
+      - "gpu_memory >= 4096"
+      - "cpu_cores >= 4"
+  
+  data_processing:
+    cpu_weight: 0.8
+    memory_weight: 0.7
+    gpu_weight: 0.1
+    network_weight: 0.4
+    
+    constraints:
+      - "cpu_cores >= 2"
+      - "memory_gb >= 4"
+  
+  background_tasks:
+    cpu_weight: 0.2
+    memory_weight: 0.2
+    gpu_weight: 0.0
+    network_weight: 0.1
+    
+    constraints:
+      - "cpu_cores >= 1"
+
+scaling:
+  enabled: true
+  scale_up_threshold: 0.8
+  scale_down_threshold: 0.3
+  scale_up_delay: 60
+  scale_down_delay: 300
+  
+  metrics:
+    - cpu_utilization
+    - memory_utilization
+    - gpu_utilization
+    - request_queue_length
+  
+  scaling_rules:
+    - metric: cpu_utilization
+      threshold: 0.8
+      duration: 60
+      action: scale_up
+      amount: +1
+    
+    - metric: cpu_utilization
+      threshold: 0.3
+      duration: 300
+      action: scale_down
+      amount: -1
+    
+    - metric: memory_utilization
+      threshold: 0.85
+      duration: 60
+      action: scale_up
+      amount: +1
+
+monitoring:
+  enabled: true
+  collection_interval: 5
+  retention_days: 7
+  
+  alerts:
+    - resource: cpu
+      condition: "usage > 0.9"
+      severity: critical
+      action: notify_and_scale
+      
+    - resource: memory
+      condition: "usage > 0.95"
+      severity: critical
+      action: notify_and_restart
+      
+    - resource: disk
+      condition: "usage > 0.9"
+      severity: warning
+      action: notify_and_cleanup
+
+recovery:
+  enabled: true
+  auto_restart: true
+  restart_delay: 30
+  max_restart_attempts: 3
+  backoff_multiplier: 2
+  
+  health_checks:
+    - endpoint: /health
+      interval: 30
+      timeout: 5
+      retries: 3

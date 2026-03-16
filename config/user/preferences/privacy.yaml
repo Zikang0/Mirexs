@@ -1,0 +1,301 @@
+# config/user/preferences/privacy.yaml
+# 隐私偏好配置
+# 管理数据收集、共享和保护设置
+
+# 数据收集
+data_collection:
+  # 收集级别
+  level: "essential"  # none, essential, enhanced, full
+
+  # 收集数据类型
+  types:
+    # 基本数据
+    basic:
+      account_info: true
+      device_info: true
+      usage_stats: true
+
+    # 交互数据
+    interaction:
+      commands: true
+      queries: true
+      responses: false
+      feedback: true
+
+    # 内容数据
+    content:
+      generated_content: false
+      uploaded_files: false
+      conversations: false
+
+    # 环境数据
+    environment:
+      location: false
+      network_info: true
+      device_sensors: false
+
+  # 收集目的
+  purposes:
+    service_improvement: true
+    personalization: true
+    research: false
+    marketing: false
+
+  # 收集控制
+  control:
+    opt_in_by_default: false
+    granular_controls: true
+    periodic_review: true
+
+# 分析数据
+analytics:
+  # 分析启用
+  enabled: true
+
+  # 分析类型
+  types:
+    usage_analytics: true
+    performance_analytics: true
+    error_analytics: true
+    feature_analytics: true
+
+  # 数据匿名化
+  anonymization:
+    enabled: true
+    method: "pseudonymization"  # aggregation, pseudonymization, differential_privacy
+    remove_pii: true
+
+  # 分析共享
+  sharing:
+    with_developers: true
+    with_partners: false
+    aggregated_only: true
+
+# 个性化广告
+personalized_ads:
+  # 广告个性化
+  enabled: false
+
+  # 个性化依据
+  based_on:
+    interests: false
+    behavior: false
+    location: false
+    demographics: false
+
+  # 广告控制
+  control:
+    ad_preferences: true
+    opt_out: true
+    limit_tracking: true
+
+  # 广告内容
+  content:
+    categories: []
+    sensitivities: ["adult", "gambling", "alcohol"]
+
+# 数据保留
+data_retention:
+  # 保留期限
+  period: "90_days"  # 7_days, 30_days, 90_days, 1_year, indefinite
+
+  # 数据类型保留
+  by_type:
+    account_data: "indefinite"
+    usage_data: "90_days"
+    conversation_data: "30_days"
+    temporary_data: "7_days"
+
+  # 自动删除
+  auto_deletion:
+    enabled: true
+    schedule: "monthly"
+    notification: true
+
+  # 数据归档
+  archiving:
+    enabled: false
+    compress_archives: true
+    encryption: true
+
+# 位置共享
+location_sharing:
+  # 位置访问
+  enabled: false
+
+  # 访问级别
+  level: "never"  # never, while_using, always, precise, approximate
+
+  # 使用场景
+  use_cases:
+    local_search: false
+    weather: false
+    navigation: false
+    recommendations: false
+
+  # 位置历史
+  history:
+    store_history: false
+    history_duration: "7_days"
+    auto_delete: true
+
+# 联系人同步
+contact_sync:
+  # 同步启用
+  enabled: false
+
+  # 同步范围
+  scope:
+    phone_contacts: false
+    email_contacts: false
+    social_contacts: false
+
+  # 同步控制
+  control:
+    manual_approval: true
+    selective_sync: true
+    auto_update: false
+
+  # 数据使用
+  usage:
+    for_messaging: false
+    for_recommendations: false
+    for_social_features: false
+
+# 生物识别数据
+biometric_data:
+  # 数据收集
+  enabled: false
+
+  # 数据类型
+  types:
+    voice_print: false
+    facial_recognition: false
+    fingerprint: false
+    behavioral_biometrics: false
+
+  # 存储方式
+  storage:
+    local_only: true
+    encrypted: true
+    never_shared: true
+
+  # 使用目的
+  purposes:
+    authentication: false
+    personalization: false
+    health_monitoring: false
+
+# 加密设置
+encryption:
+  # 加密级别
+  level: "standard"  # basic, standard, enhanced, maximum
+
+  # 加密范围
+  scope:
+    data_at_rest: true
+    data_in_transit: true
+    backups: true
+    cache: false
+
+  # 加密算法
+  algorithms:
+    symmetric: "AES-256-GCM"
+    asymmetric: "RSA-2048"
+    hashing: "SHA-256"
+
+  # 密钥管理
+  key_management:
+    auto_rotation: true
+    rotation_period: "90_days"
+    secure_storage: true
+
+# 隐私控制
+privacy_controls:
+  # 权限管理
+  permissions:
+    review_periodically: true
+    revoke_easily: true
+    explain_usage: true
+
+  # 透明度
+  transparency:
+    privacy_dashboard: true
+    data_export: true
+    access_logs: true
+
+  # 同意管理
+  consent:
+    explicit_consent: true
+    withdraw_consent: true
+    consent_history: true
+
+# 第三方共享
+third_party_sharing:
+  # 共享控制
+  enabled: false
+
+  # 共享伙伴
+  partners:
+    analytics_partners: false
+    advertising_partners: false
+    service_partners: false
+    research_partners: false
+
+  # 共享要求
+  requirements:
+    data_processing_agreement: true
+    privacy_shield: true
+    purpose_limitation: true
+
+  # 用户控制
+  user_control:
+    opt_in_required: true
+    granular_controls: true
+    notification: true
+
+# 合规性
+compliance:
+  # 法规遵循
+  regulations:
+    gdpr_compliant: true
+    ccpa_compliant: true
+    pipeda_compliant: false
+    lgpd_compliant: false
+
+  # 数据保护官
+  dpo:
+    contact_available: true
+    response_time: "30_days"
+
+  # 用户权利
+  user_rights:
+    right_to_access: true
+    right_to_rectification: true
+    right_to_erasure: true
+    right_to_portability: true
+
+# 隐私增强技术
+privacy_enhancing_tech:
+  # 差分隐私
+  differential_privacy:
+    enabled: false
+    epsilon: 1.0
+    delta: 1e-5
+
+  # 联邦学习
+  federated_learning:
+    enabled: false
+    local_training: true
+    secure_aggregation: false
+
+  # 安全多方计算
+  secure_mpc:
+    enabled: false
+    use_cases: []
+
+  # 同态加密
+  homomorphic_encryption:
+    enabled: false
+    performance_mode: false
+

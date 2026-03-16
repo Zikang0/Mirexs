@@ -1,0 +1,259 @@
+# config/user/preferences/notifications.yaml
+# 通知偏好配置
+# 管理系统通知的行为和显示方式
+
+# 通知启用
+enabled: true
+
+# 通知类型
+types:
+  # 消息通知
+  messages:
+    enabled: true
+    sound: true
+    vibration: false
+    priority: "high"
+    group: "social"
+
+  # 提醒通知
+  reminders:
+    enabled: true
+    sound: true
+    vibration: true
+    priority: "medium"
+    group: "personal"
+
+  # 系统更新
+  updates:
+    enabled: true
+    sound: false
+    vibration: false
+    priority: "low"
+    group: "system"
+
+  # 任务完成
+  task_completion:
+    enabled: true
+    sound: true
+    vibration: false
+    priority: "medium"
+    group: "productivity"
+
+  # 安全警报
+  security_alerts:
+    enabled: true
+    sound: true
+    vibration: true
+    priority: "urgent"
+    group: "security"
+
+  # 推广通知
+  promotions:
+    enabled: false
+    sound: false
+    vibration: false
+    priority: "low"
+    group: "marketing"
+
+# 通知渠道
+channels:
+  # 桌面通知
+  desktop:
+    enabled: true
+    position: "bottom-right"  # top-left, top-right, bottom-left, bottom-right, center
+    duration: 5  # 秒
+    max_notifications: 3
+
+  # 移动推送
+  push:
+    enabled: false
+    providers: ["fcm", "apns"]
+    priority: "normal"
+
+  # 电子邮件
+  email:
+    enabled: false
+    frequency: "daily"  # immediate, hourly, daily, weekly
+    digest: true
+
+  # 短信
+  sms:
+    enabled: false
+    emergency_only: true
+    require_confirmation: true
+
+  # 应用内通知
+  in_app:
+    enabled: true
+    show_badge: true
+    notification_center: true
+
+# 勿扰模式
+do_not_disturb:
+  # 启用状态
+  enabled: false
+
+  # 时间安排
+  schedule:
+    enabled: false
+    start_time: "22:00"
+    end_time: "08:00"
+    days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+
+  # 例外规则
+  exceptions:
+    emergency: true
+    from_contacts: false
+    repeated_calls: true
+    priority_messages: true
+
+  # 自动启用
+  auto_enable:
+    during_meetings: false
+    while_sleeping: false
+    while_driving: false
+    during_presentations: false
+
+# 通知显示
+display:
+  # 通知样式
+  style:
+    rich_notifications: true
+    show_previews: true
+    include_actions: true
+    persistent: false
+
+  # 分组显示
+  grouping:
+    enabled: true
+    group_by: "type"  # type, app, time, sender
+    collapse_groups: true
+    expand_on_hover: true
+
+  # 动画效果
+  animation:
+    enter_animation: "slide"
+    exit_animation: "fade"
+    duration: 300  # 毫秒
+
+# 声音设置
+sound:
+  # 启用声音
+  enabled: true
+
+  # 通知声音
+  notifications:
+    message: "message.wav"
+    reminder: "reminder.wav"
+    alert: "alert.wav"
+    success: "success.wav"
+
+  # 音量控制
+  volume:
+    level: 0.7  # 0-1
+    mute_when_silent: true
+    respect_system_volume: true
+
+  # 声音定制
+  customization:
+    custom_sounds: false
+    sound_pack: "default"
+    vibration_pattern: "default"
+
+# 振动设置
+vibration:
+  # 启用振动
+  enabled: false
+
+  # 振动模式
+  patterns:
+    short: [100]
+    medium: [200, 100, 200]
+    long: [300, 200, 300]
+    urgent: [100, 50, 100, 50, 100]
+
+  # 振动强度
+  intensity: 0.5  # 0-1
+
+  # 振动控制
+  control:
+    mute_with_sound: false
+    respect_silent_mode: true
+
+# LED指示灯
+led:
+  # 启用LED
+  enabled: false
+
+  # LED颜色
+  colors:
+    message: "blue"
+    alert: "red"
+    reminder: "green"
+    charging: "orange"
+
+  # LED模式
+  patterns:
+    blink_slow: [500, 500]
+    blink_fast: [200, 200]
+    pulse: [100, 900]
+    solid: [1000, 0]
+
+# 通知管理
+management:
+  # 自动清理
+  auto_cleanup:
+    enabled: true
+    keep_days: 7
+    max_notifications: 1000
+
+  # 通知历史
+  history:
+    enabled: true
+    searchable: true
+    exportable: true
+
+  # 智能管理
+  smart_management:
+    learn_importance: true
+    auto_dismiss_unimportant: false
+    suggest_turning_off: true
+
+# 隐私设置
+privacy:
+  # 通知内容
+  content:
+    hide_content_on_lock: true
+    hide_sensitive_content: true
+    show_sender_only: false
+
+  # 通知记录
+  logging:
+    log_notifications: true
+    anonymize_logs: true
+    retention_period: "30_days"
+
+  # 共享设置
+  sharing:
+    share_notification_stats: false
+    include_personal_info: false
+
+# 高级设置
+advanced:
+  # 通知路由
+  routing:
+    smart_routing: true
+    device_aware: true
+    context_aware: true
+
+  # 通知同步
+  sync:
+    across_devices: false
+    sync_read_status: true
+    conflict_resolution: "newest_wins"
+
+  # 开发选项
+  developer:
+    show_notification_ids: false
+    log_delivery_times: false
+    test_notifications: false

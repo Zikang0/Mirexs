@@ -1,0 +1,346 @@
+# config/system/service_configs/database_config.yaml
+# 数据库配置
+# 管理所有数据库连接和配置
+
+# 数据库连接池配置
+connection_pool:
+  enabled: true
+  max_connections: 100
+  min_connections: 10
+  max_overflow: 50
+  pool_recycle: 3600
+  pool_timeout: 30
+  echo: false
+
+# 数据库配置
+databases:
+  # PostgreSQL (主关系数据库)
+  postgresql:
+    enabled: true
+    host: "localhost"
+    port: 5432
+    database: "mirexs"
+    username: "mirexs_user"
+    password: "mirexs_password"
+    sslmode: "prefer"
+    pool_size: 20
+    timeout: 30
+    application_name: "mirexs_app"
+
+    # 扩展支持
+    extensions:
+      - "pgvector"
+      - "timescaledb"
+      - "postgis"
+
+    # 连接参数
+    parameters:
+      client_encoding: "utf8"
+      timezone: "UTC"
+      statement_timeout: "30000"
+
+    # 复制配置
+    replication:
+      enabled: false
+      role: "master"
+      sync_mode: "async"
+
+  # Redis (缓存和消息队列)
+  redis:
+    enabled: true
+    host: "localhost"
+    port: 6379
+    database: 0
+    password: ""
+    ssl: false
+    decode_responses: true
+    socket_timeout: 5
+    socket_connect_timeout: 5
+
+    # 连接池
+    max_connections: 50
+    retry_on_timeout: true
+
+    # 集群配置
+    cluster:
+      enabled: false
+      startup_nodes:
+        - host: "redis-node-1"
+          port: 6379
+        - host: "redis-node-2"
+          port: 6379
+
+    # Sentinel配置
+    sentinel:
+      enabled: false
+      service_name: "mymaster"
+      sentinels:
+        - host: "sentinel-1"
+          port: 26379
+        - host: "sentinel-2"
+          port: 26379
+
+  # Neo4j (图数据库)
+  neo4j:
+    enabled: true
+    uri: "bolt://localhost:7687"
+    username: "neo4j"
+    password: "password"
+    encrypted: false
+    max_connection_lifetime: 3600
+    max_connection_pool_size: 50
+
+    # 事务配置
+    transaction:
+      timeout: 30
+      max_retry_time: 30
+
+  # Chroma (向量数据库)
+  chroma:
+    enabled: true
+    host: "localhost"
+    port: 8000
+    collection_name: "mirexs_vectors"
+    embedding_function: "sentence_transformers"
+    persist_directory: "data/chroma"
+
+    # 向量配置
+    vector:
+      dimension: 1024
+      distance: "cosine"
+      metric: "ip"
+
+  # InfluxDB (时序数据库)
+  influxdb:
+    enabled: true
+    host: "localhost"
+    port: 8086
+    token: "your-token"
+    org: "mirexs"
+    bucket: "metrics"
+    timeout: 10
+
+    # 写配置
+    write:
+      batch_size: 5000
+      flush_interval: 1000
+      jitter_interval: 0
+
+    # 查询配置
+    query:
+      chunk_size: 10000
+
+  # SQLite (嵌入式数据库)
+  sqlite:
+    enabled: true
+    database: "data/sqlite/mirexs.db"
+    timeout: 30
+    check_same_thread: false
+
+    # 性能优化
+    pragmas:
+      journal_mode: "WAL"
+      synchronous: "NORMAL"
+      cache_size: -2000
+      foreign_keys: true
+
+  # MongoDB (文档数据库)
+  mongodb:
+    enabled: false
+    host: "localhost"
+    port: 27017
+    database: "mirexs"
+    username: ""
+    password: ""
+    auth_source: "admin"
+
+    # 连接配置
+    max_pool_size: 100
+    min_pool_size: 10
+    max_idle_time_ms: 60000
+
+    # 副本集配置
+    replica_set:
+      enabled: false
+      name: "rs0"
+      read_preference: "primary"
+
+  # MySQL (备选关系数据库)
+  mysql:
+    enabled: false
+    host: "localhost"
+    port: 3306
+    database: "mirexs"
+    username: "root"
+    password: "password"
+    charset: "utf8mb4"
+
+    # 连接配置
+    pool_size: 20
+    pool_recycle: 3600
+    echo: false
+
+# 数据库迁移配置
+migrations:
+  enabled: true
+  directory: "data/migrations"
+  table_name: "alembic_version"
+
+  # 自动迁移
+  auto_migrate: false
+  backup_before_migrate: true
+
+  # 版本控制
+  version_format: "%%(year)d%%(month).2d%%(day).2d%%(hour).2d%%(minute).2d%%(second).2d"
+
+# 备份配置
+backup:
+  enabled: true
+  schedule: "0 2 * * *"  # 每天凌晨2点
+
+  # 备份存储
+  storage:
+    local:
+      enabled: true
+      directory: "data/backups"
+      retention_days: 30
+
+    cloud:
+      enabled: false
+      provider: "aws_s3"
+      bucket: "mirexs-backups"
+      retention_days: 90
+
+  # 备份内容
+  include:
+    - "postgresql"
+    - "neo4j"
+    - "chroma"
+
+  exclude:
+    - "redis"  # Redis通常不备份
+    - "influxdb"
+
+# 性能优化
+performance:
+  # 查询缓存
+  query_cache:
+    enabled: true
+    size_mb: 100
+    ttl_seconds: 300
+
+  # 索引优化
+  indexing:
+    auto_index: true
+    rebuild_threshold: 0.3
+
+  # 连接优化
+  connection:
+    keepalive: true
+    keepalive_idle: 60
+    keepalive_interval: 10
+    keepalive_count: 5
+
+  # 批量操作
+  batch_operations:
+    max_batch_size: 1000
+    commit_interval: 100
+
+# 监控配置
+monitoring:
+  enabled: true
+
+  # 性能指标
+  metrics:
+    - "connection_count"
+    - "query_latency"
+    - "transaction_rate"
+    - "cache_hit_ratio"
+
+  # 告警配置
+  alerts:
+    max_connections_threshold: 80
+    query_timeout_threshold: 5000
+    deadlock_threshold: 1
+
+  # 慢查询日志
+  slow_query:
+    enabled: true
+    threshold_ms: 1000
+    log_file: "logs/slow_queries.log"
+
+# 安全配置
+security:
+  # 加密连接
+  encryption:
+    enabled: false
+    ssl_cert: "certs/db.crt"
+    ssl_key: "certs/db.key"
+    ssl_ca: "certs/ca.crt"
+
+  # 访问控制
+  access_control:
+    ip_whitelist:
+      - "127.0.0.1"
+      - "192.168.1.0/24"
+
+    user_roles:
+      admin: ["ALL"]
+      user: ["SELECT", "INSERT", "UPDATE"]
+      reader: ["SELECT"]
+
+  # 审计日志
+  audit:
+    enabled: true
+    events:
+      - "LOGIN"
+      - "LOGOUT"
+      - "DDL"
+      - "DML"
+    retention_days: 90
+
+# 高可用配置
+high_availability:
+  # 主从复制
+  replication:
+    enabled: false
+    mode: "asynchronous"
+    slaves: 2
+
+  # 故障转移
+  failover:
+    enabled: false
+    timeout: 30
+    auto_failover: true
+
+  # 负载均衡
+  load_balancing:
+    enabled: false
+    strategy: "round_robin"
+    read_write_splitting: true
+
+# 维护配置
+maintenance:
+  # 自动维护
+  auto_maintenance:
+    enabled: true
+    schedule: "0 3 * * 0"  # 每周日凌晨3点
+
+  # 维护任务
+  tasks:
+    vacuum:
+      enabled: true
+      frequency: "weekly"
+
+    reindex:
+      enabled: true
+      frequency: "monthly"
+
+    analyze:
+      enabled: true
+      frequency: "daily"
+
+  # 统计信息
+  statistics:
+    enabled: true
+    update_frequency: "daily"

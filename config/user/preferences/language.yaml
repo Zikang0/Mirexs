@@ -1,0 +1,297 @@
+# config/user/preferences/language.yaml
+# 语言偏好配置
+# 管理语言设置、翻译偏好和多语言支持
+
+# 主要语言设置
+primary:
+  # 主要语言代码
+  code: "zh-CN"
+
+  # 语言显示名称
+  name: "简体中文"
+
+  # 区域设置
+  locale: "zh_CN"
+
+  # 语言变体
+  variant: "standard"  # standard, simplified, traditional
+
+  # 语言优先级
+  priority: 1
+
+# 次要语言设置
+secondary:
+  # 次要语言列表
+  languages:
+    - code: "en-US"
+      name: "English (US)"
+      locale: "en_US"
+      priority: 2
+      proficiency: 0.8  # 0-1
+
+    - code: "ja-JP"
+      name: "日本語"
+      locale: "ja_JP"
+      priority: 3
+      proficiency: 0.5
+
+    - code: "ko-KR"
+      name: "한국어"
+      locale: "ko_KR"
+      priority: 4
+      proficiency: 0.3
+
+  # 次要语言使用场景
+  usage_scenarios:
+    auto_switch: false
+    switch_threshold: 0.7  # 当主要语言理解度低于此值时切换
+    fallback_order: ["en-US", "ja-JP", "ko-KR"]
+
+# 翻译设置
+translation:
+  # 自动翻译
+  auto_translate:
+    enabled: true
+    target_language: "zh-CN"
+    source_detection: true
+
+  # 翻译质量
+  quality:
+    preferred_engine: "google"  # google, microsoft, deepl, baidu
+    fallback_engines: ["microsoft", "baidu"]
+    preserve_formatting: true
+    cultural_adaptation: true
+
+  # 翻译显示
+  display:
+    show_original: false
+    show_translation: true
+    side_by_side: false
+    hover_translation: true
+
+  # 翻译缓存
+  caching:
+    enabled: true
+    cache_size: 1000
+    ttl_hours: 24
+
+# 语言学习
+language_learning:
+  # 学习模式
+  mode:
+    enabled: false
+    target_language: "en-US"
+    current_level: "beginner"  # beginner, intermediate, advanced, fluent
+    learning_goals: ["vocabulary", "grammar", "conversation"]
+
+  # 学习工具
+  tools:
+    vocabulary_builder: true
+    grammar_checker: true
+    pronunciation_guide: true
+    conversation_practice: false
+
+  # 学习进度
+  progress:
+    daily_goal: 30  # 分钟
+    streak_days: 0
+    total_hours: 0.0
+    mastered_words: 0
+
+# 输入法设置
+input_method:
+  # 文本输入
+  text:
+    primary: "pinyin"  # pinyin, wubi, cangjie, english
+    secondary: "english"
+    auto_correction: true
+    auto_completion: true
+    predictive_text: true
+
+  # 语音输入
+  speech:
+    primary_language: "zh-CN"
+    secondary_languages: ["en-US"]
+    auto_punctuation: true
+    auto_capitalization: true
+    profanity_filter: true
+
+  # 手写输入
+  handwriting:
+    enabled: false
+    recognition_language: "zh-CN"
+    stroke_order: true
+    character_recognition: true
+
+# 语言检测
+language_detection:
+  # 检测设置
+  settings:
+    auto_detect: true
+    confidence_threshold: 0.8
+    fallback_language: "en-US"
+    detect_multilingual: true
+
+  # 检测范围
+  scope:
+    detect_in_text: true
+    detect_in_speech: true
+    detect_in_ui: false
+    detect_in_files: true
+
+  # 检测算法
+  algorithm:
+    primary: "fasttext"
+    fallback: "langdetect"
+    custom_model: false
+
+# 多语言UI
+multilingual_ui:
+  # UI语言
+  ui_language:
+    primary: "zh-CN"
+    fallback: "en-US"
+    auto_switch: false
+
+  # 本地化内容
+  localization:
+    date_format: "yyyy-MM-dd"
+    time_format: "HH:mm:ss"
+    number_format: "1,234.56"
+    currency_format: "¥1,234.56"
+
+  # 文化适配
+  cultural_adaptation:
+    timezone: "Asia/Shanghai"
+    calendar: "gregorian"
+    measurement_system: "metric"
+    temperature_unit: "celsius"
+
+# 方言支持
+dialect_support:
+  # 方言设置
+  dialects:
+    - code: "zh-CN"
+      variants:
+        - name: "普通话"
+          code: "mandarin"
+          enabled: true
+        - name: "粤语"
+          code: "cantonese"
+          enabled: false
+        - name: "吴语"
+          code: "wuyu"
+          enabled: false
+
+    - code: "en-US"
+      variants:
+        - name: "美式英语"
+          code: "us"
+          enabled: true
+        - name: "英式英语"
+          code: "uk"
+          enabled: true
+        - name: "澳式英语"
+          code: "au"
+          enabled: false
+
+  # 方言处理
+  processing:
+    auto_detect_dialect: true
+    dialect_adaptation: true
+    preserve_regionalisms: true
+
+# 语言资源
+language_resources:
+  # 字典和词汇表
+  dictionaries:
+    - name: "现代汉语词典"
+      language: "zh-CN"
+      type: "monolingual"
+      enabled: true
+
+    - name: "牛津英汉双解词典"
+      language: "en-ZH"
+      type: "bilingual"
+      enabled: true
+
+    - name: "专业术语词典"
+      language: "multi"
+      type: "technical"
+      enabled: false
+
+  # 语言模型
+  language_models:
+    zh-CN:
+      primary: "bert-base-chinese"
+      fallback: "roberta-chinese"
+      size: "base"
+
+    en-US:
+      primary: "gpt-3.5-turbo"
+      fallback: "bert-base-uncased"
+      size: "large"
+
+  # 语料库
+  corpora:
+    enabled: true
+    sources: ["wikipedia", "news", "books"]
+    update_frequency: "monthly"
+
+# 语言API
+language_apis:
+  # 翻译API
+  translation:
+    google:
+      enabled: true
+      api_key: ""
+      quota: 1000000
+
+    microsoft:
+      enabled: false
+      api_key: ""
+      quota: 2000000
+
+    deepl:
+      enabled: false
+      api_key: ""
+      quota: 500000
+
+    baidu:
+      enabled: true
+      api_key: ""
+      quota: 1000000
+
+  # 语言检测API
+  detection:
+    google: true
+    microsoft: false
+    amazon: false
+
+  # 语音API
+  speech:
+    google: true
+    microsoft: false
+    amazon: false
+    baidu: true
+
+# 语言性能
+performance:
+  # 翻译性能
+  translation:
+    cache_enabled: true
+    pre_translation: false
+    batch_translation: true
+    concurrent_requests: 10
+
+  # 语言检测性能
+  detection:
+    cache_enabled: true
+    fast_mode: true
+    accuracy_priority: false
+
+  # 内存使用
+  memory:
+    model_cache_size: 512  # MB
+    dictionary_cache_size: 256  # MB
+    translation_cache_size: 128  # MB

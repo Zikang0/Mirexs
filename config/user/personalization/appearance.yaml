@@ -1,0 +1,304 @@
+# config/user/personalization/appearance.yaml
+# 外观设置配置
+# 管理界面外观、字体、动画等视觉设置
+
+# 主题设置
+theme:
+  # 主题模式：light, dark, auto, custom
+  mode: "auto"
+
+  # 自定义主题配置
+  custom:
+    name: "custom_theme"
+    colors:
+      primary: "#6200EE"
+      secondary: "#03DAC6"
+      accent: "#FF9800"
+      background: "#FFFFFF"
+      surface: "#F5F5F5"
+      error: "#B00020"
+      text: "#000000"
+      text_secondary: "#666666"
+    font: "system-ui"
+
+  # 主题切换行为
+  switch_behavior:
+    auto_switch: true
+    switch_time:
+      light_to_dark: "18:00"
+      dark_to_light: "06:00"
+    based_on_location: false
+
+# 字体设置
+font:
+  # 字体大小：small, medium, large, x-large
+  size: "medium"
+
+  # 自定义字体大小（像素）
+  custom_size: 14
+
+  # 字体家族
+  family:
+    primary: "system-ui"
+    secondary: "Arial, sans-serif"
+    monospace: "Monaco, 'Courier New', monospace"
+
+  # 字体权重
+  weight:
+    normal: 400
+    medium: 500
+    bold: 700
+
+  # 行高
+  line_height: 1.5
+
+# 动画设置
+animation:
+  # 动画速度：slow, normal, fast, none
+  speed: "normal"
+
+  # 动画效果
+  effects:
+    fade: true
+    slide: true
+    scale: true
+    rotate: false
+
+  # 动画时长（毫秒）
+  duration:
+    fast: 150
+    normal: 300
+    slow: 500
+
+  # 缓动函数
+  easing:
+    standard: "cubic-bezier(0.4, 0.0, 0.2, 1)"
+    entrance: "cubic-bezier(0.0, 0.0, 0.2, 1)"
+    exit: "cubic-bezier(0.4, 0.0, 1, 1)"
+
+# 虚拟形象设置
+avatar:
+  # 形象大小：small, medium, large
+  size: "medium"
+
+  # 自定义尺寸（像素）
+  custom_size: 200
+
+  # 形象样式
+  style:
+    # 渲染风格：realistic, cartoon, anime, abstract
+    rendering: "cartoon"
+
+    # 细节级别：low, medium, high
+    detail_level: "high"
+
+    # 动画质量：low, medium, high
+    animation_quality: "high"
+
+  # 服装和外观
+  appearance:
+    # 基础外观
+    base_model: "mirexs_cat_v1"
+
+    # 服装配置
+    clothing:
+      enabled: true
+      items:
+        - name: "bowtie"
+          color: "#FF4081"
+          enabled: true
+        - name: "collar"
+          color: "#2196F3"
+          enabled: false
+
+    # 颜色配置
+    colors:
+      fur: "#FF9800"
+      eyes: "#2196F3"
+      nose: "#F44336"
+
+  # 表情系统
+  expressions:
+    enabled: true
+    intensity: 0.8
+    auto_expression: true
+    reaction_speed: "normal"
+
+# 界面布局
+layout:
+  # UI密度：compact, comfortable, spacious
+  density: "comfortable"
+
+  # 圆角设置
+  rounded_corners:
+    enabled: true
+    radius: "8px"
+
+  # 阴影效果
+  shadows:
+    enabled: true
+    level: "medium"  # none, subtle, medium, prominent
+    color: "rgba(0, 0, 0, 0.1)"
+
+  # 透明度
+  transparency:
+    enabled: false
+    level: 0.9  # 0-1
+
+  # 边距和填充
+  spacing:
+    small: "4px"
+    medium: "8px"
+    large: "16px"
+    xlarge: "24px"
+
+# 窗口设置
+window:
+  # 窗口行为
+  behavior:
+    always_on_top: false
+    borderless: false
+    resizeable: true
+    maximized_startup: false
+
+  # 窗口位置和大小
+  geometry:
+    width: 1200
+    height: 800
+    x: "center"
+    y: "center"
+
+  # 最小化行为
+  minimize:
+    to_tray: true
+    show_notification: true
+
+# 图标设置
+icons:
+  # 图标主题
+  theme: "default"  # default, filled, outline, color
+
+  # 图标大小
+  size:
+    small: 16
+    medium: 24
+    large: 32
+
+  # 动画图标
+  animated:
+    enabled: true
+    speed: "normal"
+
+# 背景设置
+background:
+  # 背景类型：color, image, gradient, blur
+  type: "color"
+
+  # 纯色背景
+  color: "#FFFFFF"
+
+  # 图片背景
+  image:
+    path: ""
+    opacity: 0.5
+    repeat: "no-repeat"
+    size: "cover"
+    position: "center"
+
+  # 渐变背景
+  gradient:
+    type: "linear"  # linear, radial
+    colors: ["#FFFFFF", "#F5F5F5"]
+    angle: 45
+
+  # 毛玻璃效果
+  blur:
+    enabled: false
+    intensity: 5
+
+# 视觉效果
+visual_effects:
+  # 模糊效果
+  blur:
+    background: false
+    sidebar: false
+    intensity: 5
+
+  # 发光效果
+  glow:
+    enabled: false
+    color: "#6200EE"
+    intensity: 0.3
+
+  # 粒子效果
+  particles:
+    enabled: false
+    density: "low"
+    type: "sparkles"
+
+  # 视差效果
+  parallax:
+    enabled: false
+    intensity: 0.1
+
+# 响应式设计
+responsive:
+  # 断点配置
+  breakpoints:
+    mobile: 768
+    tablet: 1024
+    desktop: 1280
+    wide: 1920
+
+  # 自适应布局
+  adaptive_layout:
+    enabled: true
+    collapse_sidebar: true
+    responsive_fonts: true
+
+  # 触控优化
+  touch_optimized:
+    enabled: false
+    touch_targets: "large"
+
+# 性能优化
+performance:
+  # 硬件加速
+  hardware_acceleration:
+    enabled: true
+    gpu_preference: "high_performance"
+
+  # 渲染优化
+  rendering:
+    vsync: true
+    anti_aliasing: "msaa_4x"
+    texture_filtering: "anisotropic"
+
+  # 内存优化
+  memory:
+    texture_cache_size: 256  # MB
+    model_cache_size: 512  # MB
+
+  # 节流设置
+  throttling:
+    enabled: true
+    fps_limit: 60
+    idle_throttle: true
+
+# 高级设置
+advanced:
+  # 自定义CSS
+  custom_css:
+    enabled: false
+    code: ""
+
+  # 实验性功能
+  experimental:
+    webgl2: true
+    webgpu: false
+
+  # 调试模式
+  debug:
+    enabled: false
+    show_fps: false
+    show_bounds: false

@@ -1,0 +1,340 @@
+# config/system/model_configs/3d_models.yaml
+# 3D模型配置
+# 包含3D角色、动画、渲染等模型
+
+# 通用3D配置
+general:
+  # 渲染配置
+  rendering:
+    resolution: "1920x1080"
+    fps: 60
+    antialiasing: "msaa_4x"
+    shadows: true
+    reflections: true
+    ambient_occlusion: true
+
+  # 图形API配置
+  graphics_api:
+    primary: "opengl"  # opengl, vulkan, directx
+    fallback: "software"
+    version: "4.6"
+
+  # 性能配置
+  performance:
+    max_polygons: 1000000
+    texture_size: "2048x2048"
+    mipmap_levels: 4
+
+# 3D角色模型
+characters:
+  # 默认角色模型
+  default_character: "mirexs_cat_v1"
+
+  # 角色模型列表
+  models:
+    # 主角色：弥尔思猫咪
+    - name: "mirexs_cat_v1"
+      type: "character"
+      framework: "panda3d"
+      device: "gpu"
+      path: "models/3d/characters/mirexs_cat_v1.glb"
+      url: "assets://characters/mirexs_cat_v1"
+      version: "1.0"
+      enabled: true
+      priority: 1
+      memory_mb: 200
+      polygons: 50000
+      textures:
+        base_color: "textures/cat_base_color.png"
+        normal: "textures/cat_normal.png"
+        roughness: "textures/cat_roughness.png"
+      skeleton:
+        bones: 120
+        rigging: "humanoid_cat"
+      blend_shapes: 52
+      features:
+        facial_expressions: true
+        lip_sync: true
+        eye_blinking: true
+        tail_movement: true
+        ear_movement: true
+
+    - name: "mirexs_cat_v2"
+      type: "character"
+      framework: "panda3d"
+      device: "gpu"
+      path: "models/3d/characters/mirexs_cat_v2.glb"
+      url: "assets://characters/mirexs_cat_v2"
+      version: "2.0"
+      enabled: true
+      priority: 2
+      memory_mb: 300
+      polygons: 80000
+      textures:
+        base_color: "textures/cat_v2_base_color.png"
+        normal: "textures/cat_v2_normal.png"
+        roughness: "textures/cat_v2_roughness.png"
+        specular: "textures/cat_v2_specular.png"
+      features:
+        advanced_facial: true
+        dynamic_fur: true
+        physics_based: true
+        weather_reaction: true
+
+    # 备用角色
+    - name: "simple_cat"
+      type: "character"
+      framework: "panda3d"
+      device: "cpu"
+      path: "models/3d/characters/simple_cat.glb"
+      url: "assets://characters/simple_cat"
+      version: "1.0"
+      enabled: true
+      priority: 3
+      memory_mb: 50
+      polygons: 10000
+      features:
+        basic_animations: true
+        low_poly: true
+        mobile_friendly: true
+
+# 动画模型
+animations:
+  # 动画模型列表
+  models:
+    # 基础动作
+    - name: "idle_animations"
+      type: "animation"
+      framework: "panda3d"
+      path: "models/3d/animations/idle/"
+      animations:
+        idle: "idle_normal.anim"
+        idle_happy: "idle_happy.anim"
+        idle_curious: "idle_curious.anim"
+        idle_tired: "idle_tired.anim"
+      blend_time: 0.3
+
+    # 移动动作
+    - name: "movement_animations"
+      type: "animation"
+      framework: "panda3d"
+      path: "models/3d/animations/movement/"
+      animations:
+        walk: "walk_normal.anim"
+        run: "run.anim"
+        jump: "jump.anim"
+        sit: "sit.anim"
+        lie_down: "lie_down.anim"
+
+    # 表情动作
+    - name: "facial_animations"
+      type: "animation"
+      framework: "panda3d"
+      path: "models/3d/animations/facial/"
+      animations:
+        smile: "smile.anim"
+        frown: "frown.anim"
+        surprise: "surprise.anim"
+        blink: "blink.anim"
+        wink: "wink.anim"
+
+    # 交互动作
+    - name: "interaction_animations"
+      type: "animation"
+      framework: "panda3d"
+      path: "models/3d/animations/interaction/"
+      animations:
+        wave: "wave.anim"
+        nod: "nod.anim"
+        shake_head: "shake_head.anim"
+        point: "point.anim"
+        clap: "clap.anim"
+
+# 环境模型
+environments:
+  models:
+    # 室内环境
+    - name: "living_room"
+      type: "environment"
+      framework: "panda3d"
+      path: "models/3d/environments/living_room.glb"
+      memory_mb: 100
+      lighting: "interior_day"
+      interactive_objects: ["sofa", "table", "tv", "window"]
+
+    # 室外环境
+    - name: "garden"
+      type: "environment"
+      framework: "panda3d"
+      path: "models/3d/environments/garden.glb"
+      memory_mb: 150
+      lighting: "exterior_sunny"
+      weather_effects: ["rain", "snow", "wind"]
+
+    # 抽象环境
+    - name: "cyberspace"
+      type: "environment"
+      framework: "panda3d"
+      path: "models/3d/environments/cyberspace.glb"
+      memory_mb: 80
+      lighting: "neon"
+      particle_effects: true
+
+# 物理引擎模型
+physics:
+  models:
+    - name: "bullet_physics"
+      type: "physics"
+      framework: "bullet"
+      version: "3.25"
+      enabled: true
+      gravity: 9.8
+      simulation_rate: 60
+      features:
+        rigid_body: true
+        soft_body: true
+        cloth_simulation: true
+        fluid_simulation: false
+
+# 着色器模型
+shaders:
+  models:
+    - name: "standard_pbr"
+      type: "shader"
+      framework: "glsl"
+      path: "models/3d/shaders/standard_pbr/"
+      features:
+        pbr: true
+        normal_mapping: true
+        parallax_mapping: false
+        ssr: false
+
+    - name: "cel_shading"
+      type: "shader"
+      framework: "glsl"
+      path: "models/3d/shaders/cel_shading/"
+      features:
+        toon: true
+        outline: true
+        gradient_bands: 3
+
+    - name: "cartoon_shader"
+      type: "shader"
+      framework: "glsl"
+      path: "models/3d/shaders/cartoon/"
+      features:
+        non_photorealistic: true
+        edge_detection: true
+        flat_shading: true
+
+# 粒子系统模型
+particle_systems:
+  models:
+    - name: "magic_sparks"
+      type: "particle"
+      framework: "panda3d"
+      path: "models/3d/particles/magic_sparks.ptf"
+      max_particles: 1000
+      lifetime: 3.0
+
+    - name: "thought_bubbles"
+      type: "particle"
+      framework: "panda3d"
+      path: "models/3d/particles/thought_bubbles.ptf"
+      max_particles: 100
+      lifetime: 5.0
+
+# 模型优化配置
+optimization:
+  # 几何优化
+  geometry:
+    lod_enabled: true
+    lod_levels: 3
+    polygon_reduction: true
+    decimation_ratio: 0.5
+
+  # 纹理优化
+  texture:
+    compression: true
+    format: "ktx2"
+    max_size: 2048
+    mipmap: true
+
+  # 动画优化
+  animation:
+    keyframe_reduction: true
+    compression: true
+    sampling_rate: 30
+
+  # 内存优化
+  memory:
+    texture_streaming: true
+    geometry_streaming: true
+    cache_size_mb: 512
+
+# 渲染管道配置
+rendering_pipeline:
+  # 前向渲染
+  forward:
+    enabled: true
+    msaa_samples: 4
+    transparency: "blend"
+
+  # 延迟渲染
+  deferred:
+    enabled: false
+    g_buffer_format: "rgba16f"
+    light_culling: true
+
+  # 后处理效果
+  postprocessing:
+    bloom:
+      enabled: true
+      intensity: 0.5
+      threshold: 0.8
+
+    depth_of_field:
+      enabled: false
+      focus_distance: 10.0
+      aperture: 0.1
+
+    color_grading:
+      enabled: true
+      lut_texture: "textures/luts/neutral.cube"
+
+    ssao:
+      enabled: true
+      radius: 0.5
+      bias: 0.01
+
+# 模型格式支持
+formats:
+  import:
+    - "glb"
+    - "gltf"
+    - "fbx"
+    - "obj"
+    - "blend"
+
+  export:
+    - "glb"
+    - "gltf"
+
+  preferred: "glb"
+
+# 资产管理
+asset_management:
+  streaming:
+    enabled: true
+    cache_size_mb: 1024
+    prefetch_distance: 100.0
+
+  compression:
+    enabled: true
+    algorithm: "zstd"
+    level: 3
+
+  validation:
+    enabled: true
+    check_integrity: true
+    auto_repair: true

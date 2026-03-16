@@ -1,0 +1,227 @@
+# 用户使用模式配置
+# 记录和分析用户与系统的交互模式
+# 更新时间: {{ current_timestamp }}
+
+# 使用频率和时间模式
+frequency_patterns:
+  daily:
+    average_sessions: 0
+    peak_hours: []
+    typical_duration: 0
+
+  weekly:
+    usage_days: []
+    weekly_total_hours: 0
+    weekly_pattern: "unknown"  # consistent, sporadic, growing, declining
+
+  monthly:
+    monthly_total_hours: 0
+    monthly_growth_rate: 0.0
+
+# 会话特征
+session_characteristics:
+  session_length_distribution:
+    short_sessions: 0  # <5分钟
+    medium_sessions: 0  # 5-30分钟
+    long_sessions: 0  # >30分钟
+
+  session_types:
+    quick_queries: 0
+    deep_work: 0
+    learning_sessions: 0
+    creative_sessions: 0
+
+  session_intensity:
+    avg_queries_per_session: 0
+    avg_actions_per_session: 0
+    avg_attention_span: 0
+
+# 功能使用偏好
+feature_usage:
+  most_used_features:
+    - feature: ""
+      usage_count: 0
+      last_used: ""
+
+    - feature: ""
+      usage_count: 0
+      last_used: ""
+
+  least_used_features: []
+
+  feature_adoption_rate:  # 新功能采用速度
+    early_adopter: false
+    adoption_speed: "moderate"  # slow, moderate, fast
+
+  feature_preferences_by_context:
+    work_context: []
+    learning_context: []
+    entertainment_context: []
+
+# 交互模式
+interaction_patterns:
+  input_modes_preference:
+    voice_input: 0
+    text_input: 0
+    gesture_input: 0
+    multimodal_input: 0
+
+  output_modes_preference:
+    voice_response: 0
+    text_response: 0
+    visual_response: 0
+    haptic_feedback: 0
+
+  response_complexity:
+    prefers_simple: false
+    prefers_detailed: false
+    adaptive_complexity: true
+
+  initiative_pattern:
+    user_initiated: 0  # 用户主动发起的比例
+    system_suggested: 0  # 系统建议的比例
+
+# 上下文使用模式
+contextual_patterns:
+  location_based_patterns:
+    home_usage:
+      features: []
+      typical_duration: 0
+
+    work_usage:
+      features: []
+      typical_duration: 0
+
+    mobile_usage:
+      features: []
+      typical_duration: 0
+
+  time_based_patterns:
+    morning_routine: []
+    work_hours: []
+    evening_leisure: []
+    late_night: []
+
+  mood_based_patterns:
+    productive_mood: []
+    tired_mood: []
+    creative_mood: []
+    learning_mood: []
+
+# 任务完成模式
+task_completion_patterns:
+  task_types:
+    information_seeking: 0
+    content_creation: 0
+    problem_solving: 0
+    automation: 0
+    learning: 0
+
+  task_complexity:
+    simple_tasks: 0
+    moderate_tasks: 0
+    complex_tasks: 0
+
+  task_success_rate:
+    overall_success_rate: 0.0
+    by_task_type: {}
+
+  task_duration_patterns:
+    quick_tasks: 0
+    medium_tasks: 0
+    extended_tasks: 0
+
+# 学习行为模式
+learning_behavior_patterns:
+  learning_styles_observed:
+    exploratory: 0
+    structured: 0
+    project_based: 0
+    tutorial_following: 0
+
+  knowledge_retention_patterns:
+    revisits_topic: false
+    applies_knowledge: false
+    teaches_others: false
+
+  learning_progression:
+    depth_first: false
+    breadth_first: false
+    spiral_learning: false
+
+# 社交和协作模式
+social_collaboration_patterns:
+  sharing_behavior:
+    shares_insights: false
+    asks_for_help: false
+    provides_feedback: false
+
+  collaboration_preference:
+    solo_work: 0
+    paired_work: 0
+    team_work: 0
+
+  communication_style:
+    formal: 0
+    informal: 0
+    technical: 0
+    casual: 0
+
+# 系统适应模式
+system_adaptation_patterns:
+  customization_level:
+    uses_defaults: false
+    light_customization: false
+    heavy_customization: false
+
+  feature_discovery:
+    explores_new_features: false
+    sticks_to_known_features: false
+
+  feedback_provided:
+    provides_feedback: false
+    frequency: 0
+
+# 疲劳和专注度模式
+fatigue_patterns:
+  attention_span_patterns:
+    peak_attention_hours: []
+    attention_decay_rate: 0
+
+  break_patterns:
+    break_frequency: 0
+    break_duration: 0
+
+  recovery_patterns:
+    recovery_time: 0
+    recovery_activities: []
+
+# 行为异常检测
+anomaly_detection:
+  typical_patterns: {}
+  detected_anomalies: []
+  anomaly_resolution_patterns: {}
+
+# 统计和趋势
+statistics_and_trends:
+  total_interactions: 0
+  avg_daily_interactions: 0
+  usage_trend: "stable"  # increasing, decreasing, stable
+  engagement_score: 0.0
+  loyalty_pattern: "unknown"  # loyal, occasional, new
+
+  historical_trends:
+    peak_usage_periods: []
+    growth_phases: []
+    decline_periods: []
+
+  pattern_stability:
+    pattern_consistency: 0.0
+    change_frequency: 0.0
+
+# 预测和建议
+predictions_and_recommendations:
+  predicted_next_actions: []
+  recommended_features: []
+  optimal_usage_times: []
+  personalization_suggestions: []

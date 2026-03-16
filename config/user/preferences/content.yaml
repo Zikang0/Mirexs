@@ -1,0 +1,294 @@
+# config/user/preferences/content.yaml
+# 内容偏好配置
+# 管理内容过滤、来源偏好和质量设置
+
+# 内容过滤
+filtering:
+  # 过滤级别
+  level: "moderate"  # none, minimal, moderate, strict, maximum
+
+  # 过滤类别
+  categories:
+    violence:
+      enabled: true
+      sensitivity: 0.7  # 0-1
+
+    adult:
+      enabled: true
+      sensitivity: 0.8
+
+    hate_speech:
+      enabled: true
+      sensitivity: 0.9
+
+    misinformation:
+      enabled: true
+      sensitivity: 0.6
+
+    spam:
+      enabled: true
+      sensitivity: 0.5
+
+    # 自定义过滤规则
+    custom:
+      enabled: false
+      rules: []
+
+  # 过滤方法
+  method:
+    keyword_filtering: true
+    ai_classification: true
+    community_reports: true
+    manual_review: false
+
+# 安全搜索
+safe_search:
+  # 基本设置
+  enabled: true
+  strict_mode: false
+
+  # 搜索过滤
+  search_filters:
+    images: true
+    videos: true
+    web: true
+    news: true
+
+  # 年龄限制
+  age_restrictions:
+    enabled: true
+    age_limit: 18
+    verification_method: "self_declaration"  # self_declaration, age_id, parental_controls
+
+# 内容类型偏好
+content_types:
+  # 启用类型
+  enabled:
+    - "text"
+    - "image"
+    - "video"
+    - "audio"
+    - "document"
+    - "code"
+    - "data"
+
+  # 类型优先级
+  priority:
+    text: 1
+    document: 2
+    code: 3
+    image: 4
+    video: 5
+    audio: 6
+    data: 7
+
+  # 类型特定设置
+  specific:
+    text:
+      max_length: 10000
+      format_preference: "markdown"  # plain, markdown, html
+
+    image:
+      max_size: "10MB"
+      preferred_formats: ["jpg", "png", "webp"]
+      allow_animations: true
+
+    video:
+      max_duration: 600  # 秒
+      preferred_formats: ["mp4", "webm"]
+      allow_streaming: true
+
+    audio:
+      max_duration: 300  # 秒
+      preferred_formats: ["mp3", "wav", "ogg"]
+
+# 来源偏好
+sources:
+  # 首选来源
+  preferred:
+    - name: "Wikipedia"
+      url: "wikipedia.org"
+      trust_level: 0.9
+      categories: ["encyclopedia", "reference"]
+
+    - name: "学术期刊"
+      url: ""
+      trust_level: 0.8
+      categories: ["academic", "research"]
+
+    - name: "官方新闻"
+      url: ""
+      trust_level: 0.7
+      categories: ["news", "official"]
+
+  # 黑名单来源
+  blacklist:
+    - name: "已知虚假新闻"
+      url: ""
+      reason: "misinformation"
+
+    - name: "恶意网站"
+      url: ""
+      reason: "security"
+
+  # 来源评估
+  evaluation:
+    auto_evaluate: true
+    trust_indicators: ["https", "domain_age", "authority", "transparency"]
+    update_frequency: "weekly"
+
+# 内容质量
+quality:
+  # 质量标准
+  standards:
+    accuracy: 0.8  # 0-1
+    relevance: 0.7
+    completeness: 0.6
+    timeliness: 0.9
+    authority: 0.8
+
+  # 质量过滤
+  filtering:
+    minimum_quality: 0.5
+    prioritize_quality: true
+    show_quality_indicators: true
+
+  # 质量改进
+  improvement:
+    suggest_better_sources: true
+    highlight_quality_content: true
+    filter_low_quality: false
+
+# 自动处理
+auto_processing:
+  # 自动摘要
+  summarization:
+    enabled: false
+    length: "medium"  # short, medium, long
+    include_key_points: true
+    language: "same_as_original"  # same_as_original, primary_language
+
+  # 自动分类
+  categorization:
+    enabled: true
+    categories: ["technology", "science", "business", "entertainment", "education"]
+    auto_tag: true
+
+  # 自动翻译
+  translation:
+    enabled: true
+    target_language: "primary"
+    preserve_format: true
+
+  # 自动格式化
+  formatting:
+    enabled: true
+    clean_html: true
+    normalize_spacing: true
+    fix_encoding: true
+
+# 内容警告
+content_warnings:
+  # 警告类型
+  types:
+    sensitive_topics: true
+    graphic_content: true
+    strong_language: true
+    spoilers: false
+    flashing_content: true
+
+  # 警告显示
+  display:
+    show_warnings: true
+    require_confirmation: false
+    custom_message: ""
+
+  # 警告级别
+  levels:
+    mild: "info"
+    moderate: "warning"
+    severe: "block"
+
+# 个性化推荐
+personalized_recommendations:
+  # 推荐引擎
+  engine:
+    enabled: true
+    algorithm: "collaborative_filtering"  # content_based, collaborative_filtering, hybrid
+    update_frequency: "daily"
+
+  # 推荐内容
+  content:
+    based_on_history: true
+    based_on_preferences: true
+    based_on_trends: false
+    diversity_factor: 0.3  # 0-1
+
+  # 推荐控制
+  control:
+    show_recommendations: true
+    allow_feedback: true
+    limit_frequency: false
+
+# 内容保存
+content_saving:
+  # 自动保存
+  auto_save:
+    enabled: true
+    interval: "on_change"  # on_change, timed, manual
+    backup_count: 3
+
+  # 保存格式
+  format:
+    default: "original"  # original, markdown, pdf, html
+    compression: true
+    include_metadata: true
+
+  # 存储位置
+  storage:
+    local: true
+    cloud: false
+    organized_by: "date"  # date, category, project
+
+# 内容共享
+content_sharing:
+  # 共享权限
+  permissions:
+    allow_sharing: true
+    require_attribution: true
+    limit_usage: false
+    watermark: false
+
+  # 共享格式
+  formats:
+    export_formats: ["pdf", "markdown", "html", "text"]
+    include_source: true
+    include_metadata: false
+
+  # 共享平台
+  platforms:
+    email: true
+    messaging: true
+    social_media: false
+    cloud_storage: false
+
+# 高级设置
+advanced:
+  # 内容分析
+  analysis:
+    sentiment_analysis: true
+    topic_modeling: false
+    entity_recognition: true
+    keyword_extraction: true
+
+  # 内容验证
+  verification:
+    fact_checking: false
+    source_verification: true
+    cross_reference: true
+
+  # 实验功能
+  experimental:
+    ai_generated_content: true
+    interactive_content: false
+    augmented_reality: false

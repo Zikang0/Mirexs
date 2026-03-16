@@ -1,0 +1,226 @@
+# GPU优化配置
+# 优化GPU使用和性能
+
+enabled: true
+multi_gpu_enabled: false
+gpu_architecture: cuda  # cuda, rocm, opencl
+
+device_selection:
+  strategy: auto
+  preferred_devices: ["cuda:0"]
+  fallback_devices: ["cpu"]
+  
+  selection_criteria:
+    - memory_size
+    - compute_capability
+    - bandwidth
+    - temperature
+    
+  device_blacklist: []
+  device_whitelist: []
+
+memory_management:
+  memory_pool: true
+  max_split_size_mb: 256
+  cache_allocator: true
+  fragmentation_threshold: 0.1
+  
+  pool_config:
+    initial_size_mb: 1024
+    max_size_mb: 8192
+    growth_factor: 1.5
+    shrink_factor: 0.8
+    
+  unified_memory:
+    enabled: false
+    prefetch: true
+    advice: preferred_location_device
+    
+  page_locked_memory:
+    enabled: true
+    allocation_limit_mb: 1024
+    streaming: true
+
+kernel_optimization:
+  autotune: true
+  max_workspace_size_mb: 1024
+  kernel_cache: true
+  tensor_cores: true
+  
+  optimization_levels:
+    o0: no_optimization
+    o1: basic_optimization
+    o2: advanced_optimization
+    o3: aggressive_optimization
+  
+  kernel_fusion:
+    enabled: true
+    fusion_patterns:
+      - conv_bn_relu
+      - linear_gelu
+      - layernorm_dropout
+  
+  precision:
+    mixed_precision: true
+    precision_mode: float16
+    loss_scaling: true
+    dynamic_loss_scaling: true
+
+pipeline_optimization:
+  overlap_compute_copy: true
+  streams: 4
+  event_sync: true
+  graph_capture: true
+  
+  stream_config:
+    default_stream: 0
+    compute_streams: [1, 2]
+    copy_streams: [3]
+    priority_streams: []
+    
+  graph_config:
+    max_captures: 10
+    capture_timeout_ms: 1000
+    instantiate_timeout_ms: 100
+  
+  async_execution:
+    enabled: true
+    callback_mechanism: cuda_stream_callback
+    error_checking: async
+
+power_management:
+  enabled: true
+  power_limit_w: 250
+  temperature_limit: 85
+  fan_control: auto
+  
+  clock_management:
+    graphics_clock_mhz: auto
+    memory_clock_mhz: auto
+    boost_clock: true
+    
+  power_profiles:
+    performance:
+      power_limit: max
+      clocks: max
+      fan_speed: max
+      
+    balanced:
+      power_limit: default
+      clocks: default
+      fan_speed: auto
+      
+    power_saver:
+      power_limit: min
+      clocks: min
+      fan_speed: min
+
+monitoring:
+  enabled: true
+  polling_interval: 1
+  
+  metrics_to_track:
+    - gpu_utilization
+    - memory_usage
+    - memory_bandwidth
+    - temperature
+    - power_usage
+    - ecc_errors
+    - pcie_throughput
+    - kernel_execution_time
+  
+  alerts:
+    - metric: temperature
+      condition: "> 80"
+      duration: 10
+      severity: warning
+      action: reduce_clock_and_alert
+      
+    - metric: memory_usage
+      condition: "> 0.9"
+      duration: 30
+      severity: critical
+      action: free_memory_and_alert
+      
+    - metric: ecc_errors
+      condition: "> 0"
+      severity: critical
+      action: log_and_notify
+
+profiling:
+  enabled: true
+  profile_level: detailed
+  
+  tools:
+    - nsight_systems
+    - nsight_compute
+    - nvprof
+    - tensorboard
+    
+  metrics:
+    - kernel_timing
+    - memory_transfers
+    - occupancy
+    - warp_efficiency
+    - shared_memory_usage
+    - register_usage
+    
+  output:
+    format: chrome_trace
+    directory: /profiles/gpu
+    retention_days: 7
+
+multi_gpu_strategies:
+  data_parallel:
+    enabled: false
+    sync_strategy: all_reduce
+    gradient_accumulation: 1
+    
+  model_parallel:
+    enabled: false
+    partition_strategy: layer_wise
+    pipeline_parallelism: false
+    
+  hybrid_parallel:
+    enabled: false
+    data_parallel_degree: 2
+    model_parallel_degree: 2
+    
+  communication:
+    backend: nccl
+    collective_operations: all
+    pcie_aware: true
+
+profiles:
+  performance:
+    memory_management:
+      memory_pool: true
+      max_split_size_mb: 512
+    kernel_optimization:
+      autotune: true
+      optimization_level: o3
+    power_management:
+      power_limit: max
+      clocks: max
+    
+  balanced:
+    memory_management:
+      memory_pool: true
+      max_split_size_mb: 256
+    kernel_optimization:
+      autotune: true
+      optimization_level: o2
+    power_management:
+      power_limit: default
+      clocks: default
+    
+  power_saver:
+    memory_management:
+      memory_pool: false
+      max_split_size_mb: 128
+    kernel_optimization:
+      autotune: false
+      optimization_level: o1
+    power_management:
+      power_limit: min
+      clocks: min

@@ -1,0 +1,328 @@
+# config/system/platform_configs/mobile_config.yaml
+# 移动端平台配置
+
+# 平台信息
+platforms:
+  # Android配置
+  android:
+    min_sdk: 24  # Android 7.0
+    target_sdk: 34  # Android 14
+    compile_sdk: 34
+
+    # 架构支持
+    architectures:
+      - "armeabi-v7a"
+      - "arm64-v8a"
+      - "x86"
+      - "x86_64"
+
+    # 权限配置
+    permissions:
+      - "android.permission.RECORD_AUDIO"
+      - "android.permission.CAMERA"
+      - "android.permission.INTERNET"
+      - "android.permission.ACCESS_NETWORK_STATE"
+      - "android.permission.WRITE_EXTERNAL_STORAGE"
+
+    # 特性配置
+    features:
+      - "android.hardware.microphone"
+      - "android.hardware.camera"
+      - "android.hardware.camera.autofocus"
+
+  # iOS配置
+  ios:
+    min_version: "14.0"
+    target_version: "17.0"
+
+    # 架构支持
+    architectures:
+      - "arm64"
+      - "arm64-simulator"
+
+    # 权限配置
+    permissions:
+      - "NSMicrophoneUsageDescription"
+      - "NSCameraUsageDescription"
+      - "NSPhotoLibraryUsageDescription"
+
+    # 能力配置
+    capabilities:
+      - "Background Modes"
+      - "Push Notifications"
+      - "In-App Purchase"
+
+# 应用配置
+application:
+  # 基本信息
+  info:
+    name: "Mirexs"
+    bundle_id: "team.mirexs.app"
+    version: "1.0.0"
+    build_number: 1
+
+  # 图标配置
+  icons:
+    android:
+      mipmap:
+        hdpi: 72x72
+        mdpi: 48x48
+        xhdpi: 96x96
+        xxhdpi: 144x144
+        xxxhdpi: 192x192
+      adaptive:
+        foreground: 432x432
+        background: 432x432
+
+    ios:
+      app_icon: 1024x1024
+      sizes:
+        - size: 20
+          scales: [2, 3]
+        - size: 29
+          scales: [2, 3]
+        - size: 40
+          scales: [2, 3]
+        - size: 60
+          scales: [2, 3]
+        - size: 76
+          scales: [2]
+        - size: 83.5
+          scales: [2]
+
+  # 启动屏幕
+  launch_screen:
+    android:
+      layout: "@layout/launch_screen"
+      theme: "@style/LaunchTheme"
+
+    ios:
+      storyboard: "LaunchScreen.storyboard"
+      images: []
+
+  # 主题配置
+  theme:
+    primary_color: "#6200EE"
+    accent_color: "#03DAC6"
+    dark_mode: true
+
+# 性能优化
+performance:
+  # 内存优化
+  memory:
+    max_heap_size_mb: 256
+    low_memory_handler: true
+    bitmap_caching: true
+
+  # 电池优化
+  battery:
+    doze_mode_whitelist: true
+    background_restrictions: false
+    power_saver_mode: true
+
+  # 网络优化
+  network:
+    data_saver: true
+    prefetching: false
+    caching: true
+
+  # 存储优化
+  storage:
+    cache_size_mb: 100
+    cleanup_threshold_mb: 50
+    external_storage: false
+
+# 网络配置
+network:
+  # 协议支持
+  protocols:
+    http:
+      cleartext_allowed: false
+      caching: true
+    websocket:
+      compression: true
+      ping_interval: 30
+
+  # 离线支持
+  offline:
+    enabled: true
+    cache_strategy: "stale_while_revalidate"
+    max_cache_age: 86400
+
+  # 后台同步
+  background_sync:
+    enabled: true
+    interval_minutes: 15
+    requires_charging: false
+
+# 传感器配置
+sensors:
+  # 可用传感器
+  available:
+    - "accelerometer"
+    - "gyroscope"
+    - "magnetometer"
+    - "proximity"
+    - "light"
+    - "pressure"
+
+  # 采样率
+  sampling:
+    normal: 10  # Hz
+    game: 60  # Hz
+    ui: 15  # Hz
+    fastest: 100  # Hz
+
+  # 权限配置
+  permissions:
+    body_sensors: false
+    activity_recognition: false
+
+# 通知配置
+notifications:
+  # 推送通知
+  push:
+    enabled: true
+    providers:
+      fcm:
+        enabled: true
+        sender_id: "your-sender-id"
+      apns:
+        enabled: true
+        environment: "development"
+
+  # 本地通知
+  local:
+    enabled: true
+    channels:
+      - id: "default"
+        name: "Default"
+        importance: "high"
+      - id: "chat"
+        name: "Chat Messages"
+        importance: "max"
+
+  # 通知样式
+  style:
+    sound: true
+    vibration: true
+    lights: true
+    badge: true
+
+# 安全配置
+security:
+  # 数据加密
+  encryption:
+    enabled: true
+    algorithm: "AES-256-GCM"
+    key_storage: "keystore"
+
+  # 生物识别
+  biometrics:
+    enabled: true
+    types:
+      - "fingerprint"
+      - "face"
+      - "iris"
+    fallback: "pin"
+
+  # 应用沙箱
+  sandboxing:
+    enabled: true
+    data_isolation: true
+    network_isolation: true
+
+# 用户体验
+user_experience:
+  # 手势支持
+  gestures:
+    swipe: true
+    pinch: true
+    double_tap: true
+    long_press: true
+
+  # 触摸反馈
+  haptic_feedback:
+    enabled: true
+    intensity: "medium"
+
+  # 语音交互
+  voice_interaction:
+    enabled: true
+    hotword: "hey mirexs"
+    offline_mode: true
+
+  # 辅助功能
+  accessibility:
+    screen_reader: true
+    large_text: true
+    color_correction: true
+
+# 模型优化
+model_optimization:
+  # 移动端模型
+  mobile_models:
+    speech:
+      asr: "whisper-tiny"
+      tts: "espeak-ng"
+    vision:
+      object_detection: "yolov8n"
+      face_recognition: "dlib"
+    nlp:
+      language_model: "qwen-1.8b-chat"
+      embedding: "all-MiniLM-L6-v2"
+
+  # 模型量化
+  quantization:
+    enabled: true
+    precision: "int8"
+    calibration_samples: 100
+
+  # 模型压缩
+  compression:
+    enabled: true
+    pruning: false
+    knowledge_distillation: false
+
+# 更新配置
+update:
+  # 应用更新
+  app_update:
+    auto_check: true
+    channel: "stable"  # stable, beta, alpha
+    incremental_updates: true
+
+  # 热更新
+  hot_update:
+    enabled: true
+    provider: "code_push"
+    deployment_key: "your-deployment-key"
+
+  # 模型更新
+  model_update:
+    enabled: true
+    strategy: "incremental"
+    max_size_mb: 50
+
+# 分析配置
+analytics:
+  # 使用统计
+  usage:
+    enabled: true
+    anonymize: true
+    data_retention_days: 90
+
+  # 崩溃报告
+  crash_reporting:
+    enabled: true
+    auto_send: true
+    include_logs: false
+
+  # 性能监控
+  performance:
+    enabled: true
+    metrics:
+      - "startup_time"
+      - "memory_usage"
+      - "battery_impact"
+      - "network_latency"

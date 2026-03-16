@@ -1,0 +1,130 @@
+# 性能调优配置
+# 运行时动态调整系统性能参数
+
+enabled: true
+auto_tuning: true
+tuning_interval: 300  # 5分钟
+max_iterations: 100
+tolerance: 0.01
+
+strategies:
+  inference:
+    batch_size:
+      min: 1
+      max: 64
+      default: 16
+    precision:
+      - float32
+      - float16
+      - bfloat16
+    threads:
+      cpu: 4
+      io: 2
+  
+  rendering:
+    quality_presets:
+      - low
+      - medium
+      - high
+      - ultra
+    fps_target: 60
+    adaptive_resolution: true
+    shadow_quality: medium
+    texture_quality: high
+  
+  data_processing:
+    chunk_size: 1024
+    prefetch_factor: 2
+    num_workers: 4
+    compression: zstd
+    compression_level: 3
+  
+  memory_management:
+    cache_size_mb: 1024
+    eviction_policy: lru
+    preallocation: true
+    fragmentation_threshold: 0.1
+
+monitoring:
+  enabled: true
+  metrics_interval: 60  # 1分钟
+  alert_threshold: 0.9  # 90%使用率
+  sampling_rate: 1.0  # 100%采样
+  
+  metrics_to_track:
+    - cpu_usage
+    - memory_usage
+    - gpu_usage
+    - disk_io
+    - network_io
+    - inference_latency
+    - rendering_fps
+    - cache_hit_rate
+
+auto_adjustment:
+  enabled: true
+  adjustment_delay: 60  # 1分钟延迟
+  max_adjustment_percent: 20  # 最多调整20%
+  
+  rules:
+    - condition: "cpu_usage > 0.8"
+      action: "reduce_batch_size"
+      parameter: "inference.batch_size"
+      value: -25
+      
+    - condition: "memory_usage > 0.85"
+      action: "increase_cache_ttl"
+      parameter: "memory_management.cache_ttl"
+      value: +50
+      
+    - condition: "inference_latency > 500"
+      action: "switch_precision"
+      parameter: "inference.precision"
+      value: "float16"
+      
+    - condition: "rendering_fps < 30"
+      action: "reduce_quality"
+      parameter: "rendering.quality_preset"
+      value: "medium"
+
+profiles:
+  default:
+    inference:
+      batch_size: 16
+      precision: float32
+    rendering:
+      quality_preset: high
+      fps_target: 60
+    
+  performance:
+    inference:
+      batch_size: 32
+      precision: float16
+    rendering:
+      quality_preset: medium
+      fps_target: 60
+    
+  quality:
+    inference:
+      batch_size: 8
+      precision: float32
+    rendering:
+      quality_preset: ultra
+      fps_target: 30
+    
+  mobile:
+    inference:
+      batch_size: 4
+      precision: float16
+    rendering:
+      quality_preset: low
+      fps_target: 30
+
+logging:
+  enabled: true
+  level: info
+  format: json
+  rotation:
+    max_size_mb: 100
+    backup_count: 5
+    retention_days: 30

@@ -1,0 +1,398 @@
+# config/user/personalization/shortcuts.yaml
+# 快捷键设置配置
+# 管理系统全局和上下文快捷键
+
+# 全局快捷键
+global:
+  # 激活应用
+  activate_app:
+    key: "Ctrl+Shift+M"
+    description: "激活Mirexs应用"
+    enabled: true
+    category: "general"
+
+  # 静音麦克风
+  mute_microphone:
+    key: "Ctrl+Shift+S"
+    description: "切换麦克风静音"
+    enabled: true
+    category: "audio"
+
+  # 全局搜索
+  global_search:
+    key: "Ctrl+K"
+    description: "打开全局搜索"
+    enabled: true
+    category: "navigation"
+
+  # 快速笔记
+  quick_note:
+    key: "Ctrl+Shift+N"
+    description: "创建快速笔记"
+    enabled: true
+    category: "productivity"
+
+  # 截图
+  screenshot:
+    key: "Ctrl+Shift+P"
+    description: "截取屏幕区域"
+    enabled: true
+    category: "media"
+
+  # 切换主题
+  toggle_theme:
+    key: "Ctrl+Shift+T"
+    description: "切换明暗主题"
+    enabled: true
+    category: "appearance"
+
+  # 显示/隐藏应用
+  toggle_visibility:
+    key: "Ctrl+Shift+H"
+    description: "显示或隐藏应用窗口"
+    enabled: true
+    category: "window"
+
+# 编辑快捷键
+editing:
+  # 文本编辑
+  undo:
+    key: "Ctrl+Z"
+    description: "撤销操作"
+    enabled: true
+    category: "editing"
+
+  redo:
+    key: "Ctrl+Y"
+    description: "重做操作"
+    enabled: true
+    category: "editing"
+
+  cut:
+    key: "Ctrl+X"
+    description: "剪切选中内容"
+    enabled: true
+    category: "editing"
+
+  copy:
+    key: "Ctrl+C"
+    description: "复制选中内容"
+    enabled: true
+    category: "editing"
+
+  paste:
+    key: "Ctrl+V"
+    description: "粘贴内容"
+    enabled: true
+    category: "editing"
+
+  # 选择操作
+  select_all:
+    key: "Ctrl+A"
+    description: "全选"
+    enabled: true
+    category: "editing"
+
+  find:
+    key: "Ctrl+F"
+    description: "查找文本"
+    enabled: true
+    category: "editing"
+
+  replace:
+    key: "Ctrl+H"
+    description: "替换文本"
+    enabled: true
+    category: "editing"
+
+# 导航快捷键
+navigation:
+  # 界面导航
+  new_chat:
+    key: "Ctrl+N"
+    description: "新建对话"
+    enabled: true
+    category: "navigation"
+
+  close_tab:
+    key: "Ctrl+W"
+    description: "关闭当前标签页"
+    enabled: true
+    category: "navigation"
+
+  next_tab:
+    key: "Ctrl+Tab"
+    description: "切换到下一个标签页"
+    enabled: true
+    category: "navigation"
+
+  previous_tab:
+    key: "Ctrl+Shift+Tab"
+    description: "切换到上一个标签页"
+    enabled: true
+    category: "navigation"
+
+  # 页面导航
+  go_back:
+    key: "Alt+Left"
+    description: "后退"
+    enabled: true
+    category: "navigation"
+
+  go_forward:
+    key: "Alt+Right"
+    description: "前进"
+    enabled: true
+    category: "navigation"
+
+  refresh:
+    key: "F5"
+    description: "刷新页面"
+    enabled: true
+    category: "navigation"
+
+  home:
+    key: "Alt+Home"
+    description: "返回主页"
+    enabled: true
+    category: "navigation"
+
+# 对话快捷键
+conversation:
+  # 对话控制
+  send_message:
+    key: "Ctrl+Enter"
+    description: "发送消息"
+    enabled: true
+    category: "conversation"
+
+  new_line:
+    key: "Shift+Enter"
+    description: "输入新行"
+    enabled: true
+    category: "conversation"
+
+  clear_chat:
+    key: "Ctrl+Shift+C"
+    description: "清空对话"
+    enabled: true
+    category: "conversation"
+
+  export_chat:
+    key: "Ctrl+Shift+E"
+    description: "导出对话"
+    enabled: true
+    category: "conversation"
+
+  # 对话历史
+  previous_message:
+    key: "Up"
+    description: "上一条消息"
+    enabled: true
+    category: "conversation"
+
+  next_message:
+    key: "Down"
+    description: "下一条消息"
+    enabled: true
+    category: "conversation"
+
+# 媒体控制快捷键
+media:
+  # 语音控制
+  start_recording:
+    key: "Ctrl+R"
+    description: "开始录音"
+    enabled: true
+    category: "media"
+
+  stop_recording:
+    key: "Ctrl+Shift+R"
+    description: "停止录音"
+    enabled: true
+    category: "media"
+
+  play_audio:
+    key: "Ctrl+Shift+P"
+    description: "播放音频"
+    enabled: true
+    category: "media"
+
+  pause_audio:
+    key: "Ctrl+Shift+Space"
+    description: "暂停音频"
+    enabled: true
+    category: "media"
+
+  # 视频控制
+  toggle_camera:
+    key: "Ctrl+Shift+C"
+    description: "开关摄像头"
+    enabled: true
+    category: "media"
+
+  toggle_screen_share:
+    key: "Ctrl+Shift+D"
+    description: "开关屏幕共享"
+    enabled: true
+    category: "media"
+
+# 开发工具快捷键
+development:
+  # 开发工具
+  open_devtools:
+    key: "F12"
+    description: "打开开发者工具"
+    enabled: true
+    category: "development"
+
+  reload_ignore_cache:
+    key: "Ctrl+Shift+R"
+    description: "强制刷新（忽略缓存）"
+    enabled: true
+    category: "development"
+
+  inspect_element:
+    key: "Ctrl+Shift+I"
+    description: "检查元素"
+    enabled: true
+    category: "development"
+
+  console:
+    key: "Ctrl+Shift+J"
+    description: "打开控制台"
+    enabled: true
+    category: "development"
+
+  # 调试工具
+  debug_pause:
+    key: "F8"
+    description: "暂停调试"
+    enabled: false
+    category: "development"
+
+  debug_step_over:
+    key: "F10"
+    description: "单步跳过"
+    enabled: false
+    category: "development"
+
+  debug_step_into:
+    key: "F11"
+    description: "单步进入"
+    enabled: false
+    category: "development"
+
+# 系统快捷键
+system:
+  # 系统操作
+  open_settings:
+    key: "Ctrl+,"
+    description: "打开设置"
+    enabled: true
+    category: "system"
+
+  open_help:
+    key: "F1"
+    description: "打开帮助"
+    enabled: true
+    category: "system"
+
+  open_about:
+    key: "Ctrl+Shift+A"
+    description: "关于Mirexs"
+    enabled: true
+    category: "system"
+
+  # 窗口管理
+  minimize_window:
+    key: "Ctrl+M"
+    description: "最小化窗口"
+    enabled: true
+    category: "system"
+
+  maximize_window:
+    key: "F11"
+    description: "最大化窗口"
+    enabled: true
+    category: "system"
+
+  close_window:
+    key: "Alt+F4"
+    description: "关闭窗口"
+    enabled: true
+    category: "system"
+
+# 自定义快捷键
+custom:
+  # 用户自定义快捷键
+  user_defined:
+    - name: "custom_action_1"
+      key: "Ctrl+Shift+1"
+      description: "自定义操作1"
+      enabled: false
+      category: "custom"
+      action: ""
+
+    - name: "custom_action_2"
+      key: "Ctrl+Shift+2"
+      description: "自定义操作2"
+      enabled: false
+      category: "custom"
+      action: ""
+
+    - name: "custom_action_3"
+      key: "Ctrl+Shift+3"
+      description: "自定义操作3"
+      enabled: false
+      category: "custom"
+      action: ""
+
+# 快捷键配置
+configuration:
+  # 冲突检测
+  conflict_detection:
+    enabled: true
+    auto_resolve: false
+
+  # 平台适配
+  platform_specific:
+    windows:
+      modifier: "Ctrl"
+    macos:
+      modifier: "Cmd"
+    linux:
+      modifier: "Ctrl"
+
+  # 上下文感知
+  context_aware:
+    enabled: true
+    contexts:
+      - "text_editor"
+      - "conversation"
+      - "media_player"
+      - "browser"
+
+  # 学习模式
+  learning:
+    show_hints: true
+    gradual_introduction: true
+    reset_to_defaults: false
+
+# 高级设置
+advanced:
+  # 快捷键映射
+  key_mapping:
+    custom_mappings: {}
+    preserve_custom: true
+
+  # 性能优化
+  performance:
+    hotkey_polling_rate: 100  # Hz
+    debounce_ms: 50
+
+  # 调试信息
+  debug:
+    log_shortcut_usage: false
+    show_keycodes: false
+

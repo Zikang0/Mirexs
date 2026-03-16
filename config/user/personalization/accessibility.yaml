@@ -1,0 +1,298 @@
+# config/user/personalization/accessibility.yaml
+# 无障碍设置配置
+# 管理辅助功能，确保所有用户都能使用系统
+
+# 视觉辅助
+visual_aids:
+  # 高对比度模式
+  high_contrast:
+    enabled: false
+    mode: "standard"  # standard, inverse, custom
+    custom_colors:
+      foreground: "#FFFFFF"
+      background: "#000000"
+      links: "#FFFF00"
+
+  # 颜色调整
+  color_adjustment:
+    enabled: false
+    color_blind_mode: "none"  # none, protanopia, deuteranopia, tritanopia, achromatopsia
+    grayscale: false
+    invert_colors: false
+    contrast_boost: 1.0
+
+  # 文字大小
+  text_size:
+    scale_factor: 1.0
+    minimum_size: 12  # 像素
+    maximum_size: 48  # 像素
+    auto_adjust: true
+
+  # 字体调整
+  font_adjustment:
+    readable_fonts: true
+    dyslexic_font: false
+    letter_spacing: "normal"
+    word_spacing: "normal"
+    line_height: 1.5
+
+# 听觉辅助
+auditory_aids:
+  # 文字转语音
+  text_to_speech:
+    enabled: false
+    voice:
+      name: "Microsoft Huihui"
+      language: "zh-CN"
+      rate: 1.0
+      pitch: 1.0
+      volume: 1.0
+    reading_options:
+      highlight_text: true
+      read_links: true
+      read_images: true
+      auto_read: false
+
+  # 声音增强
+  sound_enhancement:
+    enabled: false
+    amplify_sounds: true
+    reduce_background_noise: true
+    mono_audio: false
+    balance_adjustment: 0.0
+
+  # 视觉通知
+  visual_notifications:
+    enabled: true
+    flash_on_sound: false
+    caption_sounds: true
+    show_sound_visualizer: false
+
+# 运动辅助
+motion_aids:
+  # 减少动画
+  reduce_motion:
+    enabled: false
+    disable_animations: false
+    reduce_animation_duration: true
+    prefer_transitions: true
+
+  # 指针控制
+  pointer_control:
+    pointer_size: "medium"  # small, medium, large, x-large
+    pointer_color: "auto"
+    pointer_trail: false
+    show_location: false
+
+  # 触控辅助
+  touch_assistance:
+    touch_hold_duration: 1.0  # 秒
+    ignore_accidental_taps: true
+    tap_assistance: false
+
+# 认知辅助
+cognitive_aids:
+  # 简化界面
+  simplify_interface:
+    enabled: false
+    hide_complex_elements: true
+    group_related_items: true
+    reduce_clutter: true
+
+  # 阅读辅助
+  reading_assistance:
+    reading_mode: false
+    focus_mode: true
+    line_guide: false
+    text_masking: false
+
+  # 注意力辅助
+  attention_assistance:
+    focus_highlights: true
+    reduce_distractions: true
+    reminder_prompts: false
+    step_by_step_guides: true
+
+# 交互辅助
+interaction_aids:
+  # 键盘导航
+  keyboard_navigation:
+    enabled: true
+    tab_order: "logical"
+    highlight_focus: true
+    skip_navigation: true
+    shortcut_help: true
+
+  # 鼠标辅助
+  mouse_assistance:
+    click_lock: false
+    hover_select: false
+    mouse_keys: false
+    drag_drop_assistance: true
+
+  # 语音控制
+  voice_control:
+    enabled: false
+    language: "zh-CN"
+    confirmation_mode: "minimal"
+    command_feedback: true
+    custom_commands: []
+
+# 输入辅助
+input_aids:
+  # 屏幕键盘
+  onscreen_keyboard:
+    enabled: false
+    auto_show: true
+    layout: "standard"
+    key_size: "medium"
+    transparency: 0.8
+
+  # 输入预测
+  input_prediction:
+    enabled: true
+    word_prediction: true
+    auto_correction: true
+    auto_capitalization: true
+    spell_check: true
+
+  # 输入替代
+  input_alternatives:
+    eye_tracking: false
+    head_tracking: false
+    switch_control: false
+    sip_puff: false
+
+# 通知辅助
+notification_aids:
+  # 通知增强
+  enhanced_notifications:
+    extended_duration: 10  # 秒
+    repeat_notifications: false
+    vibration_pattern: "default"
+    led_color: "blue"
+
+  # 紧急通知
+  emergency_alerts:
+    bypass_dnd: true
+    maximum_volume: true
+    flashing_lights: false
+    repeat_interval: 30  # 秒
+
+  # 通知历史
+  notification_history:
+    enabled: true
+    retention_days: 7
+    searchable: true
+    categorized: true
+
+# 个性化辅助
+personalized_aids:
+  # 辅助配置文件
+  accessibility_profiles:
+    enabled: true
+    profiles:
+      - name: "视力辅助"
+        settings: ["high_contrast", "text_size", "screen_reader"]
+      - name: "听力辅助"
+        settings: ["text_to_speech", "visual_notifications"]
+      - name: "运动辅助"
+        settings: ["keyboard_navigation", "voice_control"]
+    auto_switch: false
+
+  # 学习辅助
+  learning_support:
+    guided_tutorials: true
+    contextual_help: true
+    progressive_disclosure: true
+    skill_building: false
+
+  # 适应学习
+  adaptive_learning:
+    learn_preferences: true
+    suggest_settings: true
+    auto_adjust: false
+    feedback_loop: true
+
+# 兼容性设置
+compatibility:
+  # 辅助技术兼容
+  assistive_tech_compatibility:
+    screen_reader: true
+    braille_display: false
+    switch_control: false
+    voice_control: true
+
+  # 标准合规
+  standards_compliance:
+    wcag_level: "AA"  # A, AA, AAA
+    aria_labels: true
+    semantic_html: true
+    keyboard_accessibility: true
+
+  # 浏览器兼容
+  browser_compatibility:
+    cross_browser: true
+    graceful_degradation: true
+    feature_detection: true
+
+# 远程协助
+remote_assistance:
+  # 远程协助功能
+  enabled: false
+  allow_remote_control: false
+  allow_screen_sharing: true
+  allow_voice_chat: true
+
+  # 隐私保护
+  privacy:
+    ask_permission: true
+    session_timeout: 30  # 分钟
+    log_activities: true
+    encrypt_communication: true
+
+# 紧急功能
+emergency_features:
+  # SOS功能
+  sos_function:
+    enabled: true
+    trigger: "triple_click"  # triple_click, voice_command, button
+    action: "notify_contacts"
+    contacts: []
+
+  # 位置共享
+  location_sharing:
+    enabled: false
+    share_with: "emergency_services"
+    duration: "until_disabled"
+
+  # 紧急信息
+  emergency_info:
+    medical_conditions: ""
+    medications: ""
+    allergies: ""
+    emergency_contact: ""
+
+# 测试和反馈
+testing_feedback:
+  # 无障碍测试
+  accessibility_testing:
+    automated_tests: true
+    manual_tests: false
+    user_testing: false
+    test_frequency: "monthly"
+
+  # 用户反馈
+  user_feedback:
+    feedback_channel: "in_app"
+    anonymous_feedback: true
+    priority_handling: true
+    response_time: "7_days"
+
+  # 改进跟踪
+  improvement_tracking:
+    track_issues: true
+    measure_impact: true
+    report_progress: true
+    public_reporting: false
+

@@ -1,0 +1,166 @@
+# 自适应学习配置
+# 动态调整学习参数和策略
+
+enabled: true
+learning_modes:
+  supervised: true
+  reinforcement: true
+  unsupervised: false
+  transfer: true
+  federated: false
+
+parameters:
+  learning_rate:
+    initial: 0.001
+    decay_rate: 0.95
+    decay_steps: 1000
+    min_lr: 1e-6
+    warmup_steps: 100
+    cycle_length: 10000
+    
+  regularization:
+    l1_lambda: 0.01
+    l2_lambda: 0.001
+    dropout_rate: 0.2
+    weight_decay: 0.0001
+    batch_norm: true
+    
+  optimization:
+    optimizer: adam
+    momentum: 0.9
+    beta1: 0.9
+    beta2: 0.999
+    epsilon: 1e-8
+    amsgrad: false
+    
+  batch_size:
+    min: 1
+    max: 64
+    initial: 32
+    increase_factor: 1.2
+    decrease_factor: 0.8
+
+adaptation_strategies:
+  exploration_exploitation:
+    epsilon: 0.1
+    decay: 0.99
+    min_epsilon: 0.01
+    exploration_bonus: 0.1
+    
+  curriculum_learning:
+    enabled: true
+    difficulty_steps: 10
+    progression_rate: 0.1
+    mastery_threshold: 0.9
+    
+  transfer_learning:
+    enabled: true
+    source_tasks:
+      - general_knowledge
+      - language_understanding
+      - image_recognition
+    transfer_coefficient: 0.7
+    
+  meta_learning:
+    enabled: false
+    inner_steps: 5
+    outer_steps: 3
+    adaptation_rate: 0.01
+
+learning_schedules:
+  fast_learning:
+    learning_rate: 0.01
+    batch_size: 16
+    epochs: 10
+    
+  balanced:
+    learning_rate: 0.001
+    batch_size: 32
+    epochs: 50
+    
+  fine_tuning:
+    learning_rate: 0.0001
+    batch_size: 8
+    epochs: 100
+
+performance_targets:
+  accuracy:
+    min: 0.8
+    target: 0.95
+    max: 0.99
+    
+  loss:
+    min: 0.01
+    target: 0.05
+    max: 0.1
+    
+  inference_speed:
+    min: 100  # ms
+    target: 50
+    max: 200
+    
+  training_speed:
+    min: 1000  # samples/sec
+    target: 5000
+    max: 10000
+
+adaptation_rules:
+  - condition: "accuracy < 0.8"
+    action: "increase_learning_rate"
+    parameter: "learning_rate"
+    adjustment: +0.001
+    
+  - condition: "loss > 0.1"
+    action: "decrease_learning_rate"
+    parameter: "learning_rate"
+    adjustment: -0.0005
+    
+  - condition: "training_speed < 1000"
+    action: "increase_batch_size"
+    parameter: "batch_size"
+    adjustment: +4
+    
+  - condition: "memory_usage > 0.9"
+    action: "decrease_batch_size"
+    parameter: "batch_size"
+    adjustment: -8
+
+monitoring:
+  enabled: true
+  metrics_interval: 60
+  
+  metrics_to_track:
+    - accuracy
+    - loss
+    - learning_rate
+    - batch_size
+    - training_speed
+    - inference_speed
+    - memory_usage
+    - convergence_rate
+  
+  visualization:
+    enabled: true
+    update_interval: 60
+    charts:
+      - learning_curve
+      - loss_curve
+      - accuracy_curve
+      - resource_usage
+
+logging:
+  enabled: true
+  level: info
+  log_training: true
+  log_validation: true
+  log_adaptation: true
+  
+  tensorboard:
+    enabled: true
+    log_dir: /logs/tensorboard
+    update_freq: 100
+    
+  mlflow:
+    enabled: true
+    tracking_uri: http://localhost:5000
+    experiment_name: mirexs_adaptive_learning

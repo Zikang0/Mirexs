@@ -1,0 +1,329 @@
+# config/system/platform_configs/macos_config.yaml
+# macOS平台特定配置
+
+# 系统信息
+system:
+  name: "macOS"
+  min_version: "11.0"
+  recommended_version: "14.0"
+  architecture: "arm64"  # 或 x86_64
+  bitness: 64
+  chip_type: "apple_silicon"  # apple_silicon, intel
+
+# 路径配置
+paths:
+  # 系统路径
+  home: "${HOME}"
+  applications: "/Applications"
+  user_applications: "${HOME}/Applications"
+  library: "${HOME}/Library"
+  system_library: "/Library"
+  system: "/System"
+  tmp: "/tmp"
+
+  # Mirexs特定路径
+  mirexs_data: "${HOME}/Library/Application Support/Mirexs"
+  mirexs_config: "${HOME}/Library/Preferences/Mirexs"
+  mirexs_logs: "${HOME}/Library/Logs/Mirexs"
+  mirexs_cache: "${HOME}/Library/Caches/Mirexs"
+  mirexs_models: "${HOME}/Library/Application Support/Mirexs/Models"
+
+  # 可执行文件路径
+  python_exe: "/usr/bin/python3"
+  ffmpeg_path: "/usr/local/bin/ffmpeg"
+
+  # 框架路径
+  framework_paths:
+    - "/Library/Frameworks"
+    - "${HOME}/Library/Frameworks"
+    - "/System/Library/Frameworks"
+
+  # 库路径
+  library_paths:
+    - "/usr/local/lib"
+    - "/usr/lib"
+    - "${HOME}/.local/lib"
+
+# 图形配置
+graphics:
+  # 图形API
+  api:
+    primary: "metal"
+    versions:
+      metal: "3"
+      opengl: "4.1"
+      vulkan: "1.3"  # 通过MoltenVK
+
+  # 显示配置
+  display:
+    retina_support: true
+    high_dpi_aware: true
+    refresh_rate: 60
+
+  # 渲染配置
+  rendering:
+    hardware_acceleration: true
+    vsync: true
+    metal_layer: true
+
+  # 性能优化
+  performance:
+    gpu_preference: "automatic"  # automatic, integrated, discrete
+    power_preference: "high_performance"
+    texture_quality: "high"
+
+# 音频配置
+audio:
+  # 音频API
+  api: "coreaudio"
+
+  # 设备配置
+  devices:
+    input:
+      default: "Built-in Microphone"
+      type: "input"
+    output:
+      default: "Built-in Output"
+      type: "output"
+
+  # 音频处理
+  processing:
+    echo_cancellation: true
+    noise_suppression: true
+    automatic_gain_control: true
+
+  # 格式配置
+  format:
+    sample_rate: 48000
+    channels: 2
+    bits_per_sample: 16
+
+  # 音频单元
+  audio_units:
+    enabled: false
+    component_type: "aufx"
+
+# 输入配置
+input:
+  # 鼠标配置
+  mouse:
+    sensitivity: 1.0
+    acceleration: true
+    natural_scroll: true
+
+  # 键盘配置
+  keyboard:
+    layout: "us"
+    repeat_delay: 0.2
+    repeat_rate: 30
+
+  # 触摸板
+  trackpad:
+    enabled: true
+    gestures: true
+    force_touch: true
+
+  # 触控栏 (Touch Bar)
+  touch_bar:
+    enabled: true
+    custom_controls: true
+
+# 网络配置
+network:
+  # 网络服务
+  services:
+    bonjour: true
+    network_extension: false
+
+  # 防火墙
+  firewall:
+    enabled: true
+    stealth_mode: false
+    auto_configure: true
+
+  # VPN集成
+  vpn:
+    enabled: false
+    type: "ikev2"
+
+# 安全配置
+security:
+  # 门禁 (Gatekeeper)
+  gatekeeper:
+    enabled: true
+    app_notarization: true
+    developer_id: "Mirexs Team"
+
+  # 隐私权限
+  privacy:
+    microphone: true
+    camera: true
+    accessibility: true
+    full_disk_access: false
+
+  # 钥匙串集成
+  keychain:
+    enabled: true
+    service_name: "Mirexs"
+    access_group: "team.mirexs.app"
+
+# 系统集成
+integration:
+  # 应用包 (App Bundle)
+  app_bundle:
+    enabled: true
+    identifier: "team.mirexs.app"
+    version: "1.0.0"
+    bundle_name: "Mirexs"
+
+  # 菜单栏
+  menu_bar:
+    enabled: true
+    extra_menu: true
+    status_item: true
+
+  # 通知中心
+  notifications:
+    enabled: true
+    sound: "default"
+    badge: true
+    alert_style: "alert"
+
+  # 聚焦搜索 (Spotlight)
+  spotlight:
+    enabled: true
+    importers: ["Text", "Source Code"]
+
+  # 快速查看 (Quick Look)
+  quick_look:
+    enabled: true
+    generator: true
+
+# 性能优化
+performance:
+  # 电源管理
+  power:
+    nap_prevention: true
+    display_sleep_inhibit: true
+    idle_sleep_inhibit: true
+
+  # 内存管理
+  memory:
+    compressed_memory: true
+    memory_pressure: true
+
+  # 进程优先级
+  process:
+    quality_of_service: "user_interactive"
+    io_priority: "standard"
+
+  # 磁盘优化
+  disk:
+    apfs_optimization: true
+    trim_support: true
+
+# 开发工具
+development:
+  # Xcode集成
+  xcode:
+    integration: false
+    command_line_tools: true
+
+  # 原生框架
+  frameworks:
+    cocoa: false
+    swift: false
+    objc: false
+
+  # 苹果芯片优化
+  apple_silicon:
+    native_build: true
+    universal_binary: true
+    rosetta_fallback: false
+
+# 包管理
+package_management:
+  # 安装包格式
+  formats:
+    dmg:
+      enabled: true
+      background: "resources/dmg_background.png"
+      window_size: [640, 480]
+
+    pkg:
+      enabled: true
+      component_pkg: false
+      require_root: false
+
+    app:
+      enabled: true
+      codesign: true
+      notarize: true
+
+    brew:
+      enabled: true
+      formula: "mirexs"
+      cask: false
+
+# 服务配置
+services:
+  # Launchd服务
+  launchd:
+    enabled: true
+    plist_path: "${HOME}/Library/LaunchAgents/team.mirexs.app.plist"
+    keep_alive: true
+    run_at_load: true
+
+  # 后台任务
+  background_tasks:
+    enabled: true
+    app_nap_prevention: true
+    network_activity: true
+
+  # 登录项
+  login_items:
+    enabled: true
+    hide: false
+
+# 辅助功能
+accessibility:
+  # 语音控制
+  voice_control:
+    enabled: true
+    commands: ["open mirexs", "start recording"]
+
+  # 旁白 (VoiceOver)
+  voiceover:
+    enabled: true
+    announcements: true
+
+  # 缩放
+  zoom:
+    enabled: true
+    smooth_images: true
+
+  # 悬停文本
+  hover_text:
+    enabled: true
+    font_size: 14
+
+# 国际化
+internationalization:
+  # 语言支持
+  languages:
+    primary: "zh-Hans"
+    additional:
+      - "en"
+      - "ja"
+      - "ko"
+
+  # 区域格式
+  locale:
+    calendar: "gregorian"
+    measurement_system: "metric"
+    temperature_unit: "celsius"
+
+  # 文本输入
+  text_input:
+    ime_support: true
+    romanization: "pinyin"
