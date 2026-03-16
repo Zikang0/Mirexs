@@ -1,3 +1,4 @@
+
 # Mirexs v2.0 整体架构概述（Architecture Overview）
 
 **版本：v2.0.0**  
@@ -18,40 +19,44 @@ Mirexs v2.0 不是传统聊天机器人，而是一个**本地优先、情感驱
 
 ## 2. 整体分层架构（自顶向下）
 
+```
 Mirexs v2.0 系统分层（由外到内）
+
 ┌─────────────────────────────────────────────────────────────┐
 │  Presentation & Interaction Layer                           │
 │  - 3D Avatar (Panda3D)                                      │
 │  - Multimodal I/O (Voice / Vision / Text)                   │
 │  - UI/CLI/WebSocket 接口                                    │
 └─────────────────────────────────────────────────────────────┘
-↓↑ (事件总线 + Emotion Payload)
+            ↓↑ (事件总线 + Emotion Payload)
 ┌─────────────────────────────────────────────────────────────┐
-│  Cognitive & Decision Core (情感 + 智能中枢)                │
+│  Cognitive & Decision Core (情感 + 智能中枢)                 │
 │  - Emotion Neural Network                                   │
 │  - Knowledge Graph + Hybrid Memory                          │
 │  - Multi-Model Intelligent Routing                          │
-│  - Reinforcement Learner (Q-learning + User Feedback)      │
+│  - Reinforcement Learner (Q-learning + User Feedback)       │
 │  - Proactive Behavior Engine                                │
 └─────────────────────────────────────────────────────────────┘
-↓↑ (标准接口 + Pydantic Payloads)
+            ↓↑ (标准接口 + Pydantic Payloads)
 ┌─────────────────────────────────────────────────────────────┐
 │  Infrastructure & Runtime Layer                             │
-│  - Model Hub & Loader (vLLM / llama.cpp / transformers)    │
+│  - Model Hub & Loader (vLLM / llama.cpp / transformers)     │
 │  - Vector DB (Chroma / FAISS)                               │
 │  - Graph DB (Neo4j)                                         │
 │  - Hardware Profiler & Resource Manager                     │
 │  - Real-time Knowledge Updater (RSS / Optional Web)         │
 └─────────────────────────────────────────────────────────────┘
-↓↑ (加密通道 + Audit Log)
+            ↓↑ (加密通道 + Audit Log)
 ┌─────────────────────────────────────────────────────────────┐
-│  Security & Trust Layer (三层防护)                          │
+│  Security & Trust Layer (三层防护)                           │
 │  - Input Sanitization & Jailbreak Defense                   │
 │  - Immutable Audit Trail (append-only)                      │
 │  - Incident Response & Auto-quarantine                      │
-│  - Privacy Controls (Data Export / Delete / Local-only)    │
+│  - Privacy Controls (Data Export / Delete / Local-only)     │
 └─────────────────────────────────────────────────────────────┘
-text## 3. 关键模块间依赖与数据流（简化图 + 关键路径）
+```
+
+## 3. 关键模块间依赖与数据流（简化图 + 关键路径）
 
 ### 主要数据流路径示例
 
@@ -115,3 +120,4 @@ text## 3. 关键模块间依赖与数据流（简化图 + 关键路径）
 
 **作者签名**：Zikang.Li  
 **日期**：2026-03-16
+
