@@ -1073,6 +1073,7 @@ docs/
 │   ├── knowledge_graph.md               # ⭐【新增】知识图谱设计
 │   ├── emotion_nn.md                    # ⭐【新增】情绪神经网络设计
 │   ├── reinforcement_learner.md         # ⭐【新增】强化学习
+│   ├── proactive_behavior.md            # ⭐【新增】主动行为引擎
 │   └── security_architecture.md         # 安全架构
 │
 ├── security/                            # 安全合规
