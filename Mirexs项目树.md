@@ -1072,6 +1072,7 @@ docs/
 │   ├── multi_model_routing.md           # ⭐【新增】多模型路由设计
 │   ├── knowledge_graph.md               # ⭐【新增】知识图谱设计
 │   ├── emotion_nn.md                    # ⭐【新增】情绪神经网络设计
+│   ├── reinforcement_learner.md         # ⭐【新增】强化学习
 │   └── security_architecture.md         # 安全架构
 │
 ├── security/                            # 安全合规
