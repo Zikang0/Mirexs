@@ -1,4 +1,5 @@
 # 🌳 Mirexs 完整项目结构树 v2.0（详细版）
+
 版本：2.0
 更新日期：2026年3月
 说明：完整包含多模型智能路由、知识图谱、情绪神经网络、实时知识更新、安全防护等所有2.0增强模块
@@ -1030,7 +1031,7 @@ launch/
 │   │   ├── dmg_creator.py               # DMG创建器
 │   │   ├── background_image.py          # 背景图片
 │   │   ├── volume_icon.py               # 卷图标
-│   │   ├── license_agreement.py         # 许可协议
+│   │   ├── macos_license_handler.py     # 许可协议
 │   │   └── dmg_metrics.py               # DMG指标
 │   ├── launchd/                         # Launchd配置
 │   │   ├── __init__.py
@@ -1069,6 +1070,7 @@ docs/
 │   ├── rest_api.md                      # REST API文档
 │   ├── sdk_documentation.md             # SDK使用文档
 │   ├── plugin_development.md            # 插件开发指南
+│   ├── fact_checker_api.md              # ⭐【新增】事实核查相关的REST·API接口
 │   ├── api_examples/                    # API示例代码
 │   │   ├── __init__.py
 │   │   ├── basic_usage.py               # 基础使用示例
@@ -1085,6 +1087,7 @@ docs/
 │   ├── emotion_nn.md                    # ⭐【新增】情绪神经网络设计
 │   ├── reinforcement_learner.md         # ⭐【新增】强化学习
 │   ├── proactive_behavior.md            # ⭐【新增】主动行为引擎
+│   ├── fact_checker.md                  # ⭐【新增】事实核查器的设计
 │   └── security_architecture.md         # 安全架构
 │
 ├── security/                            # 安全合规
@@ -1112,7 +1115,7 @@ docs/
 │   ├── license_agreement.md             # 许可协议
 │   ├── terms_of_service.md              # 服务条款
 │   ├── eula.md                          # 最终用户许可协议
-│   └── patent_filing.md                  # 专利申请
+│   └── patent_filing.md                 # 专利申请
 │
 ├── user_manual/                         # 用户手册
 │   ├── __init__.py
@@ -1122,6 +1125,7 @@ docs/
 │   ├── features_guide.md                # 功能特性指南
 │   ├── avatar_customization.md          # ⭐【新增】形象自定义指南
 │   ├── knowledge_management.md          # ⭐【新增】知识管理指南
+│   ├── fact_checker_usage.md            # ⭐【新增】可信度评分指南
 │   ├── troubleshooting.md               # 故障排除
 │   ├── faq.md                           # 常见问题
 │   └── video_tutorials/                 # 视频教程
@@ -1139,6 +1143,7 @@ docs/
 │   ├── deployment_guide.md               # 部署指南
 │   ├── contribution_guide.md             # 贡献指南
 │   ├── code_review_process.md            # 代码审查流程
+│   ├── fact_checker_development.md       # ⭐【新增】信源分级事实核查逻辑谬误检测规则
 │   ├── model_integration.md              # ⭐【新增】模型集成指南
 │   ├── knowledge_graph_api.md            # ⭐【新增】知识图谱API
 │   └── emotion_nn_training.md            # ⭐【新增】情绪模型训练
@@ -1469,7 +1474,7 @@ tests/
 │   │   ├── test_nlp_models.py           # NLP模型测试
 │   │   ├── test_3d_models.py            # 3D模型测试
 │   │   ├── test_vector_db.py            # 向量数据库测试
-│   │   ├── test_graph_db.py             # 图数据库测试 ⭐【强化】
+│   │   ├── test_graph_db                # 图数据库测试 ⭐【强化】
 │   │   │   ├── __init__.py
 │   │   │   ├── test_knowledge_graph.py  # 知识图谱测试
 │   │   │   └── test_neo4j_integration.py # Neo4j集成测试
