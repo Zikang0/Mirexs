@@ -251,6 +251,17 @@ cognitive/
 │   ├── reasoning_metrics.py           # 推理指标
 │   └── smart_router_integration.py    # ⭐【新增】与模型路由的接口
 │
+├── fact_checker/                      # ⭐【新增】事实核查模块
+│   ├── __init__.py
+│   ├── credibility_scorer.py          # 综合可信度评分
+│   ├── source_analyzer.py             # 信源分析
+│   ├── cross_validator.py             # 多源交叉验证
+│   ├── consistency_checker.py         # 与知识图谱一致性检查
+│   ├── claim_extractor.py             # 主张提取
+│   ├── evidence_ranker.py             # 证据排序
+│   ├── logic_checker.py               # 逻辑谬误检测
+│   └── bias_detector.py               # 广告/偏见识别
+│
 ├── learning/                          # 学习与适应系统 ⭐【2.0核心】
 │   ├── __init__.py
 │   ├── meta_learner.py                # 元学习器
