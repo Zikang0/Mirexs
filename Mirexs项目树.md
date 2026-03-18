@@ -1157,7 +1157,7 @@ docs/
 │   ├── performance_benchmarks.md         # 性能基准
 │   └── compatibility_matrix.md           # 兼容性矩阵
 │
-└── internal_docs/                       # 内部文档
+└── internal_docs/                     v  # 内部文档
     ├── __init__.py
     ├── design_decisions.md               # 设计决策记录
     ├── meeting_notes/                    # 会议记录
