@@ -1065,6 +1065,7 @@ launch/
 text
 docs/
 ├── __init__.py
+├── Mirexs技术设计补充计划.md
 ├── api_reference/                       # API参考文档
 │   ├── __init__.py
 │   ├── rest_api.md                      # REST API文档
@@ -1088,6 +1089,10 @@ docs/
 │   ├── reinforcement_learner.md         # ⭐【新增】强化学习
 │   ├── proactive_behavior.md            # ⭐【新增】主动行为引擎
 │   ├── fact_checker.md                  # ⭐【新增】事实核查器的设计
+│   ├── big_data_models.md               # ⭐【新增】模型并行推理机制
+│   ├── deep_thinking_engine.md          # ⭐【新增】深度思考机制
+│   ├── neural_networks_detail.md        # ⭐【新增】情绪识别神经网络
+│   ├── ai_algorithms_handbook.md        # ⭐【新增】核心决策逻辑
 │   └── security_architecture.md         # 安全架构
 │
 ├── security/                            # 安全合规
@@ -1155,6 +1160,8 @@ docs/
 │   ├── database_schema.md                # 数据库设计
 │   ├── security_specification.md         # 安全规范
 │   ├── performance_benchmarks.md         # 性能基准
+│   ├── data_pipeline_design.md           # ⭐【新增】大数据处理链路
+│   ├── distributed_inference_spec.md     # ⭐【新增】分布式推理规范
 │   └── compatibility_matrix.md           # 兼容性矩阵
 │
 └── internal_docs/                     v  # 内部文档
