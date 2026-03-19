@@ -3,7 +3,7 @@
 
 **版本：v2.0.0**  
 **最后更新：2026-03-17**  
-**作者：Zikang.Li**  
+**作者：Zikang Li**  
 **适用范围**：Mirexs v2.0 系统所有审计日志（data/audit.db）、审计查询、导出、分析、事后审查  
 **参考**：security_architecture.md、incident_response_plan.md、privacy_policy.md
 
@@ -154,5 +154,5 @@ python tools/audit_integrity_check.py
 
 本审计指南是 Mirexs **可追溯性与信任基础** 的核心文档。所有审计实现可在 security/audit_logger.py 与 data/audit.db schema 中验证。
 
-**作者签名**：Zikang.Li  
+**作者签名**：Zikang Li  
 **日期**：2026-03-17

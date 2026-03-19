@@ -3,7 +3,7 @@
 
 **版本：v2.0.0**  
 **最后更新：2026-03-17**  
-**作者：Zikang.Li**  
+**作者：Zikang Li**  
 **状态：生产级完整规范，与仓库实际 plugins/ 目录结构完全对应，可直接用于开发、测试和贡献插件**
 
 ## 1. 插件系统概述
@@ -98,7 +98,7 @@ class WeatherToolPlugin(BasePlugin):
     name = "weather_tool"
     version = "1.0.0"
     description = "提供实时天气查询，支持中文城市名"
-    author = "Zikang.Li"
+    author = "Zikang Li"
     enabled_by_default = True
     
     tools = [
@@ -200,5 +200,5 @@ async def test_weather_tool():
 
 本指南与仓库**plugins/** 目录及 **security/**、**cognitive/** 等模块完全对应，是插件开发的**唯一权威文档**。任何插件变更需同步更新本文件。
 
-**作者签名**：Zikang.Li  
+**作者签名**：Zikang Li  
 **日期**：2026-03-17

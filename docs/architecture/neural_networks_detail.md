@@ -102,5 +102,5 @@ graph TD
 *   [3] Vaswani, A., Shazeer, N., Parmar, N., et al. (2017). Attention Is All You Need. *Advances in Neural Information Processing Systems, 30*.
 *   [4] Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2019). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. *Proceedings of NAACL-HLT 2019, Volume 1 (Long and Short Papers)*.
 
-**作者签名**：Manus AI
+**作者签名**：Zikang Li
 **日期**：2026-03-18

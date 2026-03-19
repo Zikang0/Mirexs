@@ -3,7 +3,7 @@
 
 **版本：v2.0.2** （重大升级：新增 DQN 版本、完整测试套件、奖励整形增强、混合 Q-table + DQN 切换机制）  
 **最后更新：2026-03-17**  
-**作者：Zikang.Li**  
+**作者：Zikang Li**  
 **状态：契约优先 + 生产级实现规范（已可直接复制到 `cognitive/reinforcement_learner.py`）**
 
 ## 1. 变更日志（v2.0.1 → v2.0.2）
@@ -245,5 +245,5 @@ def generate_training_curve(learner, episodes: int = 5000):
 
 本 v2.0.2 版本已包含 **DQN 完整实现** + **28 个测试 case** + **可视化支持**，可直接用于生产开发与 CI 测试。
 
-**作者签名**：Zikang.Li  
+**作者签名**：Zikang Li  
 **日期**：2026-03-17

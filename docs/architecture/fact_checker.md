@@ -114,5 +114,5 @@ graph TD
 *   [2] Guo, L., & Li, Y. (2020). A Survey on Fact Checking. *ACM Computing Surveys (CSUR), 53*(1), 1-37.
 *   [3] Li, Z., et al. (2026). *Mirexs项目设计.md*. Internal Document.
 
-**作者签名**：Manus AI
+**作者签名**：Zikang Li
 **日期**：2026-03-18

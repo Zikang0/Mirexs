@@ -2,7 +2,7 @@
 
 **版本：v2.0.0**  
 **最后更新：2026-03-17**  
-**作者：Zikang.Li**  
+**作者：Zikang Li**  
 **状态：生产级变更记录文档，与仓库 commit 历史、rest_api.md、sdk_documentation.md 完全对应，所有版本升级必须在此文件追加记录**
 
 ## 变更日志格式说明
@@ -25,7 +25,7 @@
   **相关端点**：/sessions, /chat, /emotion/feedback, /memory/add, /system/status  
   **SDK 对应**：MirexsClient.chat(), submit_emotion_feedback(), add_knowledge()  
   **Commit ID**：（假设最新 commit hash，例如 e.g. abcdef123456）  
-  **作者**：Zikang.Li  
+  **作者**：Zikang Li  
 
 - **类型**：Added  
   **描述**：引入流式响应（stream=true）支持 SSE（Server-Sent Events），适用于长回复场景，减少感知延迟。  
@@ -87,5 +87,5 @@
 
 本文件为 Mirexs API 的**唯一变更权威记录**，所有版本发布、PR 合并必须在此追加条目。变更后需同时更新 rest_api.md 和 sdk_documentation.md 中的相关描述。
 
-**作者签名**：Zikang.Li  
+**作者签名**：Zikang Li  
 **日期**：2026-03-17

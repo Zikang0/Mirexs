@@ -3,7 +3,7 @@
 
 **版本：v2.0.0**  
 **最后更新：2026-03-17**  
-**作者：Zikang.Li**  
+**作者：Zikang Li**  
 **状态：生产级完整文档，与仓库实际代码结构（cognitive/、infrastructure/、interaction/ 等）完全对应，可直接用于 pip install 或本地 import**
 
 ## 1. SDK 概述
@@ -207,6 +207,6 @@ client.register_plugin("my_custom_tool", my_function)
 
 本 SDK 文档与仓库**实际代码结构 100% 对齐**，所有路径、类名、行为均可直接对应到当前 commit 中的文件。任何未来代码变更必须同步更新本文件。
 
-**作者签名**：Zikang.Li  
+**作者签名**：Zikang Li  
 **日期**：2026-03-17
 
