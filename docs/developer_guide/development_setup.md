@@ -1,7 +1,7 @@
 # 开发环境搭建（Development Setup）
 
-版本：v2.0
-最后更新：2026-03-16
+版本：v2.0.1
+最后更新：2026-03-23
 
 ## 1. 环境准备
 
@@ -39,14 +39,44 @@ pip install -r requirements.txt
 
 ## 6. 启动开发环境
 
+> 说明（实现对齐，2026-03-23）：当前仓库 `launch/` 目录中**未提供** `start_development.py` 一键启动脚本；API 网关以
+> `application/api_gateway/rest_api.py` 的 `RESTAPI` 管理器形式存在，需要由上层启动器调用 `RESTAPI.start()` 运行。
+
+### 6.1 快速自检（不启动网络服务）
+
+```bash
+python -c "from application.api_gateway.rest_api import get_rest_api; print(get_rest_api().get_status())"
 ```
-python launch/start_development.py
+
+### 6.2 启动 API 网关（开发用示例）
+
+> 该示例仅用于验证 FastAPI/uvicorn 运行链路，不代表“全系统已可用”。当前默认不包含业务端点注册。
+
+```python
+import asyncio
+from application.api_gateway.rest_api import get_rest_api
+
+async def main():
+    api = get_rest_api()
+    await api.start()
+    await api.server_task  # 阻塞直到服务退出
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
+
+将以上脚本保存为 `scripts/run_api_gateway.py` 后执行：
+
+```bash
+python scripts/run_api_gateway.py
+```
+
+> 端口与路由前缀的“目标配置口径”见 `config/system/service_configs/api_config.yaml`；当前 `RESTAPI` 默认监听 `0.0.0.0:8000`（代码默认值）。
 
 ## 7. 验证
 
-- 访问 `GET /api/v1/system/health`
-- 打开 UI 观察日志输出
+- 若已按 6.1 执行自检，应看到包含 `host/port/docs_url/openapi_url` 的状态输出。
+- 若已按 6.2 启动 API 网关，可访问 `http://localhost:8000/docs` 验证 Swagger UI 可用（端点为空属正常）。
 
 ---
 
