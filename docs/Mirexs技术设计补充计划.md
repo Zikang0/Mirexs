@@ -1,59 +1,62 @@
 # Mirexs 技术设计补充计划
 
+**版本：v1.1.0**  
+**最后更新：2026-03-23**  
+**作者：Zikang Li**  
+**状态：滚动更新计划（按“缺口→落地→对齐”迭代维护）**
+
 ## 1. 引言
 
 根据用户对 Mirexs 项目“大数据模型、AI算法、深度思考、知识图谱、神经网络”等核心技术领域的关注，并结合对现有文档的全面分析，本计划旨在识别当前技术设计文档中的缺失与不足，并制定详细的补充方案，以构建一套更为完整和深入的技术设计体系。
 
 ## 2. 现有文档评估总结
 
-Mirexs 项目的 `Mirexs项目设计.md` 提供了高层次的架构概览和核心理念，`docs/architecture/` 目录下已包含 `overview.md`、`multi_model_routing.md`、`emotion_nn.md`、`knowledge_graph.md`、`reinforcement_learner.md` 等关键模块的初步设计或详细实现。然而，在特定深度技术领域，仍存在以下不足：
+Mirexs 项目的 `Mirexs项目设计.md` 提供了高层次的架构概览和核心理念，`docs/architecture/` 目录下已包含 `overview.md`、`multi_model_routing.md`、`emotion_nn.md`、`knowledge_graph.md`、`reinforcement_learner.md` 等关键模块的设计文档。
 
-*   **大数据模型**：缺乏对大型语言模型（LLM）的选型、训练、微调、量化及推理优化的系统性技术设计。
-*   **AI算法**：虽然有强化学习等具体算法的实现，但缺少一个概括性的文档来阐述项目中使用的各类核心AI算法及其设计原则。
-*   **深度思考**：项目设计中提及了“思维链推理”和“自我反思”，但缺乏专门的技术设计文档来详细阐述其实现机制和工作流程。
-*   **知识图谱**：`knowledge_graph.md` 已有详细内容，但可进一步与“深度思考”和“大数据模型”的集成进行阐述。
-*   **神经网络**：`emotion_nn.md` 提供了情绪神经网络的实现，但可以更深入地探讨其架构选择、训练数据、评估指标等。
-*   **事实核查**：`fact_checker.md` 内容过于简略，需要扩充其技术细节。
+截至 **2026-03-23**，下列“深度技术领域文档”已补齐（见 `docs/architecture/` 与 `docs/technical_specifications/`）：
+
+- 大数据模型：`big_data_models.md`
+- AI 算法汇总：`ai_algorithms_handbook.md`
+- 深度思考：`deep_thinking_engine.md`
+- 神经网络细化：`neural_networks_detail.md`
+- 数据管道与分布式推理：`data_pipeline_design.md`、`distributed_inference_spec.md`
+
+当前主要缺口不再是“有没有文档”，而是“**文档是否与仓库实现/配置严格对齐**”。具体不足集中在：
+
+1. **引用与路径漂移**：部分文档引用了不存在的脚本/路径/配置名，或与仓库实际目录结构不一致。
+2. **契约口径不统一**：同一主题在不同文档中出现版本/响应格式/基地址不一致（尤其是 API 文档）。
+3. **实现状态缺失**：大量文档用“可直接指导实现/生产级”等措辞，但未标注“已落地/部分落地/规划”，易误导读者。
+4. **关键集成桥梁文档**：已补齐 `hybrid_memory.md` 与 `realtime_knowledge.md`，后续需要持续与实现/配置对齐并补充验收用例。
 
 ## 3. 查漏补缺目标与新增文档列表
 
-为满足用户对完整技术设计的需求，我们将重点补充以下文档，并深化现有文档内容：
+为满足“严谨、细致、可验证”的技术方案要求，后续迭代目标调整为：
 
-### 3.1 新增核心技术设计文档
+1. 补齐缺失的关键架构文档（Hybrid Memory / Real-time Knowledge）。
+2. 对已有文档做一致性收敛：统一术语、版本、路径、配置名与对外契约。
+3. 为所有核心文档补充“实现对齐摘要”：明确对应代码/配置入口与当前差异。
 
-以下文档将在 `docs/architecture/` 目录下创建，专注于用户关注的核心技术领域：
+### 3.1 文档补齐与对齐清单（滚动维护）
 
-| 文件名 | 对应用户需求 | 核心内容概述 |
-|:---|:---|:---|
-| `big_data_models.md` | 大数据模型 | 涵盖 LLM 选型策略（如 Llama 3.1, Qwen 3.5, DeepSeek V3）、模型量化技术（GGUF, EXL2）、微调方法（LoRA, QLoRA）、模型并行推理、以及模型管理与更新机制。 |
-| `deep_thinking_engine.md` | 深度思考 | 详细设计 Mirexs 的“深度思考”机制，包括思维链（Chain-of-Thought, CoT）的实现、自我反思（Self-Reflection）循环、多路径推理与验证、以及如何与知识图谱和记忆系统协同工作。 |
-| `neural_networks_detail.md` | 神经网络 | 深入剖析项目中使用的各类神经网络（如 `emotion_nn`），包括其具体的网络结构（如 LSTM、Transformer 变体）、输入特征工程、训练数据集构建、损失函数、优化器选择、以及模型评估与部署策略。 |
-| `ai_algorithms_handbook.md` | AI算法 | 汇总 Mirexs 中采用的关键 AI 算法，如 RAG（检索增强生成）的检索算法、强化学习（RL）的奖励函数设计、多模型路由的启发式算法、以及其他核心决策算法。 |
-
-### 3.2 深化现有技术设计文档
-
-以下现有文档将进行内容扩充和细节深化：
-
-| 文件名 | 核心内容概述 |
-|:---|:---|
-| `fact_checker.md` | 扩充事实核查器的技术设计，包括信源评估与权重分配、多源信息交叉验证机制、冲突解决策略、以及与知识图谱的集成方式。 |
-
-### 3.3 新增系统级补充文档
-
-以下文档将在 `docs/technical_specifications/` 目录下创建，以完善整体系统设计：
-
-| 文件名 | 核心内容概述 |
-|:---|:---|
-| `data_pipeline_design.md` | 详细描述 Mirexs 的大数据处理管道，从原始数据（对话、用户行为、外部信息）的摄取、清洗、转换，到特征工程、知识图谱构建、向量嵌入生成、以及数据同步与一致性保障。 |
-| `distributed_inference_spec.md` | 阐述 Mirexs 在多卡、多节点环境下进行模型推理的分布式策略，包括负载均衡、模型分片、并行计算、容错机制以及性能优化。 |
+| 文档 | 类型 | 状态（2026-03-23） | 备注 |
+|---|---|---|---|
+| `docs/architecture/big_data_models.md` | 架构 | 已存在 | 需持续与模型配置/推理后端对齐 |
+| `docs/architecture/ai_algorithms_handbook.md` | 架构 | 已存在 | 建议补充“算法→代码入口”映射 |
+| `docs/architecture/deep_thinking_engine.md` | 架构 | 已存在 | 已修订关键实现路径引用 |
+| `docs/architecture/neural_networks_detail.md` | 架构 | 已存在 | 建议补充训练/推理落地口径 |
+| `docs/architecture/fact_checker.md` | 架构 | 已存在 | 需补充元数据与路径对齐（如实时知识模块入口） |
+| `docs/technical_specifications/data_pipeline_design.md` | 技术规范 | 已存在 | 需修订代码路径引用（graph/vector 等） |
+| `docs/technical_specifications/distributed_inference_spec.md` | 技术规范 | 已存在 | 需与路由/推理后端现状对齐 |
+| `docs/architecture/hybrid_memory.md` | 架构 | 已存在 | 作为“KG + Vector + Episodic/Working”的集成桥梁 |
+| `docs/architecture/realtime_knowledge.md` | 架构 | 已存在 | 明确联网/摄取的授权、安全与缓存策略 |
 
 ## 4. 执行步骤与时间线
 
-1.  **Phase 4 (当前阶段)**：集中编写 `big_data_models.md`、`deep_thinking_engine.md`、`neural_networks_detail.md`、`ai_algorithms_handbook.md`。
-2.  **Phase 5**：编写 `data_pipeline_design.md`、`distributed_inference_spec.md`，并深化 `fact_checker.md`。
-3.  **Phase 6**：完成所有文档的最终审阅、格式调整，并提交至 GitHub 仓库，向用户汇报最终成果。
+1. **Phase A（文档一致性收敛）**：统一 API 契约口径、路径引用与配置名，补充“实现状态”标注与实现入口映射。
+2. **Phase B（补齐并对齐关键架构文档）**：补齐 `hybrid_memory.md`、`realtime_knowledge.md` 后，持续更新 `architecture/overview.md` 的清单、实现入口映射与差异说明。
+3. **Phase C（最终审阅）**：全量检查交叉引用、Mermaid 渲染、示例可执行性，并形成“文档验收清单”。
 
 本计划将确保 Mirexs 项目的技术设计文档能够全面、深入地覆盖所有核心技术领域，为项目的开发、维护和未来演进提供坚实的基础。
 
 **作者签名**：Zikang Li
-**日期**：2026-03-18
+**日期**：2026-03-23
