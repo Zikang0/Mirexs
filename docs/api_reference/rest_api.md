@@ -1,70 +1,102 @@
 
-# REST API 参考文档
+# Mirexs REST API 参考文档（API Reference）
 
-**版本：v2.0.0**  
-**最后更新：2026-03-17**  
-**作者：Zikang Li**  
-**状态：契约优先规范，所有 REST API 实现、客户端调用、文档生成必须严格遵守本文件**
+**API 版本**：v1  
+**适用系统版本**：Mirexs v2.x  
+**最后更新**：2026-03-23  
+**作者**：Zikang Li  
+**状态**：参考文档（与 `technical_specifications/api_specification.md` 保持一致）
 
-## 1. API 概述
+## 1. 文档关系与阅读顺序
 
-Mirexs v2.0 提供一套 RESTful API，用于：
+- **契约规范（定义口径）**：`docs/technical_specifications/api_specification.md`  
+- **本文档（调用方参考）**：提供可读的端点清单、请求/响应示例与注意事项  
 
-- 本地/远程客户端与核心引擎交互
-- 第三方插件/应用集成
-- Web UI、移动端、CLI 等前端调用
-- 调试、监控、批量操作
+当两者出现冲突时，以契约规范与仓库配置/实现为准，并在同一 PR 内同步修订。
 
-**基地址**（默认本地）：
-```
-http://localhost:8765/api/v2
-```
+## 2. 基地址（Base URL）
 
-**所有端点均支持**：
-- JSON 请求/响应
-- Bearer Token 认证（可选，本地模式可禁用）
-- CORS（跨域支持，默认开启）
+基地址由 `config/system/service_configs/api_config.yaml` 决定：
 
-## 2. 认证方式
+- 默认本地：`http://localhost:8000/api/v1`
+- 私有化/生产：`https://{host}:{port}/api/v1`（是否启用 TLS 取决于部署配置）
 
-| 类型          | 方式                  | 适用场景                     | 备注                              |
-|---------------|-----------------------|------------------------------|-----------------------------------|
-| 无认证        | 无                    | 本地开发、纯本地运行         | 默认推荐                          |
-| API Key       | Header: X-API-Key     | 远程访问、插件               | 在 config.yaml 中配置             |
-| Bearer Token  | Header: Authorization | 生产级、多用户场景           | JWT 或简单 token，未来扩展 OAuth |
+## 3. 认证方式（Authentication）
 
-## 3. 通用响应格式
+认证是否启用由部署决定；字段命名与默认值与实现对齐（`application/api_gateway/api_authenticator.py`）：
 
-成功响应：
+| 类型 | Header | 说明 |
+|---|---|---|
+| API Key | `X-API-Key: <api_key>` | 适用于远程访问、插件/服务间调用 |
+| Bearer Token | `Authorization: Bearer <token>` | 适用于多用户/更严格场景（JWT/Token） |
+| 无认证 | — | 可用于本地开发（需在网关/部署层放行） |
+
+## 4. 通用响应格式（Envelope）
+
+所有 JSON 响应使用统一 Envelope（与 `application/api_gateway/response_formatter.py` 的 `ResponseWrapper` 对齐）。
+
+成功示例：
 ```json
 {
   "status": "success",
-  "data": { ... },
-  "meta": {
-    "request_id": "req_abc123",
-    "timestamp": "2026-03-17T14:27:00Z",
-    "processing_time_ms": 320
-  }
+  "code": 200,
+  "message": "Success",
+  "timestamp": 1711161600.123,
+  "data": {},
+  "meta": {}
 }
 ```
 
-错误响应：
+校验失败示例（`fail` + 422）：
 ```json
 {
-  "status": "error",
-  "code": "INVALID_INPUT",
-  "message": "Prompt too long, max 32000 tokens",
-  "details": { ... },
-  "request_id": "req_def456"
+  "status": "fail",
+  "code": 422,
+  "message": "Validation failed",
+  "timestamp": 1711161600.123,
+  "errors": [
+    {
+      "field": "user_id",
+      "message": "Field is required",
+      "code": "required",
+      "value": null
+    }
+  ]
 }
 ```
 
-## 4. 核心端点清单
+> 说明：`timestamp` 为 Unix epoch seconds（float）；`errors[]` 结构与 `request_validator.py` 对齐。
 
-### 4.1 会话管理
+## 5. 端点清单（按域）
 
-**POST /sessions**  
-创建新会话  
+> 说明：下表为 **契约端点清单**。若某端点尚未实现，必须在此处标注“规划/未实现”，避免对调用方产生误导。
+
+| 域 | 方法 | 路径（相对 `/api/v1`） | 说明 | 实现状态 |
+|---|---|---|---|---|
+| system | GET | `/system/health` | 健康检查 | 规划 |
+| system | GET | `/system/status` | 系统状态 | 规划 |
+| system | GET | `/system/metrics` | 指标输出 | 规划 |
+| session | POST | `/sessions` | 创建会话 | 规划 |
+| session | GET | `/sessions/{session_id}` | 会话详情/历史 | 规划 |
+| session | DELETE | `/sessions/{session_id}` | 结束会话 | 规划 |
+| chat | POST | `/chat` | 对话入口（可选流式） | 规划 |
+| emotion | POST | `/emotion/feedback` | 用户纠正情绪 | 规划 |
+| memory | POST | `/memory/add` | 写入记忆/偏好 | 规划 |
+| memory | POST | `/memory/search` | 语义检索 | 规划 |
+| knowledge | POST | `/knowledge/entities` | 创建/更新实体 | 规划 |
+| knowledge | POST | `/knowledge/relations` | 创建/更新关系 | 规划 |
+| routing | GET | `/models/available` | 可用模型列表 | 规划 |
+| routing | POST | `/routing/decide` | 路由决策 | 规划 |
+| plugin | GET | `/plugins` | 插件列表 | 规划 |
+| plugin | POST | `/plugins/install` | 安装插件 | 规划 |
+| tools | POST | `/tools/execute` | 工具执行 | 规划 |
+
+## 6. 示例（契约级示例）
+
+### 6.1 创建会话
+
+`POST /sessions`
+
 请求体：
 ```json
 {
@@ -72,107 +104,63 @@ http://localhost:8765/api/v2
   "initial_prompt": "你好，我是 Zikang"
 }
 ```
-响应：`{ "session_id": "sess_001", "created_at": "..." }`
 
-**GET /sessions/{session_id}**  
-获取会话状态与历史
+响应（Envelope）：
+```json
+{
+  "status": "success",
+  "code": 200,
+  "message": "Success",
+  "timestamp": 1711161600.123,
+  "data": {
+    "session_id": "sess_001",
+    "created_at": "2026-03-23T10:00:00+08:00"
+  }
+}
+```
 
-**DELETE /sessions/{session_id}**  
-结束会话（清理临时内存）
+### 6.2 对话入口（非流式）
 
-### 4.2 对话交互（核心）
+`POST /chat`
 
-**POST /chat**  
-发送消息并获取回复  
 请求体：
 ```json
 {
   "session_id": "sess_001",
   "message": "今天心情怎么样？",
-  "mode": "normal",               // normal / proactive / debug
-  "stream": true                  // 是否 SSE 流式返回
-}
-```
-响应（非流式）：
-```json
-{
-  "reply": "我感觉你今天有点疲惫，要不要聊聊最近的事？",
-  "emotion": { "primary": "calm", "intensity": 0.45 },
-  "proactive_triggered": false,
-  "used_model": "qwen2.5-32b-q5_k_m"
+  "mode": "normal",
+  "stream": false
 }
 ```
 
-**GET /chat/history/{session_id}**  
-获取完整对话历史（分页支持）
-
-### 4.3 情绪与记忆操作
-
-**POST /emotion/feedback**  
-用户手动纠正情绪  
-请求体：
+响应（示例）：
 ```json
 {
-  "session_id": "sess_001",
-  "turn_id": 5,
-  "corrected_emotion": "happy",
-  "intensity": 0.85,
-  "reason": "因为收到了礼物"
-}
-```
-
-**POST /memory/add**  
-手动添加知识到图谱  
-请求体：
-```json
-{
-  "entity_name": "吉他",
-  "type": "OBJECT",
-  "relation": {
-    "target": "Zikang",
-    "type": "LIKES",
-    "strength": 0.92
+  "status": "success",
+  "code": 200,
+  "message": "Success",
+  "timestamp": 1711161600.123,
+  "data": {
+    "reply": "我感觉你今天有点疲惫，要不要聊聊最近的事？",
+    "emotion": { "primary": "calm", "intensity": 0.45 },
+    "proactive_triggered": false,
+    "used_model": "qwen2.5-32b-q5_k_m"
   }
 }
 ```
 
-### 4.4 系统状态与配置
+## 7. 错误与状态码建议
 
-**GET /system/status**  
-获取运行状态（模型加载、VRAM 使用、会话数等）
+- 200：成功（`status=success` / `warning`）
+- 400：输入无效（`status=fail`）
+- 401：需要认证（`status=error`）
+- 403：无权限（`status=error`）
+- 404：资源不存在（`status=error`）
+- 422：参数校验失败（`status=fail`）
+- 429：限流（`status=error`）
+- 500：服务器错误（`status=error`）
 
-**POST /config/update**  
-动态更新配置（需管理员权限）
+## 8. 变更与兼容
 
-**GET /models/available**  
-列出当前可用模型及路由状态
-
-## 5. 错误码表
-
-| 代码               | HTTP 状态码 | 描述                              |
-|--------------------|-------------|-----------------------------------|
-| SUCCESS            | 200         | 成功                              |
-| INVALID_INPUT      | 400         | 输入无效                          |
-| AUTH_REQUIRED      | 401         | 需要认证                          |
-| FORBIDDEN          | 403         | 无权限                            |
-| NOT_FOUND          | 404         | 资源不存在                        |
-| RATE_LIMIT         | 429         | 频率限制                          |
-| INTERNAL_ERROR     | 500         | 服务器内部错误                    |
-| MODEL_UNAVAILABLE  | 503         | 模型未加载或 OOM                  |
-
-## 6. 版本控制与变更
-
-- 当前版本：v2
-- 向后兼容：v1 端点保留 6 个月后弃用
-- 变更日志见：api_changelog.md
-
-## 7. 安全约束
-
-- 所有输入经过 security layer 过滤（参考 security_architecture.md）
-- 敏感操作需二次确认（e.g. /memory/delete）
-- 日志记录所有 API 调用（audit log）
-
-本文件为 Mirexs REST API 的**唯一权威参考**，所有前端、插件、测试必须以此为准。任何端点变更需同步更新本文件并发布 changelog。
-
-**作者签名**：Zikang Li  
-**日期**：2026-03-17
+- 端点/字段变更必须在 `docs/api_reference/api_changelog.md` 追加记录。
+- 建议遵循语义化版本（SemVer），并通过 `/api/v{major}` 路径体现破坏性变更。
