@@ -1,10 +1,19 @@
 
 # 安全架构（Security Architecture）
 
-**版本：v2.0.0**  
-**最后更新：2026-03-16**  
+**版本：v2.0.1**  
+**最后更新：2026-03-23**  
 **作者：Zikang Li**  
-**状态：契约优先规范，所有安全相关模块、代码审查、事件响应流程必须严格遵守本规范**
+**状态：契约优先规范（部分模块已实现，部分为占位；以代码与配置为准）**
+
+## 0. 实现对齐摘要（2026-03-23）
+
+本仓库中与安全架构直接相关的可验证入口包括：
+
+- **访问控制（已实现）**：`security/access_control/*`（RBAC/ABAC、会话管理、权限管理等）
+- **API 网关安全组件（已实现）**：`application/api_gateway/api_authenticator.py`、`application/api_gateway/request_validator.py`、`application/api_gateway/rate_limiter.py`
+- **输入防护/审计等模块（占位）**：`security/guardian/*`、`security/audit/*`（接口与目录存在，但内容需补齐）
+- **关键配置口径**：`config/system/service_configs/api_config.yaml`（认证、限流、健康检查、文档端点等）
 
 ## 1. 安全设计哲学与核心原则
 
@@ -31,8 +40,8 @@ Mirexs v2.0 安全三层结构
             ↑↓ (事件总线 + Alert Payload)
 ┌─────────────────────────────────────────────────────────────┐
 │ Layer 2 - Immutable Audit & Runtime Guard                   │
-│   • Append-only 审计日志（SQLite + 加密）                    │
-│   • 运行时规则引擎（输入/输出/行为约束）                       │
+│   • Append-only 审计链（链式哈希 + 可选签名/加密）              │
+│   • 运行时守护（输入/输出/行为约束）                           │
 │   • 权限检查 & 沙箱                                          │
 └─────────────────────────────────────────────────────────────┘
             ↑↓ (每条请求/响应强制经过)
@@ -71,7 +80,7 @@ Mirexs v2.0 安全三层结构
 
 ## 4. Layer 2：运行时审计与守护（Immutable Audit Trail）
 
-### 4.1 审计日志格式（Pydantic + SQLite）
+### 4.1 审计日志格式（审计链：链式哈希 + 签名 + JSON 持久化）
 
 ```python
 class AuditEntry(BaseModel):
@@ -90,13 +99,17 @@ class AuditEntry(BaseModel):
     hash: str                        # SHA256(entry_id + timestamp + payload)
 ```
 
-- 存储：SQLite（`data/audit.db`，加密 AES-256-GCM）
-- 不可删除：只支持 append，物理文件设为只读 + chattr +i（Linux）
-- 导出：用户可导出 JSONL 格式（脱敏）
+> 说明（实现对齐，2026-03-23）：仓库中可核验的审计实现位于 `security/security_monitoring/audit_logger.py`，默认存储路径为 `data/security/audit/`（JSON 审计链 + 索引文件）。本节代码片段为概念模型，字段与实现存在差异但约束一致。
 
-### 4.2 运行时规则引擎（security/rules_engine.py）
+- 存储：审计链文件（默认 `data/security/audit/`，实现见 `security/security_monitoring/audit_logger.py`）
+- 防篡改：链式哈希（`previous_hash` → `entry_hash`）+ 签名校验（见 `AuditLogger.verify_chain()`）
+- 归档/保留：超过阈值自动归档（实现见 `AuditLogger._archive_chain()`）；保留策略以配置与实现为准
+- 导出：`AuditLogger.export_chain()` 输出 JSON（可作为进一步脱敏/归档输入）
 
-- 使用轻量规则系统（类似 Open Policy Agent 的简化版）
+### 4.2 运行时策略与守护（security/access_control/* + security/guardian/*）
+
+- 访问控制与策略评估建议以 `security/access_control/*` 为核心（RBAC/ABAC/Policy），对“谁能做什么”给出可审计判定。
+- 输入/输出/行为级守护（jailbreak、敏感内容、越权等）建议落地在 `security/guardian/*`（当前为占位，需补齐实现）。
 - 示例规则（YAML）：
   ```yaml
   rules:
@@ -127,7 +140,7 @@ class AuditEntry(BaseModel):
 ### 5.3 通知与恢复
 
 - 本地通知：通过 UI/CLI 弹窗
-- 日志导出：用户可一键打包 audit.db + config 快照
+- 日志导出：用户可一键打包 `data/security/audit/` + config 快照（用于审计与取证）
 
 ## 6. 隐私控制功能（用户可操作）
 
