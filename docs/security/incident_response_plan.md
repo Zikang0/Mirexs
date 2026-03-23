@@ -1,11 +1,18 @@
 
 # Mirexs 事件响应计划（Incident Response Plan）
 
-**版本：v2.0.0**  
-**最后更新：2026-03-17**  
+**版本：v2.0.1**  
+**最后更新：2026-03-23**  
 **作者：Zikang Li**  
 **适用范围**：Mirexs v2.0 系统所有部署实例（本地、远程、开发、生产），包括核心引擎、SDK、插件、REST API  
 **参考**：security_architecture.md、audit_guide.md、NIST SP 800-61r2（计算机安全事件处理指南）
+
+## 0. 实现对齐摘要（2026-03-23）
+
+- **审计日志（可核验）**：实现见 `security/security_monitoring/audit_logger.py`，默认存储在 `data/security/audit/`（详见 `docs/security/audit_guide.md`）
+- **访问控制（可核验）**：`security/access_control/*`（RBAC/ABAC、会话、权限、密钥等）
+- **输入守护/策略执行（占位）**：`security/guardian/*` 目录存在但内容待补齐
+- **启动/应急 CLI（缺失）**：仓库未提供 `launch/main.py` 等统一 CLI；本文涉及的 CLI/SDK 指令需在后续实现中落地
 
 ## 1. 目的与范围
 
@@ -30,10 +37,12 @@
 
 ### Phase 1: Preparation（准备阶段 - 持续）
 
-- 审计日志始终启用（data/audit.db 加密 append-only）
-- 安全规则引擎实时运行（security/rules_engine.py）
-- 自动备份：每日 00:00 备份 config/、data/（用户可选关闭）
-- 应急工具：client.reset_system()、CLI --emergency-reset
+- **审计链**：生产环境应确保审计日志启用（默认 `data/security/audit/`，实现见 `security/security_monitoring/audit_logger.py`）。
+- **安全策略与守护**：
+  - 访问控制/策略评估：`security/access_control/*`
+  - 输入/输出/行为守护：`security/guardian/*`（占位，需补齐实现并与 `docs/architecture/security_architecture.md` 对齐）
+- **备份**：建议启用自动备份（配置口径见 `config/system/main_config.yaml` 的 `backup.*`；实现可参考 `data/user_data/backup_manager.py`）。
+- **应急入口（规划）**：建议提供 CLI/SDK 的紧急重置、安全模式、审计导出能力，并确保调用被写入审计。
 
 ### Phase 2: Identification（识别阶段）
 
@@ -61,11 +70,11 @@
 - **Level 1**：无须
 - **Level 2**：
   - 清空隔离 session 临时内存
-  - 回滚 RL Q 值（从最近安全 checkpoint）
-  - 重新加载模型（model_loader.reload_safe()）
+  - 回滚/重置强化学习状态（典型落盘：`data/reinforcement_learning/`；以具体实现的 checkpoint 机制为准）
+  - 重新加载模型（由模型服务/推理框架实现负责，需提供“安全配置”启动路径）
 - **Level 3**：
-  - 强制重置用户数据（client.reset_user_data(full=True)）
-  - 删除可疑插件（plugin_loader.unload(suspicious_name)）
+  - 强制重置用户数据（产品侧需提供明确的 reset/清理能力；删除范围必须可审计、可回溯）
+  - 禁用/卸载可疑插件（插件系统实现参考 `application/api_gateway/plugin_system.py`；需补齐隔离策略与权限模型）
   - 验证系统完整性（checksum 检查核心 .py 文件）
 
 ### Phase 5: Recovery（恢复阶段）
@@ -81,7 +90,7 @@
 
 ### Phase 6: Post-Incident Activity（事后审查）
 
-- 生成 Incident Report（docs/internal_docs/incident_reports/ 下新增 .md）
+- 生成 Incident Report（建议新增 `docs/internal_docs/incident_reports/` 目录用于归档）
   - 事件时间线
   - 触发原因分析
   - 响应措施有效性评估
@@ -99,25 +108,21 @@
 
 ## 5. 关键工具与命令（紧急响应）
 
-- CLI 命令：
+> 说明（实现对齐，2026-03-23）：仓库当前未交付统一 CLI/SDK 命令入口。以下为“可落地建议”，其中审计导出示例可直接对齐现有实现。
+
+- 审计导出（可核验示例）：
   ```bash
-  python launch/main.py --emergency-reset          # 强制重置
-  python launch/main.py --safe-mode                # 进入安全模式
-  python launch/main.py --export-audit             # 导出审计日志
+  python -c "from security.security_monitoring.audit_logger import get_audit_logger; get_audit_logger().export_chain('audit_export.json')"
   ```
-- SDK 方法：
-  ```python
-  await client.emergency_reset(full=True)          # 完整重置
-  await client.get_incident_status()               # 查询当前事件状态
-  ```
+- 安全模式/紧急重置（规划建议）：提供 `launch/` 下统一 CLI，对外暴露 `--safe-mode`、`--emergency-reset`、`--export-audit` 等命令，并确保所有动作写入审计链。
 
 ## 6. 测试与演练
 
-- 每月模拟演练（tests/security/test_incident_response.py）
+- 建议为事件响应流程补齐测试与演练脚本（例如新增 `tests/unit_tests/security/` 下的场景测试），覆盖：
   - 模拟 jailbreak 输入 → 验证隔离
-  - 模拟高风险插件 → 验证卸载
-  - 模拟 Level 3 → 验证自动 safe mode
-- 演练报告存入 internal_docs/incident_reports/
+  - 模拟高风险插件 → 验证禁用/卸载
+  - 模拟 Level 3 → 验证安全模式/紧急重置入口
+- 演练报告建议归档至 `docs/internal_docs/incident_reports/`（需创建目录并制定模板）
 
 ## 7. 更新与审查
 
