@@ -1,10 +1,10 @@
 
 # Mirexs v2.0 整体架构概述（Architecture Overview）
 
-**版本：v2.0.0**  
-**最后更新：2026-03-16**  
+**版本：v2.0.1**  
+**最后更新：2026-03-23**  
 **作者：Zikang Li**  
-**状态：契约优先总览文档，所有子架构文档必须引用并遵守本概述中的分层、原则与约束**
+**状态：契约优先总览文档（已校准文档/代码口径）；所有子架构文档必须引用并遵守本概述中的分层、原则与约束**
 
 ## 1. 设计哲学与核心原则
 
@@ -34,7 +34,7 @@ Mirexs v2.0 系统分层（由外到内）
 │  - Emotion Neural Network                                   │
 │  - Knowledge Graph + Hybrid Memory                          │
 │  - Multi-Model Intelligent Routing                          │
-│  - Reinforcement Learner (Q-learning + User Feedback)       │
+│  - Reinforcement Learner (RL + User Feedback)               │
 │  - Proactive Behavior Engine                                │
 └─────────────────────────────────────────────────────────────┘
             ↓↑ (标准接口 + Pydantic Payloads)
@@ -42,7 +42,7 @@ Mirexs v2.0 系统分层（由外到内）
 │  Infrastructure & Runtime Layer                             │
 │  - Model Hub & Loader (vLLM / llama.cpp / transformers)     │
 │  - Vector DB (Chroma / FAISS)                               │
-│  - Graph DB (Neo4j)                                         │
+│  - Graph DB (NetworkX / Neo4j)                              │
 │  - Hardware Profiler & Resource Manager                     │
 │  - Real-time Knowledge Updater (RSS / Optional Web)         │
 └─────────────────────────────────────────────────────────────┘
@@ -71,33 +71,34 @@ Mirexs v2.0 系统分层（由外到内）
 
 ## 4. 统一接口规范（所有模块必须遵守）
 
-- **Payload 标准**：全部使用 Pydantic v2 BaseModel，禁止 dict/自定义类
-- **异步优先**：所有 I/O、重计算操作必须 async def
-- **错误处理**：统一使用自定义异常继承自 `MirexsError`，携带 error_code + user_friendly_message
+- **Payload 标准（边界层强制）**：对外 API、跨模块事件、持久化日志必须有稳定 Schema（优先 Pydantic v2 BaseModel；允许 dataclass 但必须配套显式序列化/反序列化）；禁止“无 Schema 的 dict”跨边界流转
+- **Payload 标准（内部层建议）**：内部模块可使用 dataclass/dict，但必须保留类型注解与字段约束，并在对外边界处转换为稳定 Schema
+- **异步优先（I/O 场景）**：网络/磁盘/数据库等 I/O 路径建议 `async def`；纯 CPU 逻辑可保持同步实现
+- **错误处理（边界层强制）**：对外接口必须转换为统一错误模型（参见 `docs/technical_specifications/api_specification.md` 的 Envelope + `errors[]` 结构）；内部异常可保留模块自定义，但需在边界层收敛
 - **日志级别**：
   - DEBUG：详细数据流
   - INFO：决策点、状态变更
   - WARNING：降级、fallback
   - ERROR：模块失败（触发 incident response）
-- **版本控制**：每个模块文档头部必须声明版本，与本概述版本同步或更高
+- **版本控制**：每个模块文档头部必须声明版本与最后更新日期；若与代码不一致，必须在文档中明确“现状差异”
 
-## 5. 子架构文档清单（architecture/ 目录下规划文件）
+## 5. 子架构文档清单（architecture/ 目录）
 
-| 文件名                        | 主要职责                                   | 依赖本概述章节 | 优先级 | 状态（GitHub） |
-|-------------------------------|--------------------------------------------|----------------|--------|----------------|
-| overview.md                   | 本文档，总览 + 分层 + 原则                 | —              | 最高   | 待创建         |
-| multi_model_routing.md        | 多模型路由、硬件自适应、决策引擎           | 2, 3, 4        | 高     | 待创建         |
-| emotion_nn.md                 | 情绪神经网络、多模态融合、个性化微调       | 2, 3           | 高     | 待创建         |
-| knowledge_graph.md            | 知识图谱建模、抽取、查询、遗忘机制         | 2, 3           | 高     | 待创建         |
-| security_architecture.md      | 安全三层设计、审计、隐私、事件响应         | 2, 5           | 高     | 待创建         |
-| reinforcement_learner.md      | Q-learning 行为优化、奖励设计、探索策略   | 2              | 中     | 待创建         |
-| proactive_behavior.md         | 主动能力引擎、触发条件、行为提案           | 2, 3           | 中     | 待创建         |
-| hybrid_memory.md              | 向量 + 图谱 + 情景 + 程序记忆协同机制      | 2, 3           | 中     | 待创建         |
-| realtime_knowledge.md         | 实时知识接入、RSS/Web 增量更新             | 2              | 低     | 待创建         |
+| 文件名                    | 主要职责 | 依赖本概述章节 | 优先级 | 文档状态 | 对应实现/配置入口（示例） |
+|---------------------------|----------|----------------|--------|----------|--------------------------|
+| overview.md               | 架构总览 + 分层 + 约束 | — | 最高 | 已存在 | `docs/architecture/overview.md` |
+| multi_model_routing.md    | 多模型路由、硬件自适应、决策引擎 | 2, 3, 4 | 高 | 已存在 | `infrastructure/model_hub/`（占位）、`config/system/model_configs/router_config.yaml`（占位） |
+| emotion_nn.md             | 情绪网络、多模态融合、个性化微调 | 2, 3 | 高 | 已存在 | `cognitive/learning/emotion_nn.py`（占位）、`docs/internal_docs/research_papers/emotion_recognition.md`（研究稿） |
+| knowledge_graph.md        | 知识图谱建模、抽取、查询、遗忘机制 | 2, 3 | 高 | 已存在 | `data/databases/graph_db/knowledge_graph.py`（内存图实现）、`data/databases/vector_db/`（向量库实现） |
+| security_architecture.md  | 安全三层设计、审计、隐私、事件响应 | 2, 5 | 高 | 已存在 | `security/`、`docs/security/*`、`config/system/service_configs/api_config.yaml`（认证/限流） |
+| reinforcement_learner.md  | 强化学习策略与接口约束 | 2 | 中 | 已存在 | `cognitive/learning/reinforcement_learner.py` |
+| proactive_behavior.md     | 主动能力引擎、触发条件、行为提案 | 2, 3 | 中 | 已存在 |（待补齐实现入口：请在文档中补充） |
+| hybrid_memory.md          | 向量 + 图谱 + 情景 + 程序记忆协同 | 2, 3 | 中 | 已存在 | `docs/architecture/hybrid_memory.md`、`cognitive/memory/`、`data/databases/vector_db/` |
+| realtime_knowledge.md     | 实时知识接入、RSS/Web 增量更新 | 2 | 低 | 已存在 | `docs/architecture/realtime_knowledge.md`、`capabilities/knowledge/*`（占位） |
 
-**注意**：以上文件**全部**在 GitHub 当前为空，需要逐个创建并 commit。后续子文档必须在头部声明：
+后续子文档必须在头部声明依赖关系（示例）：
 
-> 本文档依赖并遵守 `architecture/overview.md` v2.0.0 中的分层与原则。
+> 本文档依赖并遵守 `architecture/overview.md` v2.0.1 中的分层与约束。
 
 ## 6. 非功能性全局约束（所有模块必须满足）
 
@@ -118,6 +119,15 @@ Mirexs v2.0 系统分层（由外到内）
 
 本文件为 Mirexs v2.0 **架构层唯一入口文档**，所有其他 architecture/*.md 必须以此为顶层约束。任何重大设计变更需更新本文件并全量 review。
 
+## 8. 文档一致性与对齐规则（2026-03-23 起执行）
+
+为保证文档“严谨、可执行、可验证”，所有架构文档必须满足：
+
+1. **声明现状**：文档头部必须包含 `状态`（规划/部分落地/已落地），且不得用“生产级/100% 对齐”替代可验证描述。
+2. **映射实现**：至少给出 1 个“对应实现/配置入口”（文件路径），并说明关键差异与待办。
+3. **避免虚构**：不写不存在的脚本/路径/配置名；如为目标态，必须标注“规划”并给出落地前置条件。
+4. **变更联动**：接口/Envelope/路径变更需同步更新 `docs/technical_specifications/*` 与 `docs/api_reference/*`，并在 `docs/api_reference/api_changelog.md` 记录。
+
 **作者签名**：Zikang Li  
-**日期**：2026-03-16
+**日期**：2026-03-23
 
