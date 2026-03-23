@@ -1,10 +1,19 @@
 # Mirexs 合规性文档（Compliance）
 
-**版本：v2.0.0**  
-**最后更新：2026-03-17**  
+**版本：v2.0.1**  
+**最后更新：2026-03-23**  
 **作者：Zikang Li**  
 **适用范围**：Mirexs v2.0 系统整体（代码、数据处理、部署、开源分发、使用场景）  
 **合规参考**：香港《个人资料（私隐）条例》（Cap. 486）、GDPR（欧盟参考）、中国《个人信息保护法》（参考）、Apache 2.0 开源许可
+
+## 0. 实现对齐摘要（2026-03-23）
+
+本文为**合规要求与承诺**的契约优先文档；仓库当前可核验的对齐点包括：
+
+- **隐私偏好配置**：`config/user/preferences/privacy.yaml`
+- **隐私保护模块**：`security/privacy_protection/`（匿名化、同意管理、保留策略、加密等）
+- **审计实现**：`security/security_monitoring/audit_logger.py`（默认落盘 `data/security/audit/`；签名与完整性校验）
+- **差异提示**：仓库当前未交付统一 CLI/SDK 出口与开源分发所需的 `LICENSE/NOTICE` 等“发布必需品”；本文涉及“对外承诺”的部分需以代码与发布工件验收为准。
 
 ## 1. 合规声明总览
 
@@ -26,7 +35,7 @@ Mirexs 项目承诺遵守以下主要法规与标准：
 ### 2.1 数据收集与处理合规
 
 - **默认零云端**：所有对话、情绪、知识图谱、RL 数据均存储在用户本地设备（data/ 目录下），不上传。
-- **可选功能授权**：启用实时知识接入、联邦学习时，必须用户手动确认（config.yaml + 运行时弹窗），并记录在 audit.db。
+- **可选功能授权**：启用实时知识接入/远端训练等能力前，必须用户显式授权（隐私偏好与系统配置开关）并记录在审计链中（实现参考 `security/security_monitoring/audit_logger.py`；指南见 `docs/security/audit_guide.md`）。
 - **匿名化处理**：用户标识使用本地生成 hash（SHA-256 + salt），无真实姓名/邮箱/IP 关联。
 - **差分隐私（可选联邦学习）**：未来 v2.1+ 联邦微调时添加噪声（ε=1.0），防止逆向工程。
 
@@ -34,26 +43,25 @@ Mirexs 项目承诺遵守以下主要法规与标准：
 
 | 权利                       | 实现方式（本地即时）                                                                 | 对应功能路径                          |
 |----------------------------|--------------------------------------------------------------------------------------|---------------------------------------|
-| 访问权（Access）           | 一键导出所有个人数据（JSONL/CSV）                                                    | SDK: client.export_all_data()         |
-| 更正权（Rectification）    | 情绪手动纠正、知识图谱手动编辑                                                       | /emotion/feedback、/memory/add        |
-| 删除权（Erasure）          | 一键重置用户数据（清空 sessions/、emotion_history/、rl_qtable.db、清空个人 KG 子图）| client.reset_user_data()              |
-| 限制处理权（Restriction）  | 关闭模块（proactive/rl/emotion）                                                     | config.yaml 或 CLI 命令               |
-| 可携权（Portability）      | 导出格式标准化（JSONL + Neo4j dump）                                                 | export 工具脚本                       |
-| 反对权（Objection）        | 禁用任何可选功能、关闭记忆功能                                                       | config.yaml + restart                 |
+| 访问权（Access）           | 导出/备份个人数据（参考 `data/user_data/backup_manager.py`，需由产品侧提供入口）     | `data/user_data/backup_manager.py`    |
+| 更正权（Rectification）    | 通过纠错入口更正情绪/知识/偏好（入口形态由产品决定）                                 | 规划（需补齐 UI/CLI/SDK）             |
+| 删除权（Erasure）          | 一键重置/清理本地个人数据（删除范围需可审计、可回溯）                                 | 规划（需补齐 reset 机制）             |
+| 限制处理权（Restriction）  | 关闭模块与可选能力开关（隐私偏好/系统配置）                                           | `config/user/preferences/privacy.yaml` |
+| 可携权（Portability）      | 导出为标准格式（JSON/JSONL/CSV；图谱后端按适配器能力导出）                           | 规划（需补齐工具链）                  |
+| 反对权（Objection）        | 禁用联网/云端能力、关闭记忆/学习等模块                                                | 配置开关 + 审计记录（契约）           |
 
 ### 2.3 安全与审计合规
 
-- 所有关键操作记录在加密 audit.db（AES-256-GCM），不可篡改。
-- 审计日志保留期：默认 365 天（可配置），用户可导出但不可修改。
+- 所有关键操作应记录在本地审计链中（实现参考 `security/security_monitoring/audit_logger.py`；默认签名与链式完整性校验）。
+- 审计日志保留与归档：实现中提供阈值归档与链长度控制（以配置与实现为准），用户可导出且禁止手工编辑。
 - 事件响应：参考 incident_response_plan.md，CRIT 级别事件自动隔离模块。
 
 ### 2.4 开源许可合规（Apache 2.0）
 
-- 根目录 LICENSE 文件完整包含 Apache 2.0 全文。
-- 所有代码文件头部包含版权声明：Copyright [年份] Zikang Li
-- NOTICE 文件列出第三方依赖版权信息（requirements.txt + pyproject.toml）。
-- 专利授权条款：明确授予用户免费使用专利权。
-- 贡献者协议：未来 PR 需签署 ICLA（Individual Contributor License Agreement）。
+- **发布工件缺口（需补齐）**：仓库根目录当前未包含 `LICENSE` 与 `NOTICE`，因此不能宣称“已满足 Apache 2.0 开源分发要求”。如需开源发布，必须补齐并验收：
+  - `LICENSE`：完整 Apache 2.0 文本（或实际采用的许可证文本）
+  - `NOTICE`：第三方依赖与声明（对齐 `requirements.txt` 等）
+  - 贡献与版权策略：是否需要 ICLA/CLA、是否强制文件头声明等
 
 ### 2.5 儿童与特殊群体保护
 
@@ -66,12 +74,12 @@ Mirexs 项目承诺遵守以下主要法规与标准：
 
 | 检查项                             | 实现状态 | 证据位置                          |
 |------------------------------------|----------|-----------------------------------|
-| 默认本地运行，无云端上传           | 已实现   | config.yaml + 代码路径            |
-| 数据删除功能完整                   | 已实现   | SDK reset_user_data()             |
-| 审计日志加密 & 不可篡改            | 已实现   | security/audit_logger.py          |
+| 默认本地运行，无云端上传           | 契约已定义，待验收 | `docs/security/privacy_policy.md` + `config/user/preferences/privacy.yaml` |
+| 数据删除功能完整                   | 规划中   | 需补齐 reset/清理入口与测试       |
+| 审计日志签名 & 完整性校验          | 部分实现 | `security/security_monitoring/audit_logger.py` |
 | 隐私政策公开 & 易访问              | 已实现   | docs/security/privacy_policy.md   |
-| 开源许可完整声明                   | 已实现   | LICENSE + NOTICE                  |
-| 可选云端功能需明确同意             | 已实现   | config + 运行时确认               |
+| 开源许可完整声明                   | 未实现/待补齐 | 需新增 `LICENSE` + `NOTICE`       |
+| 可选云端功能需明确同意             | 契约已定义 | `docs/security/privacy_policy.md` + 审计链要求 |
 | 差分隐私（联邦学习）预留           | 规划中   | v2.1+                             |
 
 ## 4. 责任与免责
@@ -85,7 +93,7 @@ Mirexs 项目承诺遵守以下主要法规与标准：
 - 本合规文档随系统重大版本更新同步修订。
 - 变更通知：通过 GitHub Release Notes + CLI 启动时提示。
 
-本合规文档与 Mirexs **本地优先、安全第一** 的设计理念一致，是对法规要求的正式回应。所有措施可在源码（security/、config/、cognitive/ 等）中验证。
+本合规文档与 Mirexs **本地优先、安全第一** 的设计理念一致，是对法规要求的正式回应。已实现部分可在源码（security/、config/、cognitive/ 等）中核验；未交付项需在发布前补齐并通过验收。
 
 **作者签名**：Zikang Li  
-**日期**：2026-03-17
+**日期**：2026-03-23
