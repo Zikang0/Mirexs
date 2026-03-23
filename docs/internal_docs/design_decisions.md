@@ -81,7 +81,7 @@ Zikang Li
 *   **影响**：
     *   **积极**：提高了记忆检索的效率和准确性，支持 Mirexs 进行长期对话和深度推理，增强了用户个性化体验。
     *   **消极**：增加了记忆管理系统的复杂性，需要维护多种存储技术和数据同步机制。
-*   **相关文档**：`docs/architecture/memory_management.md`, `docs/internal_docs/research_papers/memory_management.md`
+*   **相关文档**：`docs/architecture/hybrid_memory.md`, `docs/internal_docs/research_papers/memory_management.md`
 
 ### 3.3 ADR 003: 情绪识别的多模态融合策略
 
