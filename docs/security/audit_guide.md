@@ -1,158 +1,125 @@
-
 # Mirexs 审计指南（Audit Guide）
 
-**版本：v2.0.0**  
-**最后更新：2026-03-17**  
+**版本：v2.0.1**  
+**最后更新：2026-03-23**  
 **作者：Zikang Li**  
-**适用范围**：Mirexs v2.0 系统所有审计日志（data/audit.db）、审计查询、导出、分析、事后审查  
-**参考**：security_architecture.md、incident_response_plan.md、privacy_policy.md
+**适用范围**：Mirexs v2.0 系统审计日志（默认目录 `data/security/audit/`）、审计查询、导出、分析、事后审查  
+**参考**：`docs/architecture/security_architecture.md`、`docs/security/incident_response_plan.md`、`docs/security/privacy_policy.md`
+
+## 0. 实现对齐摘要（2026-03-23）
+
+- **审计实现入口（可核验）**：`security/security_monitoring/audit_logger.py`（`AuditLogger` / `get_audit_logger()`）
+- **默认存储口径（可核验）**：`data/security/audit/`（`audit_chain.json`、`audit_index.json`、`audit_archive_*.json`）
+- **关键能力（可核验）**：`log_event()`、`query()`、`verify_chain()`、`export_chain()`
+- **注意**：`security/audit/*` 在仓库中为占位骨架；审计“运行实现”以 `security/security_monitoring/` 为准
 
 ## 1. 审计系统概述
 
-Mirexs 的审计系统是**不可篡改、可追溯、安全三层防御**的核心组成部分。  
-所有关键操作、决策、输入/输出、异常事件均强制生成审计记录，存储在本地加密数据库中。
+Mirexs 的审计系统目标是提供**可追溯、可验证完整性、可导出**的本地审计链，用于：
 
-**审计日志位置**：`data/audit.db`（SQLite + AES-256-GCM 加密）  
-**不可篡改机制**：  
-- 记录采用 append-only 模式（SQLite WAL + 文件权限只读）  
-- 每条记录包含 SHA-256 hash（entry_id + timestamp + payload + prev_hash）  
-- 链式校验：修改任何记录会导致后续所有 hash 失效  
+- 安全事件回溯（jailbreak、越权、异常插件行为等）
+- 关键决策解释（路由决策、写入长期记忆、权限拒绝原因）
+- 合规与用户权利支持（导出、删除、授权记录）
 
-## 2. 审计记录格式（AuditEntry - Pydantic 定义）
+**审计日志默认位置**：`data/security/audit/`  
+**完整性机制（防篡改可检测）**：
 
-```python
-from pydantic import BaseModel, Field
-from datetime import datetime
-from typing import Literal, Dict, Optional
+- append-only 审计链（每条记录包含 `previous_hash` → `entry_hash`）
+- 可选签名（默认启用，配置键：`enable_signing`，签名密钥：`audit_signing_key`）
 
-class AuditEntry(BaseModel):
-    entry_id: str = Field(..., description="UUID v4")
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
-    session_id: Optional[str] = None
-    user_hash: str = Field(..., description="匿名用户 hash")
-    action_type: Literal[
-        "session_create", "chat_input", "chat_output", "routing_decision",
-        "emotion_detected", "emotion_feedback", "kg_update", "rl_transition",
-        "proactive_trigger", "plugin_call", "security_alert", "data_export",
-        "user_reset", "error", "incident_level_up"
-    ]
-    level: Literal["INFO", "WARN", "ERROR", "CRIT"] = "INFO"
-    payload: Dict[str, Any] = Field(default_factory=dict)  # 脱敏数据
-    status: Literal["success", "rejected", "quarantined", "failed"]
-    reason: Optional[str] = None
-    request_id: Optional[str] = None
-    prev_hash: Optional[str] = None  # 链式 hash
-    current_hash: str = Field(..., description="SHA256(entry_id + timestamp + payload + prev_hash)")
-```
+> 机密性（加密）与完整性（防篡改）不同：当前实现重点在“可检测篡改”。如需对审计内容加密存储，应在落盘层引入 `security/privacy_protection/data_encryption.py` 的加密封装并配套密钥管理（需要额外实现与验收）。
 
-**示例记录（JSON 表示）**：
+## 2. 审计记录格式（AuditEntry - 概念字段）
+
+> 实现中的数据结构请以 `security/security_monitoring/audit_logger.py` 为准；下述为便于理解的字段口径。
+
 ```json
 {
-  "entry_id": "uuid-1234-5678",
-  "timestamp": "2026-03-17T14:30:00Z",
-  "session_id": "sess_001",
-  "user_hash": "sha256:abc...def",
-  "action_type": "chat_input",
-  "level": "INFO",
-  "payload": {
-    "message_length": 128,
-    "detected_keywords": ["累", "聊聊"]
-  },
+  "entry_id": "audit_...",
+  "timestamp": 1710000000.123,
+  "event_type": "system_start",
+  "severity": "INFO",
+  "user_id": "sha256:...",
+  "source_ip": "127.0.0.1",
+  "resource": "api_gateway",
+  "action": "request_received",
   "status": "success",
-  "reason": null,
-  "request_id": "req_abc123",
-  "current_hash": "sha256:xyz...789"
+  "details": {},
+  "previous_hash": "...",
+  "entry_hash": "...",
+  "signature": "..."
 }
 ```
 
 ## 3. 审计记录生成规则（强制触发点）
 
-| 触发时机                          | action_type 示例              | 记录内容关键字段                          | 级别默认 |
-|-----------------------------------|-------------------------------|-------------------------------------------|----------|
-| 新会话创建                        | session_create                | session_id, user_hash                     | INFO     |
-| 用户输入接收（经过 sanitization） | chat_input                    | message_length, detected_emotion          | INFO     |
-| 模型路由决策                      | routing_decision              | primary_model, estimated_latency_ms       | INFO     |
-| 情绪检测/反馈                     | emotion_detected / feedback   | primary_emotion, intensity, corrected     | INFO     |
-| 知识图谱更新                      | kg_update                     | entity_count, relation_added              | INFO     |
-| 强化学习过渡                      | rl_transition                 | reward, td_error, action_id               | INFO     |
-| 主动行为触发                      | proactive_trigger             | proposal_id, priority, estimated_reward   | INFO     |
-| 插件工具调用                      | plugin_call                   | plugin_name, tool_name, params            | INFO     |
-| 安全拒绝/隔离                     | security_alert                | reason, jailbreak_score, quarantined      | WARN/ERROR/CRIT |
-| 用户数据导出/重置                 | data_export / user_reset      | export_type, reset_scope                  | INFO     |
-| 系统错误/崩溃                     | error                         | error_code, stack_trace (脱敏)            | ERROR    |
+审计记录应覆盖“安全与数据边界”相关关键动作，建议包含但不限于：
 
-**所有记录**均在 security/audit_logger.py 中统一生成。
+- 身份认证/授权（成功/失败、API key/JWT、权限拒绝）
+- 关键数据写入（KG 更新、向量索引更新、用户偏好变更）
+- 联网行为（如启用实时知识接入：来源、URL、摘要、写入策略）
+- 安全拦截（输入过滤、越权、可疑插件行为、隔离/进入 safe mode）
+- 数据导出/删除/重置（范围、时间、操作者、结果）
+
+实现入口：`security/security_monitoring/audit_logger.py` 的 `AuditLogger.log_event(...)`。
 
 ## 4. 查询与分析指南
 
-### 4.1 CLI 查询工具（推荐）
-
-```bash
-# 查看最近 100 条记录
-python tools/audit_viewer.py --last 100
-
-# 按 session_id 查询
-python tools/audit_viewer.py --session sess_001 --level ERROR
-
-# 导出指定时间范围
-python tools/audit_viewer.py --export --start 2026-03-01 --end 2026-03-17 --format jsonl
-```
-
-### 4.2 SDK 查询方法
+### 4.1 通过 AuditLogger API 查询（仓库可核验）
 
 ```python
-from mirexs import MirexsClient
+from security.security_monitoring.audit_logger import get_audit_logger
 
-client = MirexsClient()
-audit_logs = await client.query_audit(
-    session_id="sess_001",
-    level="ERROR",
-    limit=50,
-    start_time="2026-03-01T00:00:00Z"
-)
-for log in audit_logs:
-    print(log.action_type, log.reason)
+audit = get_audit_logger()
+
+# 最近记录（query 主要查询 recent_entries 缓存）
+recent = audit.query(limit=100)
+
+# 完整性验证（审计链哈希/签名校验）
+ok = audit.verify_chain()
+
+# 导出
+audit.export_chain("audit_export.json")
 ```
 
-### 4.3 完整性校验
+> 若需要更复杂的查询（跨归档文件、全链检索），建议在产品侧提供 CLI/UI 并将归档索引纳入查询路径。
 
-```bash
-# 验证日志链是否完整（脚本示例）
-python tools/audit_integrity_check.py
-# 输出：All 12345 entries verified. No tampering detected.
-```
+### 4.2 完整性校验输出解释
+
+- `verify_chain() == True`：链结构与签名校验通过（不等于“内容真实性”，只表示“未检测到篡改”）
+- `verify_chain() == False`：链断裂/哈希不一致/签名校验失败，应按事件响应流程处理（隔离、保全证据、导出链文件）
 
 ## 5. 导出与备份规范
 
-- **格式**：JSONL（每行一条 AuditEntry JSON）
-- **脱敏规则**：
-  - message 内容截断至前 200 字符 + "..."（隐私敏感）
-  - user_hash 永不导出真实身份
-  - payload 中敏感键（如 api_key）移除
-- **导出命令**：`--export --anonymized`（默认匿名化）
-- **备份建议**：定期复制 data/audit.db 到外部加密介质
+- **导出格式**：当前实现为 JSON（数组）；如需 JSONL，可在导出后转换
+- **脱敏建议**：默认只记录最小必要字段；对 `details` 做 PII/密钥等敏感字段剥离
+- **备份建议**：定期复制 `data/security/audit/` 到外部加密介质；同时备份配置快照（`config/`）
 
 ## 6. 审计日志保留与清理
 
-- **默认保留**：365 天（可配置）
-- **自动清理**：超过保留期 + Level=INFO 的记录可安全删除（保留 Level WARN+）
-- **手动清理**：用户重置时仅删除与个人数据相关的记录（session_id/user_hash 匹配）
+实现中提供归档与链长度控制（默认配置键）：
+
+- `archive_threshold`：达到阈值时归档旧记录到 `audit_archive_*.json`
+- `max_chain_size`：超过最大链长度时保留最近记录
+
+清理原则：
+
+- 禁止“编辑”审计链文件；如需清理应通过归档/保留策略实现可解释的删除
+- 清理动作本身应写入审计（记录清理范围与原因）
 
 ## 7. 事后审查模板（用于 incident_reports/）
 
-- 事件 ID：从 audit.db 查询
-- 时间线：按 timestamp 排序
-- 关键证据：提取相关 entry_id
-- 根因分析：结合 reason、level
-- 改进建议：更新 rules_engine 或阈值
+- 事件时间线：从导出文件按 `timestamp` 排序
+- 关键证据：`entry_id` + `entry_hash`（必要时附 `signature`）
+- 触发路径：resource/action/details
+- 根因分析：结合安全策略与模块日志
+- 改进项：规则更新、阈值调整、权限收敛、补齐测试
 
 ## 8. 注意事项与限制
 
-- 审计日志**不可手动编辑**（修改会导致 hash 链断裂，系统启动时校验失败）
-- 加密密钥丢失将导致日志无法读取（密钥由用户管理）
-- 审计系统本身受安全三层保护（Layer 2 运行时守卫）
-
-本审计指南是 Mirexs **可追溯性与信任基础** 的核心文档。所有审计实现可在 security/audit_logger.py 与 data/audit.db schema 中验证。
+- 审计链强调“防篡改可检测”；机密性与访问控制需通过独立机制实现（权限管理 + 可选加密）
+- 签名密钥管理与轮换策略需与 `security/access_control/key_management.py` 对齐
+- 本指南为契约优先文档：任何审计落盘格式、字段含义或保留策略变更需同步更新本文件
 
 **作者签名**：Zikang Li  
-**日期**：2026-03-17
+**日期**：2026-03-23
