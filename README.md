@@ -1,9 +1,4 @@
----
-status: partial
-last_reviewed: 2026-03-26
-corresponds_to_code: "暂无"
-related_issues: ""
----
+
 # 🐱 Mirexs（弥尔思）V2.0 - AI Digital Lifeform  
 
 ## 0. 实现对齐摘要（2026-03-26）
@@ -13,7 +8,7 @@ related_issues: ""
 **全球首个情感化数字生命体 · 多模型智能路由 · 实时知识更新 · 知识图谱 · 情绪神经网络**
 **事实核查能力：多源交叉验证 + 逻辑分析，自动识别虚假信息，给你更可靠的答案**
 
-<p align="center"> <img src="https://via.placeholder.com/220x220.png?text=Mirexs+Logo" alt="Mirexs Logo" width="220"/> <br/> <strong>Mirexs（弥尔思）v2.0 - Your Personal AI Digital Lifeform</strong> </p><p align="center"> <a href="#-v20-重磅更新"><img src="https://img.shields.io/badge/版本-v2.0-blue" alt="版本"/></a> <a href="#-核心特性"><img src="https://img.shields.io/badge/特性-多模型智能路由-brightgreen" alt="特性"/></a> <a href="#-技术栈亮点"><img src="https://img.shields.io/badge/技术栈-知识图谱%20%7C%20情绪神经网络-orange" alt="技术栈"/></a> <a href="#-快速开始"><img src="https://img.shields.io/badge/快速开始-开发指南-red" alt="快速开始"/></a> <a href="LICENSE"><img src="https://img.shields.io/badge/许可证-Apache%202.0-purple" alt="许可证"/></a> <a href="https://mirexs.com"><img src="https://img.shields.io/badge/官网-mirexs.com%20%7C%20mirexs.cn%20%7C%20mirexs.ai-9cf" alt="官网"/></a> </p>
+<p align="center"> <img src="docs/architecture/mirexs_logo.svg" alt="Mirexs Logo" width="220"> <br/> <strong>Mirexs（弥尔思）v2.0 - Your Personal AI Digital Lifeform</strong> </p><p align="center"> <a href="#-v20-重磅更新"><img src="https://img.shields.io/badge/版本-v2.0-blue" alt="版本"/></a> <a href="#-核心特性"><img src="https://img.shields.io/badge/特性-多模型智能路由-brightgreen" alt="特性"/></a> <a href="#-技术栈亮点"><img src="https://img.shields.io/badge/技术栈-知识图谱%20%7C%20情绪神经网络-orange" alt="技术栈"/></a> <a href="#-快速开始"><img src="https://img.shields.io/badge/快速开始-开发指南-red" alt="快速开始"/></a> <a href="LICENSE"><img src="https://img.shields.io/badge/许可证-Apache%202.0-purple" alt="许可证"/></a> <a href="https://mirexs.com"><img src="https://img.shields.io/badge/官网-mirexs.com%20%7C%20mirexs.cn%20%7C%20mirexs.ai-9cf" alt="官网"/></a> </p>
 
 
 
