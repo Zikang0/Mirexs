@@ -1,7 +1,17 @@
+---
+status: partial
+last_reviewed: 2026-03-26
+corresponds_to_code: "暂无"
+related_issues: ""
+---
 # Mirexs 技术设计补充计划
 
+## 0. 实现对齐摘要（2026-03-26）
+
+本文档为技术设计补充计划，当前状态为 **partial**。文档中规划的多个架构设计（如事实核查器、混合记忆等）在代码仓库中仍处于部分实现或占位状态。关于事实核查器的设计，已通过 `fact_checker_api.md` 等文档进行了迭代，当前实现状态为 partial。后续将持续推进文档与代码的严格对齐。
+
 **版本：v2.1.0**  
-**最后更新：2026-03-23**  
+**最后更新：2026-03-26**  
 **作者：Zikang Li**  
 **状态：滚动更新计划（按“缺口→落地→对齐”迭代维护）**
 
@@ -13,7 +23,7 @@
 
 Mirexs 项目的 `Mirexs项目设计.md` 提供了高层次的架构概览和核心理念，`docs/architecture/` 目录下已包含 `overview.md`、`multi_model_routing.md`、`emotion_nn.md`、`knowledge_graph.md`、`reinforcement_learner.md` 等关键模块的设计文档。
 
-截至 **2026-03-23**，下列“深度技术领域文档”已补齐（见 `docs/architecture/` 与 `docs/technical_specifications/`）：
+截至 **2026-03-26**，下列“深度技术领域文档”已补齐（见 `docs/architecture/` 与 `docs/technical_specifications/`）：
 
 - 大数据模型：`big_data_models.md`
 - AI 算法汇总：`ai_algorithms_handbook.md`
@@ -38,13 +48,13 @@ Mirexs 项目的 `Mirexs项目设计.md` 提供了高层次的架构概览和核
 
 ### 3.1 文档补齐与对齐清单（滚动维护）
 
-| 文档 | 类型 | 状态（2026-03-23） | 备注 |
+| 文档 | 类型 | 状态（2026-03-26） | 备注 |
 |---|---|---|---|
 | `docs/architecture/big_data_models.md` | 架构 | 已存在 | 需持续与模型配置/推理后端对齐 |
 | `docs/architecture/ai_algorithms_handbook.md` | 架构 | 已存在 | 建议补充“算法→代码入口”映射 |
 | `docs/architecture/deep_thinking_engine.md` | 架构 | 已存在 | 已修订关键实现路径引用 |
 | `docs/architecture/neural_networks_detail.md` | 架构 | 已存在 | 建议补充训练/推理落地口径 |
-| `docs/architecture/fact_checker.md` | 架构 | 已存在 | 需补充元数据与路径对齐（如实时知识模块入口） |
+| `docs/architecture/fact_checker.md` | 架构 | 已存在 | 已通过 fact_checker_api.md 等迭代，当前为 partial |
 | `docs/technical_specifications/data_pipeline_design.md` | 技术规范 | 已存在 | 需修订代码路径引用（graph/vector 等） |
 | `docs/technical_specifications/distributed_inference_spec.md` | 技术规范 | 已存在 | 需与路由/推理后端现状对齐 |
 | `docs/architecture/hybrid_memory.md` | 架构 | 已存在 | 作为“KG + Vector + Episodic/Working”的集成桥梁 |
@@ -59,4 +69,4 @@ Mirexs 项目的 `Mirexs项目设计.md` 提供了高层次的架构概览和核
 本计划将确保 Mirexs 项目的技术设计文档能够全面、深入地覆盖所有核心技术领域，为项目的开发、维护和未来演进提供坚实的基础。
 
 **作者签名**：Zikang Li
-**日期**：2026-03-23
+**日期**：2026-03-26

@@ -1,3 +1,10 @@
+---
+status: partial
+last_reviewed: 2026-03-26
+corresponds_to_code: "暂无"
+related_issues: ""
+references: docs/technical_specifications/api_envelope_standard.md
+---
 # 事实核查器 API 参考 (Fact Checker API)
 
 ## 1. 概述 (Overview)

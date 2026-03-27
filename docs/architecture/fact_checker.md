@@ -1,15 +1,19 @@
+---
+status: partial
+last_reviewed: 2026-03-26
+corresponds_to_code: "capabilities/knowledge/real_time_knowledge.py"
+related_issues: ""
+---
 # 事实核查器（Fact Checker）技术设计
 
+## 0. 实现对齐摘要（2026-03-26）
+
+本文档为事实核查器的技术设计，当前状态为 **partial**。仓库中未检索到“事实核查器”的端到端可运行实现，当前仅存在部分能力骨架（如 `capabilities/knowledge/real_time_knowledge.py` 占位，以及 `data/databases/graph_db/` 和 `data/databases/vector_db/` 的基础支持）。本文描述的是目标架构与约束，落地时必须同步补齐可观测性（审计/指标/日志）与一致性测试。
+
 **版本：v2.0.1**  
-**最后更新：2026-03-23**  
+**最后更新：2026-03-26**  
 **作者：Zikang Li**  
 **状态：契约优先规范（实现待补齐与验收）**
-
-## 0. 实现对齐摘要（2026-03-23）
-
-- **API 契约（可核验）**：`docs/api_reference/fact_checker_api.md`
-- **相关能力骨架（可核验）**：`capabilities/knowledge/real_time_knowledge.py`（占位）、`data/databases/graph_db/`、`data/databases/vector_db/`
-- **实现状态说明**：仓库中未检索到“事实核查器”的端到端可运行实现；本文描述的是目标架构与约束，落地时必须同步补齐可观测性（审计/指标/日志）与一致性测试。
 
 ## 1. 引言
 
@@ -39,9 +43,9 @@ graph TD
     C --> G[冲突解决模块]
     D --> H[实时知识接入模块]
     D --> I[知识图谱]
-    E --> I;
-    F --> I;
-    G --> I;
+    E --> I
+    F --> I
+    G --> I
     C --> J[置信度评估器]
     J --> K[核查结果]
     K --> L[LLM生成回复/行为决策]
@@ -91,18 +95,18 @@ graph TD
 
 ## 5. 与其他模块的交互流程
 
-### 5.1 与实时知识接入（`docs/architecture/realtime_knowledge.md` / `capabilities/knowledge/*`）
+### 5.1 与实时知识接入（`capabilities/knowledge/real_time_knowledge.py`）
 
 *   **信息摄取**：实时知识更新模块负责从互联网（如 RSS Feeds、新闻网站）抓取最新信息。这些信息在进入 Mirexs 知识库之前，会首先通过事实核查器进行初步验证。
 *   **信源更新**：事实核查器可以根据核查结果，向实时知识更新模块提供新的可信信源或标记不可信信源。
 
-### 5.2 与知识图谱 (`knowledge_graph.md`)
+### 5.2 与知识图谱 (`data/databases/graph_db/`)
 
 *   **事实存储**：经过事实核查器验证为“已验证”的事实，将被结构化后存储到知识图谱中，作为 Mirexs 的可靠知识基础。
 *   **冲突检测**：当新的事实与知识图谱中已有的事实发生冲突时，事实核查器会被触发，进行冲突解决。
 *   **推理验证**：知识图谱中的逻辑约束和关系可以用于辅助事实核查器进行推理验证，例如，如果知识图谱显示“A是B的父亲”，而某个信息声称“A是B的儿子”，则事实核查器会标记为冲突。
 
-### 5.3 与多模型路由 (`multi_model_routing.md`)
+### 5.3 与多模型路由 (`docs/architecture/multi_model_routing.md`)
 
 *   **风险评估**：事实核查器可以为 LLM 生成的内容提供事实准确性风险评估。对于高风险内容，多模型路由可能会选择更保守的模型，或者在生成前强制进行事实核查。
 *   **生成约束**：在 LLM 生成回复时，事实核查器可以作为后处理步骤，检查生成内容的事实准确性，并在必要时进行修正或要求 LLM 重新生成。
@@ -126,4 +130,4 @@ graph TD
 *   [3] Li, Z., et al. (2026). *Mirexs项目设计.md*. Internal Document.
 
 **作者签名**：Zikang Li
-**日期**：2026-03-18
+**日期**：2026-03-26

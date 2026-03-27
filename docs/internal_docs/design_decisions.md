@@ -1,4 +1,14 @@
+---
+status: partial
+last_reviewed: 2026-03-26
+corresponds_to_code: "暂无"
+related_issues: ""
+---
 # 设计决策记录（Architecture Decision Record - ADR）
+
+## 0. 实现对齐摘要（2026-03-26）
+
+本文档记录了 Mirexs 项目中重要的架构和技术决策，当前状态为 **partial**。文档中描述的多模型智能路由、分层记忆管理系统以及情绪识别的多模态融合策略等决策，部分已在代码中初步落地（如分层记忆的向量数据库和图数据库基础结构），但完整的路由策略和多模态融合仍在持续开发和完善中。本文档旨在提供设计背景和理论依据，具体实现细节请参考对应的代码模块。
 
 ## 1. 引言
 
@@ -81,7 +91,7 @@ Zikang Li
 *   **影响**：
     *   **积极**：提高了记忆检索的效率和准确性，支持 Mirexs 进行长期对话和深度推理，增强了用户个性化体验。
     *   **消极**：增加了记忆管理系统的复杂性，需要维护多种存储技术和数据同步机制。
-*   **相关文档**：`docs/architecture/hybrid_memory.md`, `docs/internal_docs/research_papers/memory_management.md`
+*   **相关文档**：`docs/architecture/hybrid_memory.md`
 
 ### 3.3 ADR 003: 情绪识别的多模态融合策略
 
@@ -100,5 +110,5 @@ Zikang Li
 
 ---
 **作者**: Zikang Li
-**日期**: 2026-03-19
+**日期**: 2026-03-26
 **版本**: v1.0.0

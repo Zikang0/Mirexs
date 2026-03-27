@@ -1,19 +1,24 @@
-
+---
+status: partial
+last_reviewed: 2026-03-26
+corresponds_to_code: "security/access_control/, security/security_monitoring/audit_logger.py"
+related_issues: ""
+---
 # 安全架构（Security Architecture）
 
+## 0. 实现对齐摘要（2026-03-26）
+
+本文档为安全架构规范，当前状态为 **partial**。本仓库中与安全架构直接相关的可验证入口包括：
+- **访问控制（已实现）**：`security/access_control/*`（RBAC/ABAC、会话管理、权限管理等）。
+- **API 网关安全组件（已实现）**：`application/api_gateway/api_authenticator.py`、`application/api_gateway/request_validator.py`、`application/api_gateway/rate_limiter.py`。
+- **审计日志（已实现）**：`security/security_monitoring/audit_logger.py`（链式哈希与持久化）。
+- **输入防护/事件响应等模块（占位）**：`security/guardian/*`、`security/incident_response/*`（接口与目录存在，但内容需补齐）。
+后续将持续推进输入防护与事件响应等模块的代码落地。
+
 **版本：v2.0.1**  
-**最后更新：2026-03-23**  
+**最后更新：2026-03-26**  
 **作者：Zikang Li**  
 **状态：契约优先规范（部分模块已实现，部分为占位；以代码与配置为准）**
-
-## 0. 实现对齐摘要（2026-03-23）
-
-本仓库中与安全架构直接相关的可验证入口包括：
-
-- **访问控制（已实现）**：`security/access_control/*`（RBAC/ABAC、会话管理、权限管理等）
-- **API 网关安全组件（已实现）**：`application/api_gateway/api_authenticator.py`、`application/api_gateway/request_validator.py`、`application/api_gateway/rate_limiter.py`
-- **输入防护/审计等模块（占位）**：`security/guardian/*`、`security/audit/*`（接口与目录存在，但内容需补齐）
-- **关键配置口径**：`config/system/service_configs/api_config.yaml`（认证、限流、健康检查、文档端点等）
 
 ## 1. 安全设计哲学与核心原则
 
@@ -99,7 +104,7 @@ class AuditEntry(BaseModel):
     hash: str                        # SHA256(entry_id + timestamp + payload)
 ```
 
-> 说明（实现对齐，2026-03-23）：仓库中可核验的审计实现位于 `security/security_monitoring/audit_logger.py`，默认存储路径为 `data/security/audit/`（JSON 审计链 + 索引文件）。本节代码片段为概念模型，字段与实现存在差异但约束一致。
+> 说明（实现对齐，2026-03-26）：仓库中可核验的审计实现位于 `security/security_monitoring/audit_logger.py`，默认存储路径为 `data/security/audit/`（JSON 审计链 + 索引文件）。本节代码片段为概念模型，字段与实现存在差异但约束一致。
 
 - 存储：审计链文件（默认 `data/security/audit/`，实现见 `security/security_monitoring/audit_logger.py`）
 - 防篡改：链式哈希（`previous_hash` → `entry_hash`）+ 签名校验（见 `AuditLogger.verify_chain()`）
@@ -167,4 +172,4 @@ class AuditEntry(BaseModel):
 本规范为 Mirexs v2.0 **安全层的唯一权威文档**，所有代码、配置、流程必须以此为准。任何安全相关变更需经过 security review 并更新本文件。
 
 **作者签名**：Zikang Li  
-**日期**：2026-03-16
+**日期**：2026-03-26

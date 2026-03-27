@@ -1,21 +1,24 @@
-
+---
+status: partial
+last_reviewed: 2026-03-26
+corresponds_to_code: "data/databases/graph_db/knowledge_graph.py"
+related_issues: ""
+---
 # 知识图谱（Knowledge Graph）架构规范
 
+## 0. 实现对齐摘要（2026-03-26）
+
+本文档为知识图谱的架构规范，当前状态为 **partial**。为避免“文档描述的目标态”与“仓库可运行实现”混淆，特此说明当前真实代码状态：
+- **默认内存图实现（已落地）**：`data/databases/graph_db/knowledge_graph.py`（`KnowledgeGraph`，底层使用 `networkx.MultiDiGraph`）。
+- **Neo4j 可选后端（部分实现/占位）**：`data/databases/graph_db/neo4j_integration.py`（`Neo4jIntegration`，需安装 `neo4j` driver 并连接外部 Neo4j）。
+- **图分析/遍历能力（已落地）**：`data/databases/graph_db/graph_analyzer.py`、`data/databases/graph_db/graph_traversal.py`。
+- **向量数据库实现（已落地）**：`data/databases/vector_db/`（Chroma/FAISS 集成与索引）。
+本文其余章节以“契约 + 目标架构”为主，同时在关键节点标注默认实现与差异。
+
 **版本：v2.0.1**  
-**最后更新：2026-03-23**  
+**最后更新：2026-03-26**  
 **作者：Zikang Li**  
 **状态：契约优先规范（默认实现为 NetworkX 内存图；Neo4j 为可选持久化后端）**
-
-## 0. 实现对齐摘要（2026-03-23）
-
-为避免“文档描述的目标态”与“仓库可运行实现”混淆，先给出可验证的实现入口：
-
-- **默认内存图实现**：`data/databases/graph_db/knowledge_graph.py`（`KnowledgeGraph`，底层 `networkx.MultiDiGraph`）
-- **Neo4j 可选后端**：`data/databases/graph_db/neo4j_integration.py`（`Neo4jIntegration`，需安装 `neo4j` driver 并连接外部 Neo4j）
-- **图分析/遍历能力**：`data/databases/graph_db/graph_analyzer.py`、`data/databases/graph_db/graph_traversal.py`
-- **向量数据库实现**：`data/databases/vector_db/`（Chroma/FAISS 集成与索引）
-
-本文其余章节以“契约 + 目标架构”为主，同时在关键节点标注默认实现与差异。
 
 ## 1. 目标与定位
 
@@ -202,6 +205,16 @@ WHERE trigger.name CONTAINS $keyword
 RETURN trigger, avg(trigger.properties.strength) AS avg_intensity
 ```
 
+### 5.4 默认实现：NetworkX 推理入口（本仓库现状）
+
+默认内存图实现已提供基础推理与检索能力（示例方法）：
+
+- `KnowledgeGraph.infer_relations(entity_id, max_depth=2)`：DFS 推理路径
+- `KnowledgeGraph.search_entities(query, entity_types=None)`：实体搜索
+- `KnowledgeGraph.get_subgraph(center_entity, radius=2)`：子图提取
+
+> 以上方法定义与实现见：`data/databases/graph_db/knowledge_graph.py`。
+
 ## 6. 一致性与冲突处理（完整规则）
 
 1. **多源冲突**：新事实置信度 > 旧事实 0.15 时覆盖，否则保留双版本（用 `version` 属性）
@@ -267,13 +280,4 @@ class KnowledgeGraphAPI:
 本规范为知识图谱模块的**唯一权威文档**，所有实现、代码审查、性能验收必须严格遵循。任何改动需同步更新本文件并提交 PR。
 
 **作者签名**：Zikang Li  
-**日期**：2026-03-23
-### 5.4 默认实现：NetworkX 推理入口（本仓库现状）
-
-默认内存图实现已提供基础推理与检索能力（示例方法）：
-
-- `KnowledgeGraph.infer_relations(entity_id, max_depth=2)`：DFS 推理路径
-- `KnowledgeGraph.search_entities(query, entity_types=None)`：实体搜索
-- `KnowledgeGraph.get_subgraph(center_entity, radius=2)`：子图提取
-
-> 以上方法定义与实现见：`data/databases/graph_db/knowledge_graph.py`。
+**日期**：2026-03-26

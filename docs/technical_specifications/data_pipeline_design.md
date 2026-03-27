@@ -1,12 +1,17 @@
+---
+status: partial
+last_reviewed: 2026-03-26
+corresponds_to_code: "data/databases/, capabilities/knowledge/"
+related_issues: ""
+---
 # 数据管道设计
 
-## 0. 实现对齐摘要（2026-03-23）
+## 0. 实现对齐摘要（2026-03-26）
 
-为避免“目标架构描述”与“仓库当前实现”混淆，先给出可核验的实现对齐点：
-
-- **数据存储/访问模块（已存在）**：`data/user_data/`、`data/databases/relational/`、`data/databases/vector_db/`、`data/databases/graph_db/`、`data/databases/time_series/`
-- **实时知识摄取（骨架占位）**：`capabilities/knowledge/`（如 `capabilities/knowledge/real_time_knowledge.py` 当前为占位）
-- **流式管道基础设施（目标项）**：Kafka/Flink/Spark Streaming 等在仓库中未作为可直接运行依赖交付；本文件第 3~6 节描述的是“目标数据管道”形态，落地时需补齐调度、队列、质量校验与端到端一致性测试
+本文档为数据管道的技术设计，当前状态为 **partial**。为避免“目标架构描述”与“仓库当前实现”混淆，特此说明当前真实代码状态：
+- **数据存储/访问模块（已存在）**：`data/user_data/`、`data/databases/relational/`、`data/databases/vector_db/`、`data/databases/graph_db/`、`data/databases/time_series/`。
+- **实时知识摄取（骨架占位）**：`capabilities/knowledge/`（如 `capabilities/knowledge/real_time_knowledge.py` 当前为占位）。
+- **流式管道基础设施（目标项）**：Kafka/Flink/Spark Streaming 等在仓库中未作为可直接运行依赖交付；本文件第 3~6 节描述的是“目标数据管道”形态，落地时需补齐调度、队列、质量校验与端到端一致性测试。
 
 ## 1. 引言
 
@@ -45,8 +50,8 @@ graph TD
 
     subgraph 数据摄取层
         B1[用户交互数据] --> B2(消息队列)
-        B3[外部知识数据] --> B2;
-        B4[系统日志/指标] --> B2;
+        B3[外部知识数据] --> B2
+        B4[系统日志/指标] --> B2
     end
 
     subgraph 数据处理层
@@ -64,9 +69,9 @@ graph TD
     end
 
     subgraph 数据服务层
-        E1[知识图谱查询服务] --> F;
-        E2[向量检索服务] --> F;
-        E3[历史数据查询服务] --> F;
+        E1[知识图谱查询服务] --> F
+        E2[向量检索服务] --> F
+        E3[历史数据查询服务] --> F
     end
 ```
 
@@ -80,7 +85,7 @@ graph TD
     *   **消息队列 (Message Queue)**：采用 Apache Kafka 或 RabbitMQ 作为核心消息总线，实现高吞吐量、低延迟的数据传输和解耦。所有原始数据都以事件的形式发布到不同的 Topic。
     *   **数据采集器 (Data Collectors)**：
         *   **用户交互采集**：监听用户与 Mirexs 的所有交互（文本、语音、视觉），实时生成事件并发送至消息队列。
-        *   **外部知识采集**：通过 `capabilities/knowledge/real_time_knowledge.py`（当前为占位骨架）定期或实时抓取 RSS Feeds、新闻 API、学术论文等外部信息源；具体安全边界与证据链要求见 `docs/architecture/realtime_knowledge.md`。
+        *   **外部知识采集**：通过 `capabilities/knowledge/`（当前为占位骨架）定期或实时抓取 RSS Feeds、新闻 API、学术论文等外部信息源；具体安全边界与证据链要求见相关文档。
         *   **系统日志/指标采集**：通过 Fluentd/Logstash 等工具收集系统运行日志、性能指标，并发送至消息队列。
 *   **数据格式**：原始数据通常以 JSON 或 Avro 格式封装，包含时间戳、数据源、事件类型等元数据。
 
@@ -103,7 +108,7 @@ graph TD
         *   **实体抽取 (NER)**：从文本中识别并提取人名、地名、组织、概念等实体。
         *   **关系抽取 (RE)**：识别实体之间的语义关系。
         *   **事件抽取 (EE)**：识别并结构化描述事件。
-        *   **消歧与融合**：解决实体指代模糊和实体合并问题，将新信息整合到 `data/databases/graph_db/knowledge_graph.py` 中。
+        *   **消歧与融合**：解决实体指代模糊和实体合并问题，将新信息整合到 `data/databases/graph_db/` 中。
     *   **向量嵌入生成 (Vector Embedding Generation)**：
         *   **文本嵌入**：使用 `bge-small-zh-v1.5` 等模型将文本内容转换为高维向量。
         *   **多模态嵌入**：未来将集成视觉和语音嵌入模型，实现多模态信息的统一向量表示。
@@ -152,4 +157,4 @@ graph TD
 *   [4] Li, Z., et al. (2026). *Mirexs项目设计.md*. Internal Document.
 
 **作者签名**：Zikang Li
-**日期**：2026-03-18
+**日期**：2026-03-26

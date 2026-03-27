@@ -1,3 +1,10 @@
+---
+status: partial
+last_reviewed: 2026-03-26
+corresponds_to_code: "暂无"
+related_issues: ""
+references: docs/technical_specifications/api_envelope_standard.md
+---
 # 知识图谱 API（内部接口契约）
 
 版本：v2.0

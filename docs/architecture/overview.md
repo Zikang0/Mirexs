@@ -1,8 +1,17 @@
-
+---
+status: partial
+last_reviewed: 2026-03-26
+corresponds_to_code: "暂无"
+related_issues: ""
+---
 # Mirexs v2.0 整体架构概述（Architecture Overview）
 
+## 0. 实现对齐摘要（2026-03-26）
+
+本文档为 Mirexs v2.0 的整体架构概述，当前状态为 **partial**。文档中描述的多个核心模块（如多模型路由、情绪网络、主动行为引擎等）在代码仓库中仍处于占位或部分实现状态。实际代码实现主要集中在 API 网关、访问控制以及基于 NetworkX 的知识图谱内存实现。后续将持续推进代码落地，以完全对齐本架构设计。
+
 **版本：v2.0.1**  
-**最后更新：2026-03-23**  
+**最后更新：2026-03-26**  
 **作者：Zikang Li**  
 **状态：契约优先总览文档（已校准文档/代码口径）；所有子架构文档必须引用并遵守本概述中的分层、原则与约束**
 
@@ -87,14 +96,14 @@ Mirexs v2.0 系统分层（由外到内）
 | 文件名                    | 主要职责 | 依赖本概述章节 | 优先级 | 文档状态 | 对应实现/配置入口（示例） |
 |---------------------------|----------|----------------|--------|----------|--------------------------|
 | overview.md               | 架构总览 + 分层 + 约束 | — | 最高 | 已存在 | `docs/architecture/overview.md` |
-| multi_model_routing.md    | 多模型路由、硬件自适应、决策引擎 | 2, 3, 4 | 高 | 已存在 | `infrastructure/model_hub/`（占位）、`config/system/model_configs/router_config.yaml`（占位） |
-| emotion_nn.md             | 情绪网络、多模态融合、个性化微调 | 2, 3 | 高 | 已存在 | `cognitive/learning/emotion_nn.py`（占位）、`docs/internal_docs/research_papers/emotion_recognition.md`（研究稿） |
-| knowledge_graph.md        | 知识图谱建模、抽取、查询、遗忘机制 | 2, 3 | 高 | 已存在 | `data/databases/graph_db/knowledge_graph.py`（内存图实现）、`data/databases/vector_db/`（向量库实现） |
-| security_architecture.md  | 安全三层设计、审计、隐私、事件响应 | 2, 5 | 高 | 已存在 | `security/`、`docs/security/*`、`config/system/service_configs/api_config.yaml`（认证/限流） |
-| reinforcement_learner.md  | 强化学习策略与接口约束 | 2 | 中 | 已存在 | `cognitive/learning/reinforcement_learner.py` |
-| proactive_behavior.md     | 主动能力引擎、触发条件、行为提案 | 2, 3 | 中 | 已存在 |（待补齐实现入口：请在文档中补充） |
-| hybrid_memory.md          | 向量 + 图谱 + 情景 + 程序记忆协同 | 2, 3 | 中 | 已存在 | `docs/architecture/hybrid_memory.md`、`cognitive/memory/`、`data/databases/vector_db/` |
-| realtime_knowledge.md     | 实时知识接入、RSS/Web 增量更新 | 2 | 低 | 已存在 | `docs/architecture/realtime_knowledge.md`、`capabilities/knowledge/*`（占位） |
+| multi_model_routing.md    | 多模型路由、硬件自适应、决策引擎 | 2, 3, 4 | 高 | planned | `infrastructure/model_hub/`（占位）、`config/system/model_configs/router_config.yaml`（占位） |
+| emotion_nn.md             | 情绪网络、多模态融合、个性化微调 | 2, 3 | 高 | planned | `cognitive/learning/emotion_nn.py`（占位）、`docs/internal_docs/research_papers/emotion_recognition.md`（研究稿） |
+| knowledge_graph.md        | 知识图谱建模、抽取、查询、遗忘机制 | 2, 3 | 高 | partial | `data/databases/graph_db/knowledge_graph.py`（内存图实现）、`data/databases/vector_db/`（向量库实现） |
+| security_architecture.md  | 安全三层设计、审计、隐私、事件响应 | 2, 5 | 高 | partial | `security/`、`docs/security/*`、`config/system/service_configs/api_config.yaml`（认证/限流） |
+| reinforcement_learner.md  | 强化学习策略与接口约束 | 2 | 中 | planned | `cognitive/learning/reinforcement_learner.py` |
+| proactive_behavior.md     | 主动能力引擎、触发条件、行为提案 | 2, 3 | 中 | planned | （待补齐实现入口） |
+| hybrid_memory.md          | 向量 + 图谱 + 情景 + 程序记忆协同 | 2, 3 | 中 | planned | `docs/architecture/hybrid_memory.md`、`cognitive/memory/`、`data/databases/vector_db/` |
+| realtime_knowledge.md     | 实时知识接入、RSS/Web 增量更新 | 2 | 低 | planned | `docs/architecture/realtime_knowledge.md`、`capabilities/knowledge/*`（占位） |
 
 后续子文档必须在头部声明依赖关系（示例）：
 
@@ -119,7 +128,7 @@ Mirexs v2.0 系统分层（由外到内）
 
 本文件为 Mirexs v2.0 **架构层唯一入口文档**，所有其他 architecture/*.md 必须以此为顶层约束。任何重大设计变更需更新本文件并全量 review。
 
-## 8. 文档一致性与对齐规则（2026-03-23 起执行）
+## 8. 文档一致性与对齐规则（2026-03-26 起执行）
 
 为保证文档“严谨、可执行、可验证”，所有架构文档必须满足：
 
@@ -129,5 +138,4 @@ Mirexs v2.0 系统分层（由外到内）
 4. **变更联动**：接口/Envelope/路径变更需同步更新 `docs/technical_specifications/*` 与 `docs/api_reference/*`，并在 `docs/api_reference/api_changelog.md` 记录。
 
 **作者签名**：Zikang Li  
-**日期**：2026-03-23
-
+**日期**：2026-03-26

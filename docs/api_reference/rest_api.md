@@ -1,4 +1,11 @@
 
+---
+status: partial
+last_reviewed: 2026-03-26
+corresponds_to_code: "暂无"
+related_issues: ""
+references: docs/technical_specifications/api_envelope_standard.md
+---
 # Mirexs REST API 参考文档（API Reference）
 
 **API 版本**：v1  
