@@ -1,13 +1,13 @@
 ---
 status: partial
-last_reviewed: 2026-03-26
-corresponds_to_code: "暂无"
+last_reviewed: 2026-03-30
+corresponds_to_code: "config/system/service_configs/api_config.yaml,application/api_gateway/response_formatter.py"
 related_issues: ""
 references: docs/technical_specifications/api_envelope_standard.md
 ---
 # Mirexs API 变更日志（API Changelog）
 
-**API 版本**：v1  
+**API 版本**：v2  
 **适用系统版本**：Mirexs v2.x  
 **最后更新**：2026-03-30  
 **作者**：Zikang Li  
@@ -21,7 +21,7 @@ references: docs/technical_specifications/api_envelope_standard.md
 
 ## 2. 当前基线口径（Baseline）
 
-- 路由前缀（默认）：`/api/v1`（见 `config/system/service_configs/api_config.yaml`：`gateway.routing.prefix`）
+- 路由前缀（默认）：`/api/v2`（见 `config/system/service_configs/api_config.yaml`：`gateway.routing.prefix`）
 - 通用响应 Envelope：`{status, code, message, timestamp, data?, meta?, errors?}`（见 `application/api_gateway/response_formatter.py`）
 - 契约规范文档：`docs/technical_specifications/api_specification.md`
 - 调用参考文档：`docs/api_reference/rest_api.md`
@@ -42,9 +42,9 @@ references: docs/technical_specifications/api_envelope_standard.md
 ### 2026-03-23 - unreleased
 
 - **类型**：Docs  
-  **描述**：统一 API 契约与参考文档口径：基地址与版本前缀对齐为 `/api/v1`；通用响应 Envelope 对齐 `ResponseWrapper`；补充端点“实现状态”字段，避免将规划能力描述为已实现。  
+  **描述**：统一 API 契约与参考文档口径：基地址与版本前缀对齐为 `/api/v2`；通用响应 Envelope 对齐 `ResponseWrapper`；补充端点“实现状态”字段，避免将规划能力描述为已实现。  
   **影响范围**：`docs/technical_specifications/api_specification.md`、`docs/api_reference/rest_api.md`  
-  **迁移建议**：无（仅文档口径修订；如你已按旧文档实现客户端，请以 `/api/v1` 与 Envelope 字段为准）
+  **迁移建议**：如你的客户端硬编码了 `/api/v1`，请改为 `/api/v2`（配置口径见 `config/system/service_configs/api_config.yaml`）。
 
 ## 5. 记录模板（复制后填写）
 
