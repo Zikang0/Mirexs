@@ -117,5 +117,15 @@ Mirexs 的 `multi_model_router.py` 模块负责根据任务类型、复杂度和
 *   [2] Sutton, R. S., & Barto, A. G. (2018). *Reinforcement Learning: An Introduction* (2nd ed.). MIT Press.
 *   [3] Li, Z., et al. (2026). *Mirexs项目设计.md*. Internal Document.
 
+## 7. 开发使用说明（2026-03-30 补充）
+
+本手册用于说明“项目会用到哪些算法”，但它不能替代模块级设计文档。后续开发应使用如下方式：
+
+- 先看本手册确定算法类别
+- 再进入对应架构文档确定模块边界
+- 最后回到代码入口确认真实实现
+
+后续建议继续补充“算法名称 → 文档 → 代码入口 → 验收指标”的映射表。
+
 **作者签名**：Zikang Li
 **日期**：2026-03-18
