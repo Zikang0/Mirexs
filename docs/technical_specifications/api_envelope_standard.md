@@ -1,65 +1,101 @@
 ---
-status: implemented
-last_reviewed: 2026-03-26
+status: partial
+last_reviewed: 2026-03-30
 corresponds_to_code: "application/api_gateway/response_formatter.py"
 related_issues: ""
+references: "docs/technical_specifications/api_specification.md"
 ---
-# API 响应封装规范 (API Envelope Standard)
+# API 响应封装规范
 
-## 1. 概述
+## 1. 目标
 
-本规范定义了 Mirexs v2.0 所有 RESTful API 的统一响应格式。规范结合了 RFC 9457 (Problem Details for HTTP APIs) 风格的错误处理与统一的成功响应封装 (Success Wrapper)，以确保客户端能够以一致的方式解析所有 API 响应。
+本规范定义 Mirexs 所有 HTTP API 的统一响应外壳，确保客户端、SDK、测试脚本和日志系统都能用一致方式解析返回值。
 
-## 2. 成功响应格式 (Success Wrapper)
+## 2. 设计原则
 
-所有成功的 API 请求（HTTP 状态码 2xx）都必须使用以下 JSON 结构进行封装：
+- 同一类成功响应必须有统一结构
+- 错误响应必须包含可定位和可程序处理的信息
+- Envelope 与业务数据分离，避免每个接口自己发明格式
+- 状态码、错误码和消息必须相互一致
+
+## 3. 成功响应结构
+
+建议所有成功响应遵循以下结构：
 
 ```json
 {
-  "success": true,
-  "data": {
-    // 实际的业务数据，可以是对象或数组
-  },
-  "meta": {
-    // 可选的元数据，如分页信息、请求 ID、处理时间等
-    "request_id": "req-12345",
-    "timestamp": "2026-03-26T12:00:00Z"
-  }
+  "status": "success",
+  "code": 200,
+  "message": "Success",
+  "timestamp": 1711771200.123,
+  "data": {},
+  "meta": {}
 }
 ```
 
-## 3. 错误响应格式 (RFC 9457 Style)
+字段说明：
 
-所有失败的 API 请求（HTTP 状态码 4xx, 5xx）都必须遵循 RFC 9457 规范，返回以下 JSON 结构：
+- `status`：固定为 `success`
+- `code`：建议与 HTTP 状态码一致
+- `message`：简短可读说明
+- `timestamp`：服务端生成时间戳
+- `data`：实际业务数据
+- `meta`：可选元数据，例如分页、追踪 ID、耗时
+
+## 4. 失败响应结构
+
+建议失败响应遵循以下结构：
 
 ```json
 {
-  "success": false,
-  "type": "https://api.mirexs.com/errors/validation-error",
-  "title": "请求参数验证失败",
-  "status": 400,
-  "detail": "提供的实体名称不能为空。",
-  "instance": "/api/v1/knowledge/entities",
+  "status": "fail",
+  "code": 422,
+  "message": "Validation failed",
+  "timestamp": 1711771200.123,
   "errors": [
-    // 可选的详细错误列表，适用于多字段验证失败等场景
     {
       "field": "name",
-      "message": "实体名称不能为空"
+      "message": "Field is required",
+      "code": "required",
+      "value": null
     }
   ]
 }
 ```
 
-### 字段说明：
+对于不可恢复的服务端异常，可使用：
 
-- `success`: 固定为 `false`。
-- `type`: 错误类型的 URI 标识符，客户端可据此进行错误分类处理。
-- `title`: 简短的、人类可读的错误摘要。
-- `status`: HTTP 状态码，与响应头的状态码保持一致。
-- `detail`: 详细的、人类可读的错误解释。
-- `instance`: 发生错误的具体请求 URI。
-- `errors`: （可选）具体的错误详情列表。
+```json
+{
+  "status": "error",
+  "code": 500,
+  "message": "Internal error",
+  "timestamp": 1711771200.123
+}
+```
 
-## 4. 实现对齐
+## 5. 状态值约定
 
-当前代码库中，API 响应的统一格式化由 `application/api_gateway/response_formatter.py` 负责实现。所有新增的 API 路由必须使用该格式化器来生成响应。
+- `success`：请求成功
+- `fail`：客户端可修正问题，例如参数校验失败
+- `error`：服务端异常或不可恢复问题
+- `warning`：成功但附带降级、部分结果或提示信息
+
+## 6. `errors[]` 结构要求
+
+`errors` 数组元素建议包含：
+
+- `field`：出错字段
+- `message`：错误描述
+- `code`：稳定错误码
+- `value`：触发错误的值，若安全可返回
+
+## 7. 使用要求
+
+- 所有新接口必须复用统一格式化器
+- 不允许某个接口返回裸对象，另一个接口返回自定义包裹结构
+- 如果业务场景需要分页、追踪或调试信息，应写入 `meta`，而不是污染 `data`
+
+## 8. 与代码对齐说明
+
+当前仓库中统一响应格式由 `application/api_gateway/response_formatter.py` 负责。若代码实现与本文档不同，应以代码真实行为为准，并在同一变更中同步修正文档。
