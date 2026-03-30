@@ -1,0 +1,274 @@
+# 插件重载配置（v2）
+# 动态重新加载系统插件
+
+enabled: true
+plugin_categories:
+  core_plugins:
+    - authentication
+    - authorization
+    - logging
+    - monitoring
+  
+  functional_plugins:
+    - speech_processing
+    - image_processing
+    - nlp_processing
+    - 3d_rendering
+  
+  integration_plugins:
+    - database_integration
+    - api_integration
+    - iot_integration
+    - external_service
+  
+  user_plugins:
+    - productivity_tools
+    - entertainment
+    - utilities
+    - custom_plugins
+
+reload_policies:
+  automatic:
+    enabled: true
+    detect_changes: true
+    reload_on_change: true
+    change_detection: file_hash
+    
+    monitoring:
+      watch_paths:
+        - /plugins
+        - /plugins/core
+        - /plugins/functional
+        - /plugins/integration
+        - /plugins/user
+      recursive: true
+      check_interval: 5
+  
+  manual:
+    enabled: true
+    api_endpoint: /api/plugins/reload
+    require_auth: true
+    validation_required: true
+    
+    api_config:
+      methods: [POST]
+      rate_limit: 10
+      timeout: 30
+      response_format: json
+  
+  scheduled:
+    enabled: false
+    schedule: "0 2 * * *"  # 每天凌晨2点
+    reload_all: false
+    
+    schedule_config:
+      timezone: UTC
+      jitter_seconds: 300
+      max_duration: 1800
+
+isolation:
+  sandbox_enabled: true
+  sandbox_config:
+    resource_limits:
+      cpu_percent: 50
+      memory_mb: 512
+      disk_mb: 1024
+      network_mbps: 100
+    
+    filesystem_access:
+      read_only_paths: [/plugins, /config]
+      read_write_paths: [/tmp]
+      forbidden_paths: [/system, /root]
+    
+    network_access:
+      allowed_hosts: []
+      allowed_ports: []
+      max_connections: 10
+  
+  resource_limits:
+    enabled: true
+    limits:
+      max_threads: 10
+      max_file_descriptors: 100
+      max_processes: 5
+      max_memory_percent: 30
+  
+  permission_boundaries:
+    enabled: true
+    permissions:
+      - filesystem.read
+      - filesystem.write.temp
+      - network.internal
+      - process.create
+      - system.info
+    
+    dangerous_permissions:
+      - filesystem.write.system
+      - network.external
+      - process.terminate.other
+      - system.shutdown
+
+version_management:
+  version_check: true
+  version_scheme: semantic
+  auto_update: false
+  
+  compatibility_check: true
+  compatibility_rules:
+    - min_system_version: "2.0.0"
+    - max_system_version: "2.99.99"
+    - required_plugins: []
+    - conflicting_plugins: []
+  
+  downgrade_protection: true
+  version_rollback: true
+  
+  version_storage:
+    max_versions: 5
+    cleanup_old: true
+    backup_versions: true
+
+dependency_management:
+  enabled: true
+  dependency_resolution: topological
+  circular_dependency_detection: true
+  
+  plugin_dependencies:
+    speech_processing:
+      requires: [audio_processing, language_models]
+    image_processing:
+      requires: [vision_models, gpu_acceleration]
+    nlp_processing:
+      requires: [language_models, embedding_models]
+  
+  shared_libraries:
+    enabled: true
+    library_versioning: true
+    conflict_resolution: latest
+  
+  load_order:
+    enabled: true
+    order_by: dependency
+    priority_plugins: [core_plugins]
+    delayed_plugins: [user_plugins]
+
+validation:
+  enabled: true
+  validation_steps:
+    - step: signature_verification
+      enabled: true
+      signature_algorithm: rsa-sha256
+      
+    - step: code_analysis
+      enabled: true
+      security_scan: true
+      performance_check: true
+      
+    - step: dependency_check
+      enabled: true
+      check_versions: true
+      check_conflicts: true
+      
+    - step: integration_test
+      enabled: true
+      test_cases: 10
+      timeout: 30
+  
+  validation_data:
+    test_environment: sandbox
+    test_duration: 60
+    resource_monitoring: true
+  
+  validation_report:
+    format: json
+    store_results: true
+    notify_on_failure: true
+
+monitoring:
+  enabled: true
+  metrics_collection:
+    - plugin_count
+    - reload_count
+    - reload_duration
+    - plugin_health
+    - resource_usage
+    - error_rate
+    - dependency_status
+  
+  health_checks:
+    enabled: true
+    check_interval: 30
+    check_method: heartbeat
+    
+  alerts:
+    - condition: "plugin_crash_count > 3"
+      severity: critical
+      action: disable_and_notify
+      
+    - condition: "resource_usage > 0.8"
+      severity: warning
+      action: throttle_and_alert
+      
+    - condition: "dependency_failure"
+      severity: warning
+      action: check_dependencies
+
+profiles:
+  production:
+    reload_policy: manual
+    sandbox_enabled: true
+    validation_enabled: true
+    version_check: true
+    monitoring_enabled: true
+    
+  development:
+    reload_policy: automatic
+    sandbox_enabled: false
+    validation_enabled: true
+    version_check: false
+    monitoring_enabled: true
+    
+  testing:
+    reload_policy: automatic
+    sandbox_enabled: true
+    validation_enabled: true
+    version_check: true
+    monitoring_enabled: true
+
+security:
+  plugin_signing:
+    enabled: true
+    signature_required: true
+    trusted_sources:
+      - official_repository
+      - verified_developers
+    
+    signature_verification:
+      algorithm: rsa-sha256
+      key_storage: secure
+      revocation_check: true
+  
+  code_analysis:
+    enabled: true
+    static_analysis: true
+    dynamic_analysis: true
+    security_scan: true
+    
+    analysis_tools:
+      - bandit
+      - safety
+      - trivy
+      - custom_scanner
+  
+  access_control:
+    enabled: true
+    plugin_permissions:
+      core_plugins: all
+      functional_plugins: restricted
+      user_plugins: limited
+    
+    authentication_required: true
+    authorization_roles:
+      - admin: install_all, reload_all
+      - developer: install_own, reload_own
+      - user: use_only
