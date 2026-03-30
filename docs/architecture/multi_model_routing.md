@@ -272,3 +272,27 @@ models:
 
 
 本规范为契约优先文档，作为实现、代码审查、验收的统一依据。任何改动必须同步更新本文件。
+
+## 13. 开发落地要求（2026-03-30 补充）
+
+当前开发应以以下入口为准：
+
+- `infrastructure/model_hub/model_configs.yaml`
+- `infrastructure/model_hub/model_registry.py`
+- `infrastructure/model_hub/model_manager.py`
+- `infrastructure/model_hub/smart_model_router.py`
+- `infrastructure/platform_adapters/hardware_detector.py`
+
+实施时必须满足：
+
+- 路由决策与模型加载逻辑解耦
+- restricted 场景禁止云端模型
+- 模型选择必须保留原因说明，便于审计和调参
+- 候选筛选、评分、回退、加载为四个可独立测试的阶段
+
+最小验收要求：
+
+- 低显存场景能稳定回退到轻量模型
+- 上下文超长场景不会错误选择小上下文模型
+- 模态不支持的模型不会进入候选
+- 路由失败时仍有可解释的降级行为
