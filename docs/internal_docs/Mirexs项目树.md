@@ -42,12 +42,12 @@ infrastructure/
 ├── storage_migration/                  # ⭐ 新增：整体迁移模块
 │   ├── __init__.py
 │   ├── data_migrator.py                # 核心迁移引擎（一键迁移）
-│   ├── migration_wizard.py             # 用户向导界面（图形化）
-│   ├── storage_orchestrator.py         # 存储编排器（SSD + 外接盘 + 云盘并存）
+│   ├── migration_wizard.py             # 迁移向导：评估候选目标并生成执行计划
+│   ├── storage_orchestrator.py         # 存储编排器：计划/执行/校验/联接/云镜像串联
 │   ├── symlink_manager.py              # 符号链接管理器（无缝切换）
 │   ├── migration_validator.py          # 迁移完整性校验
 │   ├── cloud_sync_adapter.py           # 云盘适配器（OneDrive / 阿里云等）
-│   └── migration_config.yaml           # 迁移配置文件
+│   └── migration_config.yaml           # 默认迁移策略配置
 │
 ├── model_hub/                          # ⭐【新增目录】统一模型管理
 │   ├── __init__.py
