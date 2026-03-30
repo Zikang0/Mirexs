@@ -114,5 +114,17 @@ graph TD
 *   [3] Vaswani, A., Shazeer, N., Parmar, N., et al. (2017). Attention Is All You Need. *Advances in Neural Information Processing Systems, 30*.
 *   [4] Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2019). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. *Proceedings of NAACL-HLT 2019, Volume 1 (Long and Short Papers)*.
 
+## 5. 开发落地要求（2026-03-30 补充）
+
+本文件适合作为神经网络设计参考，但具体实现时必须进一步补清：
+
+- 训练数据来源
+- 训练脚本入口
+- 推理部署入口
+- 模型版本管理方式
+- 与上层业务的输入输出契约
+
+后续任何新增神经网络方案，都应至少同步补齐训练、推理、评估和部署四个方面的口径。
+
 **作者签名**：Zikang Li
 **日期**：2026-03-18
