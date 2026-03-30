@@ -63,7 +63,7 @@ class ConfigMetadata:
     config_id: str
     config_type: ConfigType
     config_path: Path
-    version: str = "1.0.0"
+    version: str = "2.0.0"
     created_at: datetime = field(default_factory=datetime.now)
     updated_at: datetime = field(default_factory=datetime.now)
     created_by: str = "system"
