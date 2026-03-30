@@ -1,3 +1,9 @@
+---
+status: partial
+last_reviewed: 2026-03-30
+corresponds_to_code: "docs/architecture/,docs/developer_guide/"
+related_issues: ""
+---
 # Mirexs 项目路线图 (Roadmap)
 
 ## 1. 2026 Q1: 核心引擎开发 (MVP)
@@ -41,7 +47,12 @@
     *   探索脑机接口 (BCI) 与数字生命的融合。
     *   建立具备自我意识演化能力的 AI 代理。
 
+## 6. 路线图使用说明
+
+- 本路线图表达的是产品与能力演进方向，不等于当前代码已全部实现。
+- 进入具体研发时，应回到 `docs/architecture/`、`docs/developer_guide/` 和 `docs/technical_specifications/` 获取实施口径。
+
 ---
 **作者**: Zikang Li
-**日期**: 2026-03-18
-**版本**: v1.0.0
+**日期**: 2026-03-30
+**版本**: v1.1.0
