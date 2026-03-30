@@ -1,0 +1,15 @@
+# Mirexs v2 组件配置：系统快捷键映射（供 KeyboardHandler 读取）
+meta:
+  schema_version: "2.0.0"
+  last_updated: "2026-03-30"
+  config_id: "system.component.shortcuts"
+  owner: "Mirexs Team"
+
+# 说明：
+# - 此文件只提供“系统级”快捷键映射（key string -> action id 或描述）
+# - ShortcutManager 的行为策略配置见 shortcuts_config.yaml
+system_shortcuts:
+  show_hide_mirexs: "ctrl+alt+m"
+  open_settings: "ctrl+alt+s"
+  toggle_voice_typing: "ctrl+alt+v"
+
