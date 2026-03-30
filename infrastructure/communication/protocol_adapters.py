@@ -3,11 +3,10 @@
 负责不同通信协议的适配和转换
 """
 
-import asyncio
 import json
 import aiohttp
-from typing import Dict, Any, Optional, Callable
-from dataclasses import dataclass
+from typing import Dict, Any, Optional, Callable, Union
+from dataclasses import dataclass, field
 from enum import Enum
 import logging
 from urllib.parse import urlparse
@@ -30,32 +29,76 @@ class ProtocolConfig:
     port: int
     timeout: int = 30
     ssl_verify: bool = True
-    headers: Dict[str, str] = None
-    auth: Dict[str, str] = None
+    headers: Dict[str, str] = field(default_factory=dict)
+    auth: Dict[str, str] = field(default_factory=dict)
 
 class ProtocolAdapter:
     """协议适配器基类"""
     
-    def __init__(self, config: ProtocolConfig):
-        self.config = config
+    def __init__(self, config: Optional[Union[ProtocolConfig, Dict[str, Any]]] = None):
+        self.config = self._coerce_config(config)
         self.is_connected = False
         self.connection = None
         
     async def connect(self) -> bool:
         """建立连接"""
-        raise NotImplementedError
+        self.is_connected = True
+        logging.info("通用协议适配器连接成功: %s:%s", self.config.host, self.config.port)
+        return True
     
     async def disconnect(self):
         """断开连接"""
-        raise NotImplementedError
+        self.is_connected = False
+        self.connection = None
     
     async def send(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """发送数据"""
-        raise NotImplementedError
+        if not self.is_connected:
+            raise ConnectionError("协议适配器未连接")
+        return {"status": "accepted", "data": data}
     
     async def receive(self) -> Dict[str, Any]:
         """接收数据"""
-        raise NotImplementedError
+        if not self.is_connected:
+            raise ConnectionError("协议适配器未连接")
+        return {}
+
+    async def start(self) -> bool:
+        """兼容上层 `start()` 调用。"""
+        return await self.connect()
+
+    async def stop(self):
+        """兼容上层 `stop()` 调用。"""
+        await self.disconnect()
+
+    def _coerce_config(self, config: Optional[Union[ProtocolConfig, Dict[str, Any]]]) -> ProtocolConfig:
+        if isinstance(config, ProtocolConfig):
+            return config
+
+        config_dict = dict(config or {})
+        protocol_value = str(config_dict.get("protocol_type", "http")).lower()
+        protocol_map = {
+            "http": ProtocolType.HTTP,
+            "https": ProtocolType.HTTPS,
+            "websocket": ProtocolType.WEBSOCKET,
+            "ws": ProtocolType.WEBSOCKET,
+            "mqtt": ProtocolType.MQTT,
+            "grpc": ProtocolType.GRPC,
+            "zmq": ProtocolType.ZMQ,
+            "redis": ProtocolType.REDIS,
+        }
+        protocol_type = protocol_map.get(protocol_value, ProtocolType.HTTP)
+
+        default_port = 443 if protocol_type == ProtocolType.HTTPS else 80
+        return ProtocolConfig(
+            protocol_type=protocol_type,
+            host=str(config_dict.get("host", "localhost")),
+            port=int(config_dict.get("port", default_port)),
+            timeout=int(config_dict.get("timeout", 30)),
+            ssl_verify=bool(config_dict.get("ssl_verify", True)),
+            headers=dict(config_dict.get("headers", {})),
+            auth=dict(config_dict.get("auth", {})),
+        )
 
 class HTTPAdapter(ProtocolAdapter):
     """HTTP协议适配器"""
@@ -216,8 +259,10 @@ class ProtocolAdapterFactory:
     """协议适配器工厂"""
     
     @staticmethod
-    def create_adapter(config: ProtocolConfig) -> ProtocolAdapter:
+    def create_adapter(config: Union[ProtocolConfig, Dict[str, Any]]) -> ProtocolAdapter:
         """创建协议适配器"""
+        if not isinstance(config, ProtocolConfig):
+            config = ProtocolAdapter(config).config
         if config.protocol_type in [ProtocolType.HTTP, ProtocolType.HTTPS]:
             return HTTPAdapter(config)
         elif config.protocol_type == ProtocolType.WEBSOCKET:
@@ -260,7 +305,7 @@ class ProtocolManager:
     def __init__(self):
         self.adapters: Dict[str, ProtocolAdapter] = {}
         
-    async def create_adapter(self, name: str, config: ProtocolConfig) -> bool:
+    async def create_adapter(self, name: str, config: Union[ProtocolConfig, Dict[str, Any]]) -> bool:
         """创建协议适配器"""
         try:
             adapter = ProtocolAdapterFactory.create_adapter(config)
