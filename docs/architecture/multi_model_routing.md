@@ -1,9 +1,9 @@
 # 多模型智能路由（Multi‑Model Routing）
 
 **版本：v2.0.1**  
-**最后更新：2026-03-23**  
+**最后更新：2026-03-30**  
 **作者：Zikang Li**  
-**状态：契约优先设计规范（代码落地进行中；仓库目录存在但部分文件为占位）**
+**状态：契约优先设计规范（核心代码已落地：SmartModelRouter 已读取 `router_config.yaml`；推理后端 loader/生产级观测仍需补齐）**
 
 ## 1. 目标与范围（量化版）
 
@@ -36,16 +36,19 @@
 
 ## 3. 组件划分与接口契约（设计规范）
 
-### 3.1 当前仓库目录（2026-03-23）
+### 3.1 当前仓库目录（2026-03-30）
 
 ```text
 infrastructure/model_hub/
   __init__.py
-  hardware_profile.py        # 占位：待实现硬件探测/快照
-  model_registry.py          # 占位：待实现模型注册/候选筛选
-  model_manager.py           # 占位：待实现加载/卸载/LRU 与资源管理
-  model_downloader.py        # 占位：待实现下载/校验/缓存
-  model_configs.yaml         # 占位：待补齐模型清单与资源估算
+  hardware_profile.py        # 已实现：硬件快照（可降级）
+  model_registry.py          # 已实现：模型注册/候选筛选（读取 model_configs.yaml）
+  model_manager.py           # 已实现：生命周期控制面（可注入 loader/unloader）
+  model_downloader.py        # 已实现：下载/校验/缓存（allow_network 可控）
+  smart_model_router.py      # 已实现：读取 router_config.yaml 并产出 RoutingDecision
+  model_configs.yaml         # 已实现：模型画像清单（示例，可按需扩展）
+config/system/model_configs/
+  router_config.yaml         # 已实现：路由策略与权重配置
 ```
 
 > 说明：上表为“现状目录”；本文定义的是“目标契约”。落地实现时必须遵循 `architecture/overview.md` 的边界层约束（Schema、错误模型、审计等）。
