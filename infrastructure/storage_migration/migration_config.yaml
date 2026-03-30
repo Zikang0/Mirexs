@@ -1,0 +1,18 @@
+version: "2.0.0"
+defaults:
+  mode: "copy"
+  dry_run: true
+  overwrite: false
+  create_link_after_move: false
+  check_size: true
+  check_hash: false
+  hash_sample_rate: 0.1
+  max_hash_file_mb: 2048
+  free_space_buffer_ratio: 0.10
+  upload_to_cloud: false
+targets:
+  - name: "local_ssd"
+    kind: "local"
+    root_path: "data/migrated"
+    priority: 10
+    supports_links: true
