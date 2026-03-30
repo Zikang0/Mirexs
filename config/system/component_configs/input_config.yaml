@@ -1,0 +1,11 @@
+# Mirexs v2 组件配置：键盘输入（keyboard）
+meta:
+  schema_version: "2.0.0"
+  last_updated: "2026-03-30"
+  config_id: "system.component.input_config"
+  owner: "Mirexs Team"
+
+keyboard_layout: "us"
+enable_key_logging: false
+enable_macro_recording: true
+
