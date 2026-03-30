@@ -8,7 +8,7 @@ related_issues: ""
 
 ## 0. 实现对齐摘要（2026-03-26）
 
-本文档为 Mirexs v2.0 的整体架构概述，当前状态为 **partial**。文档中描述的多个核心模块（如多模型路由、情绪网络、主动行为引擎等）在代码仓库中仍处于占位或部分实现状态。实际代码实现主要集中在 API 网关、访问控制以及基于 NetworkX 的知识图谱内存实现。后续将持续推进代码落地，以完全对齐本架构设计。
+本文档为 Mirexs v2.0 的整体架构概述，当前状态为 **partial**。文档中描述的多个核心模块（如多模型路由、情绪网络、主动行为引擎等）在代码仓库中仍处于占位或部分实现状态。实际代码实现主要集中在 API 网关、访问控制、基于 NetworkX 的知识图谱内存实现，以及已完成基础兼容修复的基础设施核心件（MessageBus、ResourceManager、storage_migration 编排链路）。后续将持续推进代码落地，以完全对齐本架构设计。
 
 **版本：v2.0.1**  
 **最后更新：2026-03-26**  
@@ -53,6 +53,7 @@ Mirexs v2.0 系统分层（由外到内）
 │  - Vector DB (Chroma / FAISS)                               │
 │  - Graph DB (NetworkX / Neo4j)                              │
 │  - Hardware Profiler & Resource Manager                     │
+│  - Message Bus & Storage Migration                          │
 │  - Real-time Knowledge Updater (RSS / Optional Web)         │
 └─────────────────────────────────────────────────────────────┘
             ↓↑ (加密通道 + Audit Log)
