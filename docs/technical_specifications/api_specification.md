@@ -1,15 +1,15 @@
 ---
 status: partial
-last_reviewed: 2026-03-26
-corresponds_to_code: "暂无"
+last_reviewed: 2026-03-30
+corresponds_to_code: "config/system/service_configs/api_config.yaml,application/api_gateway/response_formatter.py"
 related_issues: ""
 references: docs/technical_specifications/api_envelope_standard.md
 ---
 # Mirexs REST API 契约规范（Contract‑First Specification）
 
-**API 版本**：v1  
+**API 版本**：v2  
 **适用系统版本**：Mirexs v2.x  
-**最后更新**：2026-03-23  
+**最后更新**：2026-03-30  
 **作者**：Zikang Li  
 **状态**：契约优先（实现进行中，以配置与代码为准）
 
@@ -20,7 +20,7 @@ references: docs/technical_specifications/api_envelope_standard.md
 
 - **配置（最终生效口径）**：`config/system/service_configs/api_config.yaml`  
   - 网关 host/port：`gateway.service`  
-  - 路由前缀：`gateway.routing.prefix`（默认 `/api/v1`）  
+  - 路由前缀：`gateway.routing.prefix`（默认 `/api/v2`）  
   - 认证/限流/健康检查等策略：对应各章节配置段落
 - **响应封装（统一 Envelope）**：`application/api_gateway/response_formatter.py`（`ResponseWrapper`）
 - **鉴权字段命名**：`application/api_gateway/api_authenticator.py`（`X-API-Key` 默认 header 名等）
@@ -34,8 +34,8 @@ references: docs/technical_specifications/api_envelope_standard.md
 
 Base URL 由 `api_config.yaml` 中的 `gateway.service.host/port` 与 `gateway.routing.prefix` 拼接得到。
 
-- **本地默认**（单机开发/测试）：`http://localhost:8000/api/v1`
-- **私有化/生产**：`https://{host}:{port}/api/v1`（是否启用 TLS 取决于部署配置；未启用 TLS 时使用 `http`）
+- **本地默认**（单机开发/测试）：`http://localhost:8000/api/v2`
+- **私有化/生产**：`https://{host}:{port}/api/v2`（是否启用 TLS 取决于部署配置；未启用 TLS 时使用 `http`）
 
 ### 2.2 通用请求头
 
