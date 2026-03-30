@@ -1,7 +1,7 @@
 ---
 status: partial
-last_reviewed: 2026-03-26
-corresponds_to_code: "暂无"
+last_reviewed: 2026-03-30
+corresponds_to_code: "docs/architecture/fact_checker.md"
 related_issues: ""
 references: docs/technical_specifications/api_envelope_standard.md
 ---
@@ -93,6 +93,15 @@ references: docs/technical_specifications/api_envelope_standard.md
 | `rate_limit_exceeded` | 超过 API 调用频率限制。 |
 
 ---
+## 5. 联调说明（2026-03-30 补充）
+
+该接口当前更接近目标契约。进入真实联调前，必须先确认：
+
+- 事实核查服务是否已有真实运行入口
+- 结果状态字段是否与架构文档保持一致
+- 证据来源结构是否稳定
+- 返回是否遵循统一 Envelope
+
 **作者**: Zikang Li
-**日期**: 2026-03-18
-**版本**: v2.0.0
+**日期**: 2026-03-30
+**版本**: v2.0.1
