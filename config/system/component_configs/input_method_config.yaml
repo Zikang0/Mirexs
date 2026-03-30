@@ -1,0 +1,20 @@
+# Mirexs v2 组件配置：输入法管理（InputMethodManager）
+meta:
+  schema_version: "2.0.0"
+  last_updated: "2026-03-30"
+  config_id: "system.component.input_method_config"
+  owner: "Mirexs Team"
+
+auto_switch: true
+switch_shortcut: "ctrl+space"
+cycle_shortcut: "ctrl+shift"
+default_language: "zh-CN"
+default_ime: "pinyin"
+
+hotkeys:
+  ime_mapping: {}
+
+learning:
+  enable_learning: true
+  learning_rate: 0.1
+
