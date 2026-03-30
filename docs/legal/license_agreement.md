@@ -1,3 +1,9 @@
+---
+status: partial
+last_reviewed: 2026-03-30
+corresponds_to_code: "LICENSE,docs/legal/"
+related_issues: ""
+---
 # Mirexs 软件许可协议 (License Agreement)
 
 ## 1. 许可类型 (License Type)
@@ -33,7 +39,11 @@ Mirexs 软件产品（以下简称“本软件”）**计划**采用 **Apache Li
 
 在任何情况下，许可方均不对因本许可协议或使用本软件而产生的任何损害承担责任。
 
+## 8. 当前仓库口径
+
+本文件描述的是拟采用的许可方向。若根目录 `LICENSE` 与本文件不一致，以正式许可证文本为准。
+
 ---
 **作者**: Zikang Li
-**日期**: 2026-03-18
-**版本**: v2.0.0
+**日期**: 2026-03-30
+**版本**: v2.0.1
