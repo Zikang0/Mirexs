@@ -9,7 +9,7 @@ references: docs/technical_specifications/api_envelope_standard.md
 
 **API 版本**：v1  
 **适用系统版本**：Mirexs v2.x  
-**最后更新**：2026-03-23  
+**最后更新**：2026-03-30  
 **作者**：Zikang Li  
 **状态**：变更记录（用于追踪“契约/文档/实现”变化，避免口径漂移）
 
@@ -57,3 +57,14 @@ references: docs/technical_specifications/api_envelope_standard.md
   **相关端点**：  
   **相关文档**：  
   **作者**：  
+
+## 6. 使用要求（2026-03-30 补充）
+
+凡是影响调用方行为的改动，都必须记录在本文件，包括：
+
+- 新增端点
+- 字段名变更
+- 错误结构变更
+- 鉴权方式调整
+- 限流策略变更
+- 虽然只改文档、但会改变调用方理解的契约修订
