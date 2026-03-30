@@ -3,7 +3,7 @@
 负责系统内部模块间通信、网络连接管理和服务网格等功能
 """
 
-from .message_bus import MessageBus, Message, MessageTopic
+from .message_bus import MessageBus, Message, MessageTopic, message_bus
 from .event_dispatcher import EventDispatcher, Event, EventType
 from .network_manager import NetworkManager, ConnectionStatus
 from .protocol_adapters import ProtocolAdapter, ProtocolType
@@ -15,6 +15,7 @@ from .load_balancer import LoadBalancer, LoadBalanceStrategy
 
 __all__ = [
     "MessageBus", "Message", "MessageTopic",
+    "message_bus",
     "EventDispatcher", "Event", "EventType", 
     "NetworkManager", "ConnectionStatus",
     "ProtocolAdapter", "ProtocolType",
