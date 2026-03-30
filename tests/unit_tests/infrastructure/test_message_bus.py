@@ -1,47 +1,49 @@
 """
-消息总线测试模块
-测试基础设施层的消息总线功能
+消息总线单元测试。
 """
 
 import unittest
-from unittest.mock import Mock, patch
-import pytest
-from datetime import datetime
+
+from infrastructure.communication.message_bus import MessageBus, MessageTopic
 
 
-class TestMessageBus(unittest.TestCase):
-    """消息总线测试类"""
+class TestMessageBus(unittest.IsolatedAsyncioTestCase):
+    """验证消息总线的同步/异步兼容行为。"""
 
-    def setUp(self):
-        """测试设置"""
-        self.message_bus = Mock()
-        self.message_bus.broker = "test_broker"
-        self.message_bus.topic = "test_topic"
+    async def test_async_publish_dispatches_enum_topic(self):
+        bus = MessageBus()
+        received = []
 
-    def test_message_publish(self):
-        """测试消息发布功能"""
-        # TODO: 实现消息发布测试
-        pass
+        async def handler(message):
+            received.append(message.payload["value"])
 
-    def test_message_subscribe(self):
-        """测试消息订阅功能"""
-        # TODO: 实现消息订阅测试
-        pass
+        bus.subscribe(MessageTopic.USER_INPUT, handler)
+        message_id = await bus.publish(MessageTopic.USER_INPUT, {"value": 1})
 
-    def test_message_routing(self):
-        """测试消息路由功能"""
-        # TODO: 实现消息路由测试
-        pass
+        self.assertIsInstance(message_id, str)
+        self.assertEqual(received, [1])
 
-    def test_message_delivery(self):
-        """测试消息投递功能"""
-        # TODO: 实现消息投递测试
-        pass
+    def test_sync_publish_dispatches_string_topic(self):
+        bus = MessageBus()
+        received = []
 
-    def tearDown(self):
-        """测试清理"""
-        pass
+        def handler(message):
+            received.append(message.payload["value"])
 
+        bus.subscribe("text_input_command", handler)
+        message_id = bus.publish("text_input_command", {"value": 2})
 
-if __name__ == "__main__":
-    unittest.main()
+        self.assertIsInstance(message_id, str)
+        self.assertEqual(received, [2])
+
+    async def test_send_message_alias_reuses_publish_pipeline(self):
+        bus = MessageBus()
+        received = []
+
+        async def handler(message):
+            received.append(message.source)
+
+        bus.subscribe("system_alerts", handler)
+        await bus.send_message("system_alerts", {"ok": True}, source="monitor")
+
+        self.assertEqual(received, ["monitor"])
