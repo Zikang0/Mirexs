@@ -1,0 +1,27 @@
+# Mirexs v2 组件配置：输入指标收集（InputMetricsCollector）
+meta:
+  schema_version: "2.0.0"
+  last_updated: "2026-03-30"
+  config_id: "system.component.input_metrics_config"
+  owner: "Mirexs Team"
+
+collection:
+  interval: 60
+  retention_period: 604800  # 7*24*3600
+  max_history_size: 10000
+
+reporting:
+  interval: 300
+  enable_realtime: true
+  enable_daily: true
+
+thresholds:
+  latency:
+    keyboard: 50
+    handwriting: 500
+    voice: 1000
+    predictive: 200
+    correction: 100
+  accuracy: {}
+  throughput: {}
+
