@@ -1,0 +1,21 @@
+# Mirexs v2 组件配置：语音打字（VoiceTyping）
+meta:
+  schema_version: "2.0.0"
+  last_updated: "2026-03-30"
+  config_id: "system.component.voice_typing_config"
+  owner: "Mirexs Team"
+
+enable_auto_start: false
+enable_punctuation: true
+enable_capitalization: true
+
+recognition:
+  silence_threshold: 0.5
+  max_duration: 10.0
+  min_confidence: 0.7
+  default_language: "auto"
+
+audio:
+  sample_rate: 16000
+  chunk_size: 1024
+
