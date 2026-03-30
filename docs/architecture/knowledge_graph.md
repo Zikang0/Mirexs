@@ -279,5 +279,22 @@ class KnowledgeGraphAPI:
 
 本规范为知识图谱模块的**唯一权威文档**，所有实现、代码审查、性能验收必须严格遵循。任何改动需同步更新本文件并提交 PR。
 
+## 12. 开发落地要求（2026-03-30 补充）
+
+当前开发应优先围绕以下现实入口展开：
+
+- `data/databases/graph_db/knowledge_graph.py`
+- `docs/developer_guide/knowledge_graph_api.md`
+- `docs/technical_specifications/database_schema.md`
+
+实施时必须优先解决：
+
+- 实体去重与同名消歧
+- 关系更新的幂等性
+- 图谱与向量记忆之间的主键映射
+- 删除、导出和隐私清理能力
+
+后续任何“图谱增强”工作都不应只停留在抽取算法层，还必须同步考虑存储结构、查询接口和用户数据治理。
+
 **作者签名**：Zikang Li  
 **日期**：2026-03-26
