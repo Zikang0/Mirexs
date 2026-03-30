@@ -1,16 +1,16 @@
 
 ---
 status: partial
-last_reviewed: 2026-03-26
-corresponds_to_code: "暂无"
+last_reviewed: 2026-03-30
+corresponds_to_code: "config/system/service_configs/api_config.yaml,application/api_gateway/response_formatter.py"
 related_issues: ""
 references: docs/technical_specifications/api_envelope_standard.md
 ---
 # Mirexs REST API 参考文档（API Reference）
 
-**API 版本**：v1  
+**API 版本**：v2  
 **适用系统版本**：Mirexs v2.x  
-**最后更新**：2026-03-23  
+**最后更新**：2026-03-30  
 **作者**：Zikang Li  
 **状态**：参考文档（与 `technical_specifications/api_specification.md` 保持一致）
 
@@ -25,8 +25,8 @@ references: docs/technical_specifications/api_envelope_standard.md
 
 基地址由 `config/system/service_configs/api_config.yaml` 决定：
 
-- 默认本地：`http://localhost:8000/api/v1`
-- 私有化/生产：`https://{host}:{port}/api/v1`（是否启用 TLS 取决于部署配置）
+- 默认本地：`http://localhost:8000/api/v2`
+- 私有化/生产：`https://{host}:{port}/api/v2`（是否启用 TLS 取决于部署配置）
 
 ## 3. 认证方式（Authentication）
 
@@ -78,7 +78,7 @@ references: docs/technical_specifications/api_envelope_standard.md
 
 > 说明：下表为 **契约端点清单**。若某端点尚未实现，必须在此处标注“规划/未实现”，避免对调用方产生误导。
 
-| 域 | 方法 | 路径（相对 `/api/v1`） | 说明 | 实现状态 |
+| 域 | 方法 | 路径（相对 `/api/v2`） | 说明 | 实现状态 |
 |---|---|---|---|---|
 | system | GET | `/system/health` | 健康检查 | 规划 |
 | system | GET | `/system/status` | 系统状态 | 规划 |
