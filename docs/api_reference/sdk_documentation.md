@@ -1,9 +1,9 @@
 
 # Mirexs SDK / 客户端文档（Draft）
 
-**适用 API 版本**：v1  
+**适用 API 版本**：v2  
 **适用系统版本**：Mirexs v2.x  
-**最后更新**：2026-03-23  
+**最后更新**：2026-03-30  
 **作者**：Zikang Li  
 **状态**：草案（仓库当前未提供可直接发布的 SDK；本文档用于明确“现状、约束与落地路径”）
 
@@ -23,7 +23,7 @@
 import json
 import requests
 
-API_BASE = "http://localhost:8000/api/v1"
+API_BASE = "http://localhost:8000/api/v2"
 
 def _headers(api_key: str | None = None) -> dict:
     headers = {"Content-Type": "application/json", "Accept": "application/json"}
@@ -53,7 +53,7 @@ def create_session(user_id: str, initial_prompt: str | None = None, api_key: str
 
 调用方如需了解网关地址、路由前缀、认证方式等，优先参考：
 
-- `config/system/service_configs/api_config.yaml`（网关 host/port、`/api/v1` 前缀、认证/限流）
+- `config/system/service_configs/api_config.yaml`（网关 host/port、`/api/v2` 前缀、认证/限流）
 
 如需了解用户偏好（语言/隐私/交互等），优先参考：
 
