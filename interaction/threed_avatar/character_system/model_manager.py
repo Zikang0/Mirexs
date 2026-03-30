@@ -18,7 +18,12 @@ from enum import Enum
 # 导入基础设施层依赖
 from infrastructure.compute_storage.gpu_accelerator import GPUAccelerator, gpu_accelerator
 from infrastructure.compute_storage.model_serving_engine import ModelServingEngine, model_serving_engine, ModelType
-from infrastructure.compute_storage.resource_manager import ResourceManager, resource_manager, ResourceType
+from infrastructure.compute_storage.resource_manager import (
+    ResourceManager,
+    ResourceRequest,
+    ResourceType,
+    resource_manager,
+)
 
 # 导入数据层依赖
 from data.models.three_d.cat_models import CatModel, CatModelManager, CatModelConfig
