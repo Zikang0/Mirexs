@@ -171,5 +171,20 @@ class AuditEntry(BaseModel):
 
 本规范为 Mirexs v2.0 **安全层的唯一权威文档**，所有代码、配置、流程必须以此为准。任何安全相关变更需经过 security review 并更新本文件。
 
+## 9. 开发落地要求（2026-03-30 补充）
+
+当前开发和联调时必须把以下内容视为阻塞项，而不是可选优化：
+
+- 高风险接口的鉴权与限流
+- 敏感信息脱敏日志
+- 关键事件审计留痕
+- 可执行的事件响应路径
+
+对应阅读与实现入口：
+
+- `security/`
+- `docs/security/`
+- `docs/technical_specifications/security_specification.md`
+
 **作者签名**：Zikang Li  
 **日期**：2026-03-26
