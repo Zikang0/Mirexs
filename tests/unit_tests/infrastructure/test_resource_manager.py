@@ -1,47 +1,63 @@
 """
-资源管理器测试模块
-测试基础设施层的资源管理器功能
+资源管理器单元测试。
 """
 
+import time
 import unittest
-from unittest.mock import Mock, patch
-import pytest
-from datetime import datetime
+
+from infrastructure.compute_storage.resource_manager import (
+    ResourceManager,
+    ResourceRequest,
+    ResourceType,
+    ResourceUsage,
+)
 
 
-class TestResourceManager(unittest.TestCase):
-    """资源管理器测试类"""
+class TestResourceManager(unittest.IsolatedAsyncioTestCase):
+    """验证资源申请、释放与配置兼容行为。"""
 
     def setUp(self):
-        """测试设置"""
-        self.resource_manager = Mock()
-        self.resource_manager.max_memory = "8GB"
-        self.resource_manager.max_cpu = "4 cores"
+        self.resource_manager = ResourceManager(
+            {
+                "enable_gpu_monitor": False,
+                "history_limit": 8,
+            }
+        )
 
-    def test_resource_allocation(self):
-        """测试资源分配功能"""
-        # TODO: 实现资源分配测试
-        pass
+    async def test_request_and_release_memory_resources(self):
+        self.resource_manager.resource_usage[ResourceType.MEMORY] = ResourceUsage(
+            resource_type=ResourceType.MEMORY,
+            used=256,
+            total=1024,
+            percentage=25.0,
+            timestamp=time.time(),
+        )
 
-    def test_resource_monitoring(self):
-        """测试资源监控功能"""
-        # TODO: 实现资源监控测试
-        pass
+        allocation = await self.resource_manager.request_resources(
+            ResourceRequest(resource_type=ResourceType.MEMORY, amount=128)
+        )
 
-    def test_resource_deallocation(self):
-        """测试资源释放功能"""
-        # TODO: 实现资源释放测试
-        pass
+        self.assertIsNotNone(allocation)
+        self.assertEqual(self.resource_manager.resource_usage[ResourceType.MEMORY].used, 384)
 
-    def test_resource_optimization(self):
-        """测试资源优化功能"""
-        # TODO: 实现资源优化测试
-        pass
+        await self.resource_manager.release_resources(allocation)
+        self.assertEqual(self.resource_manager.resource_usage[ResourceType.MEMORY].used, 256)
 
-    def tearDown(self):
-        """测试清理"""
-        pass
+    async def test_request_resources_rejects_insufficient_capacity(self):
+        self.resource_manager.resource_usage[ResourceType.GPU] = ResourceUsage(
+            resource_type=ResourceType.GPU,
+            used=900,
+            total=1024,
+            percentage=87.89,
+            timestamp=time.time(),
+        )
 
+        allocation = await self.resource_manager.request_resources(
+            ResourceRequest(resource_type=ResourceType.GPU, amount=256)
+        )
 
-if __name__ == "__main__":
-    unittest.main()
+        self.assertIsNone(allocation)
+
+    def test_constructor_accepts_config(self):
+        self.assertFalse(self.resource_manager.enable_gpu_monitor)
+        self.assertEqual(self.resource_manager.history_limit, 8)
