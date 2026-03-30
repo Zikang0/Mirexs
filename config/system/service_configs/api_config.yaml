@@ -21,11 +21,11 @@ gateway:
 
   # 路由配置
   routing:
-    prefix: "/api/v1"
+    prefix: "/api/v2"
     versioning:
       enabled: true
       header: "X-API-Version"
-      default: "v1"
+      default: "v2"
 
   # 负载均衡
   load_balancing:
@@ -310,8 +310,8 @@ documentation:
     enabled: true
     path: "/docs"
     title: "Mirexs API"
-    version: "1.0.0"
-    description: "Mirexs全栈AI数字生命体API文档"
+    version: "2.0.0"
+    description: "Mirexs全栈AI数字生命体API文档（2.0）"
 
   # Redoc
   redoc:
