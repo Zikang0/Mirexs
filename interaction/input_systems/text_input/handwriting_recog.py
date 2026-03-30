@@ -19,7 +19,7 @@ from collections import deque
 from data.models.vision.handwriting_models import HandwritingModel
 from infrastructure.communication.message_bus import MessageBus
 from utils.ai_utilities.model_utils import ModelLoader
-from config import ConfigManager
+from config.system import ConfigManager
 
 logger = logging.getLogger(__name__)
 
