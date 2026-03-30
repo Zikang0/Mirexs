@@ -1,47 +1,71 @@
 """
-模型服务测试模块
-测试基础设施层的模型服务功能
+模型服务引擎单元测试。
 """
 
 import unittest
-from unittest.mock import Mock, patch
-import pytest
-from datetime import datetime
+
+from infrastructure.compute_storage.model_serving_engine import (
+    MockASRModel,
+    MockLLM,
+    ModelConfig,
+    ModelServingEngine,
+    ModelType,
+)
 
 
-class TestModelServing(unittest.TestCase):
-    """模型服务测试类"""
+class TestModelServingEngine(unittest.IsolatedAsyncioTestCase):
+    """验证模型注册、推理与 mock 回退行为。"""
 
-    def setUp(self):
-        """测试设置"""
-        self.model_serving = Mock()
-        self.model_serving.model_name = "test_model"
-        self.model_serving.version = "1.0.0"
+    async def asyncSetUp(self):
+        self.engine = ModelServingEngine()
 
-    def test_model_loading(self):
-        """测试模型加载功能"""
-        # TODO: 实现模型加载测试
-        pass
+    async def test_register_model_records_registry(self):
+        config = ModelConfig(
+            model_id="test_llm",
+            model_type=ModelType.NLP_LLM,
+            model_path="models/test",
+            model_format="mock",
+            device="cpu",
+            memory_usage=128,
+        )
 
-    def test_model_inference(self):
-        """测试模型推理功能"""
-        # TODO: 实现模型推理测试
-        pass
+        registered = await self.engine.register_model(config)
 
-    def test_model_scaling(self):
-        """测试模型扩缩容功能"""
-        # TODO: 实现模型扩缩容测试
-        pass
+        self.assertTrue(registered)
+        self.assertIn("test_llm", self.engine.model_registry[ModelType.NLP_LLM])
 
-    def test_model_health_check(self):
-        """测试模型健康检查功能"""
-        # TODO: 实现模型健康检查测试
-        pass
+    async def test_llm_inference_uses_loaded_model(self):
+        config = ModelConfig(
+            model_id="mock_llm",
+            model_type=ModelType.NLP_LLM,
+            model_path="models/mock",
+            model_format="mock",
+            device="cpu",
+            memory_usage=128,
+        )
+        await self.engine.register_model(config)
+        instance = await self.engine.get_model("mock_llm", auto_load=False)
+        instance.model = MockLLM()
+        instance.is_loaded = True
 
-    def tearDown(self):
-        """测试清理"""
-        pass
+        result = await self.engine.inference("mock_llm", "hello")
 
+        self.assertIn("hello", result)
 
-if __name__ == "__main__":
-    unittest.main()
+    async def test_asr_inference_supports_mock_model(self):
+        config = ModelConfig(
+            model_id="mock_asr",
+            model_type=ModelType.SPEECH_ASR,
+            model_path="models/mock_asr",
+            model_format="mock",
+            device="cpu",
+            memory_usage=64,
+        )
+        await self.engine.register_model(config)
+        instance = await self.engine.get_model("mock_asr", auto_load=False)
+        instance.model = MockASRModel()
+        instance.is_loaded = True
+
+        result = await self.engine.inference("mock_asr", b"audio")
+
+        self.assertEqual(result, "mock transcription")
