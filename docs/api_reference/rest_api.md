@@ -171,3 +171,14 @@ references: docs/technical_specifications/api_envelope_standard.md
 
 - 端点/字段变更必须在 `docs/api_reference/api_changelog.md` 追加记录。
 - 建议遵循语义化版本（SemVer），并通过 `/api/v{major}` 路径体现破坏性变更。
+
+## 9. 联调与实现要求（2026-03-30 补充）
+
+后续联调时必须同时核对：
+
+- `docs/technical_specifications/api_specification.md`
+- `docs/technical_specifications/api_envelope_standard.md`
+- `application/api_gateway/rest_api.py`
+- `application/api_gateway/response_formatter.py`
+
+如果文档、示例和真实返回不一致，应优先修正文档和实现口径，而不是让调用方长期兼容错误格式。
