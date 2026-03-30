@@ -6,6 +6,7 @@
 
 import os
 import yaml
+import logging
 from pathlib import Path
 from typing import Dict, Any, Optional
 from dataclasses import dataclass, field
@@ -14,6 +15,8 @@ from pydantic import BaseModel, validator, Field
 class ConfigError(Exception):
     """配置相关异常"""
     pass
+
+logger = logging.getLogger("mirexs.config.system")
 
 class ConfigManager:
     """统一配置管理器"""
@@ -81,7 +84,68 @@ class ConfigManager:
             return config
 
         except Exception as e:
-            raise ConfigError(f"加载配置文件失败 {full_path}: {str(e)}")
+                raise ConfigError(f"加载配置文件失败 {full_path}: {str(e)}")
+
+    def get_config(self, config_name: str, default: Optional[Dict[str, Any]] = None,
+                   reload: bool = False) -> Dict[str, Any]:
+        """
+        获取配置（v2 推荐入口）。
+
+        该方法用于支持各子系统使用统一调用方式：
+        - `get_config("text_input_config")`
+        - `get_config("auto_correction_config")`
+
+        查找策略（从高到低）：
+        1) 若 `config_name` 看起来像路径（包含 `/` 或后缀），则直接按路径加载
+        2) `system/component_configs/{name}.yaml`
+        3) `system/service_configs/{name}.yaml`
+        4) `system/model_configs/{name}.yaml`
+        5) `system/platform_configs/{name}.yaml`
+        6) `system/{name}.yaml`
+
+        Args:
+            config_name: 配置名称或相对路径
+            default: 默认返回值（默认 `{}`）
+            reload: 是否强制重新加载
+
+        Returns:
+            Dict[str, Any]: 配置字典；找不到时返回 default
+        """
+        if default is None:
+            default = {}
+
+        name = str(config_name or "").strip()
+        if not name:
+            return default
+
+        # 1) 直接路径加载
+        if ("/" in name) or ("\\" in name) or name.endswith((".yaml", ".yml", ".json", ".py")):
+            try:
+                return self.load_config(name, reload=reload) or default
+            except Exception:
+                return default
+
+        # 2) 按约定目录查找
+        candidates = [
+            f"system/component_configs/{name}.yaml",
+            f"system/component_configs/{name}.yml",
+            f"system/service_configs/{name}.yaml",
+            f"system/service_configs/{name}.yml",
+            f"system/model_configs/{name}.yaml",
+            f"system/model_configs/{name}.yml",
+            f"system/platform_configs/{name}.yaml",
+            f"system/platform_configs/{name}.yml",
+            f"system/{name}.yaml",
+            f"system/{name}.yml",
+        ]
+
+        for rel_path in candidates:
+            try:
+                return self.load_config(rel_path, reload=reload) or default
+            except Exception:
+                continue
+
+        return default
 
     def save_config(self, config_path: str, config: Dict):
         """保存配置文件
@@ -124,9 +188,32 @@ class ConfigManager:
         except Exception as e:
             raise ConfigError(f"保存配置文件失败 {full_path}: {str(e)}")
 
-    def get_system_config(self) -> Dict:
+    def get_system_config(self, reload: bool = False) -> Dict[str, Any]:
         """获取系统主配置"""
-        return self.load_config('system/main_config.yaml')
+        config = self.load_config('system/main_config.yaml', reload=reload)
+        self._validate_main_config_v2(config)
+        return config
+
+    def _validate_main_config_v2(self, config: Any) -> None:
+        """
+        v2 主配置最小校验。
+
+        说明：此处只做“版本与必需字段”的最小校验，避免把业务运行绑死在过度复杂的 schema 上。
+        """
+        if not isinstance(config, dict):
+            raise ConfigError("system/main_config.yaml 解析结果不是 dict；请检查 YAML 格式是否正确。")
+
+        meta = config.get("meta") or {}
+        schema_version = str(meta.get("schema_version") or "").strip()
+        if not schema_version:
+            raise ConfigError("system/main_config.yaml 缺少 meta.schema_version（v2 必填）。")
+        if not schema_version.startswith("2."):
+            raise ConfigError(f"system/main_config.yaml schema_version={schema_version} 不受支持（期望 2.x）。")
+
+        required_top = ["system", "mode", "logging", "paths"]
+        missing = [k for k in required_top if k not in config]
+        if missing:
+            raise ConfigError(f"system/main_config.yaml 缺少必需字段: {missing}")
 
     def get_model_config(self, model_type: str) -> Dict:
         """获取指定模型类型配置
