@@ -13,7 +13,7 @@ references: docs/technical_specifications/api_envelope_standard.md
 
 ## 2. 基础信息 (Base Info)
 
-*   **Base URL**: `http://{host}:{port}/api/v1/fact-checker`（默认本地：`http://localhost:8000/api/v1/fact-checker`）
+*   **Base URL**: `http://{host}:{port}/api/v2/fact-checker`（默认本地：`http://localhost:8000/api/v2/fact-checker`）
 *   **Content-Type**: `application/json; charset=utf-8`
 *   **Authentication（可选）**:
     *   `X-API-Key: <api_key>`
