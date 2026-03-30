@@ -1,47 +1,81 @@
-# 部署指南（Deployment Guide）
-
-版本：v2.0.1
-最后更新：2026-03-23
-
-## 1. 部署模式
-
-- 单机本地部署（个人版）
-- 单节点私有化部署
-- 多节点集群部署（企业版）
-
-## 2. 单机部署
-
-1. 安装依赖
-```bash
-pip install -r requirements.txt
-```
-
-2. 启动服务（实现对齐说明）
-
-截至 2026-03-23，本仓库未提供 `launch/start_development.py` 作为可直接运行的“一键启动入口”。部署时需按组件分别启动，或编写上层启动器统一拉起：
-
-- API 网关（FastAPI/uvicorn）：`application/api_gateway/rest_api.py` 的 `RESTAPI.start()`
-- 认知/能力/数据等其他服务：当前以目录结构与接口骨架为主，需补齐可运行进程与注册机制后再纳入部署编排
-
-> 若仅需验证 API 网关运行链路，可参考 `development_setup.md` 的“启动 API 网关（开发用示例）”。
-
-3. 验证
-如果已启动 API 网关进程（示例），可访问 `http://<host>:8000/docs` 验证服务可达。
-
-## 3. 生产部署要点
-
-- **产物口径**：当前仓库 `deployment/` 下主要为部署能力/生成器代码骨架，并未提供可直接用于生产的 Dockerfile/Helm Chart/系统服务脚本“最终产物”。如需生产部署，建议先固化并版本化交付物。
-- **容器化与编排**：建议使用 Docker/K8s；如采用生成器能力，可从 `deployment/containerization/` 中抽取/扩展。
-- **安全**：启用 TLS（证书路径可参考 `config/system/service_configs/api_config.yaml` 中的 `gateway.service.ssl.*` 口径）。
-- **外部依赖**：按需配置 Redis/Neo4j/InfluxDB 等（见 `config/system/service_configs/*_config.yaml`）。
-- **可观测性**：日志与监控接入 Prometheus/Grafana（见 `deployment/monitoring_ops/` 与 `config/system/service_configs/api_config.yaml` 的 `monitoring.*` 口径）。
-
-## 4. 回滚策略
-
-- 保留上一版本镜像
-- 数据库使用迁移版本控制
-- 支持蓝绿发布
-
 ---
+status: partial
+last_reviewed: 2026-03-30
+corresponds_to_code: "deployment/,application/api_gateway/rest_api.py,config/system/service_configs/"
+related_issues: ""
+references: "docs/technical_specifications/system_requirements.md"
+---
+# 部署指南
 
-本文件为契约优先文档。
+## 1. 文档目标
+
+本文件说明 Mirexs 的部署形态、部署前置条件、当前仓库的真实交付状态以及生产部署时必须补齐的内容。
+
+## 2. 典型部署模式
+
+- 单机本地部署：个人开发与验证
+- 单节点私有化部署：内部测试、小规模使用
+- 多节点集群部署：需要统一模型服务、外部数据库和监控体系
+
+## 3. 部署前确认项
+
+- 机器规格是否满足系统需求
+- 操作系统和驱动是否兼容
+- 依赖服务是否准备完成
+- 模型文件是否已准备或具备下载策略
+- 配置文件是否完成环境化
+
+## 4. 当前仓库交付现状
+
+截至当前状态，仓库中存在部署相关目录和能力骨架，但未完整交付“生产可直接使用”的统一发布物。
+
+已知口径：
+
+- API 网关入口存在
+- 配置目录存在
+- 部分模块仍以架构或骨架为主
+- 部署生成器和运维能力需要进一步固化
+
+因此，当前部署更适合开发验证和模块级联调，而非直接当作生产成品交付。
+
+## 5. 单机部署建议步骤
+
+1. 安装 Python 和仓库依赖
+2. 准备模型目录、数据目录和日志目录
+3. 启动必要的外部依赖，例如 Neo4j、Redis
+4. 按模块启动或验证核心入口
+5. 用健康检查或 API 文档页验证服务可达
+
+## 6. 生产部署必须补齐的内容
+
+- 明确的启动入口或进程编排方式
+- 容器镜像与版本化产物
+- 配置分环境管理
+- 外部依赖的凭据和安全注入机制
+- 日志、监控、告警和审计链路
+- 回滚与发布流程
+
+## 7. 外部依赖建议
+
+- `Neo4j`：知识图谱
+- `Redis`：缓存或消息辅助
+- `InfluxDB`/Prometheus：指标与监控
+- 对于大模型部署，可考虑独立模型服务节点
+
+## 8. 安全要求
+
+- 生产环境必须启用 TLS
+- 不允许将密钥写入代码或镜像
+- 高风险 API 必须有鉴权和限流
+- 审计和事件响应链路必须保留
+
+## 9. 验收清单
+
+部署完成后至少验证：
+
+- 服务能启动
+- 关键配置已生效
+- 健康检查可达
+- 核心接口可响应
+- 外部依赖连接正常
+- 日志和监控链路可用
