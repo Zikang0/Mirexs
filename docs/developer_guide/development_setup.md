@@ -71,6 +71,7 @@ pip install -r requirements.txt
 - `config/system/model_configs/`
 - `config/system/service_configs/`
 - `config/system/platform_configs/`
+- `config/system/component_configs/`（v2：子系统/组件级配置统一入口）
 
 ## 8. 当前可验证的启动入口
 
