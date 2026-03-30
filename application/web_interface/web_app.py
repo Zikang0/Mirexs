@@ -66,8 +66,8 @@ class WebAppConfig:
     """Web应用配置"""
     # 应用信息
     app_name: str = "Mirexs"
-    app_version: str = "1.0.0"
-    api_base_url: str = "/api/v1"
+    app_version: str = "2.0.0"
+    api_base_url: str = "/api/v2"
     
     # 路由配置
     routes: List[Route] = field(default_factory=list)
