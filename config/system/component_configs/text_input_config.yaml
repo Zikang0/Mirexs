@@ -1,0 +1,32 @@
+# Mirexs v2 组件配置：文本输入系统（text_input）
+meta:
+  schema_version: "2.0.0"
+  last_updated: "2026-03-30"
+  config_id: "system.component.text_input_config"
+  owner: "Mirexs Team"
+
+# 子系统开关
+keyboard_enabled: true
+handwriting_enabled: true
+voice_typing_enabled: true
+predictive_text_enabled: true
+auto_correction_enabled: true
+input_method_enabled: true
+shortcuts_enabled: true
+metrics_enabled: true
+
+# 性能配置
+realtime_processing: true
+batch_processing: false
+max_concurrent_operations: 10
+
+# 语言配置
+default_language: "zh-CN"
+supported_languages:
+  - "zh-CN"
+  - "en-US"
+
+# 存储配置
+save_user_data: true
+auto_save_interval: 300
+
