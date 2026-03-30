@@ -56,7 +56,7 @@ service_registration:
       - "digital-lifeform"
       - "microservice"
     meta:
-      version: "1.0.0"
+      version: "2.0.0"
       environment: "development"
 
   # 健康检查
@@ -100,7 +100,7 @@ service_discovery:
   filtering:
     tags:
       required: ["ai"]
-      optional: ["version:1.0.0"]
+      optional: ["version:2.0.0"]
     health: "passing"  # passing, warning, critical, any
     node_meta: {}
 
@@ -263,7 +263,7 @@ version_management:
     rules:
       - header: "X-API-Version"
         value: "v1"
-        service_version: "1.0.0"
+        service_version: "2.0.0"
       - header: "X-API-Version"
         value: "v2"
         service_version: "2.0.0"
