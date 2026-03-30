@@ -1,0 +1,29 @@
+# Mirexs v2 组件配置：预测文本（PredictiveText）
+meta:
+  schema_version: "2.0.0"
+  last_updated: "2026-03-30"
+  config_id: "system.component.predictive_text_config"
+  owner: "Mirexs Team"
+
+enable_predictions: true
+enable_learning: true
+enable_context_aware: true
+
+model:
+  max_predictions: 5
+  ngram_order: 3
+  min_confidence: 0.3
+
+cache:
+  cache_size: 1000
+  cache_ttl: 3600
+
+learning:
+  learning_rate: 0.1
+  max_user_words: 10000
+
+default_language: "zh-CN"
+supported_languages:
+  - "zh-CN"
+  - "en-US"
+
