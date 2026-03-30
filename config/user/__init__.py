@@ -385,7 +385,7 @@ class UserConfigManager:
                 "metadata": {
                     "exported_at": datetime.now().isoformat(),
                     "user_id": self.user_id,
-                    "version": "1.0"
+                    "version": "2.0.0"
                 },
                 "profile": self.profile.to_dict(),
                 "configs": self.get_all_configs()
