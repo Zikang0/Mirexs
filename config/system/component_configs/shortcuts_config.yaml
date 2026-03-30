@@ -1,0 +1,18 @@
+# Mirexs v2 组件配置：快捷键管理（ShortcutManager）
+meta:
+  schema_version: "2.0.0"
+  last_updated: "2026-03-30"
+  config_id: "system.component.shortcuts_config"
+  owner: "Mirexs Team"
+
+enable_shortcuts: true
+enable_conflict_detection: true
+conflict_resolution: "priority" # priority | disable | warn
+
+auto_save: true
+save_interval: 300
+
+conflict_detection:
+  detection_threshold: 0.8
+  auto_resolve: false
+
