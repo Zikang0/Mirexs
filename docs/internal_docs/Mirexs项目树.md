@@ -887,6 +887,17 @@ config/
 ├── system/                             # 系统配置
 │   ├── __init__.py
 │   ├── main_config.yaml                # 主配置文件
+│   ├── component_configs/              # ⭐【v2】组件/子系统配置（get_config 统一入口）
+│   │   ├── text_input_config.yaml      # 文本输入系统配置
+│   │   ├── input_config.yaml           # 键盘输入配置
+│   │   ├── shortcuts.yaml              # 系统快捷键映射
+│   │   ├── shortcuts_config.yaml       # 快捷键管理策略配置
+│   │   ├── handwriting_config.yaml     # 手写识别配置
+│   │   ├── voice_typing_config.yaml    # 语音打字配置
+│   │   ├── predictive_text_config.yaml # 预测文本配置
+│   │   ├── auto_correction_config.yaml # 自动校正配置
+│   │   ├── input_method_config.yaml    # 输入法配置
+│   │   └── input_metrics_config.yaml   # 输入指标配置
 │   ├── model_configs/                  # 模型配置 ⭐【增强】
 │   │   ├── __init__.py
 │   │   ├── speech_models.yaml          # 语音模型配置
