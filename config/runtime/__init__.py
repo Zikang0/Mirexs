@@ -38,7 +38,7 @@ class RuntimeConfigState:
     mode: RuntimeConfigMode = RuntimeConfigMode.DEVELOPMENT
     last_updated: datetime = field(default_factory=datetime.now)
     source: RuntimeConfigSource = RuntimeConfigSource.FILE
-    version: str = "1.0.0"
+    version: str = "2.0.0"
     checksum: str = ""
     is_valid: bool = True
     validation_errors: List[str] = field(default_factory=list)
