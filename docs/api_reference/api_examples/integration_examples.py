@@ -5,7 +5,7 @@ import hmac
 import hashlib
 import requests
 
-BASE_URL = "https://api.mirexs.local/api/v1"
+BASE_URL = "https://api.mirexs.local/api/v2"
 API_KEY = "YOUR_API_KEY"
 WEBHOOK_SECRET = "your-webhook-secret"
 
