@@ -96,7 +96,7 @@ Mirexs v2.0 系统分层（由外到内）
 | 文件名                    | 主要职责 | 依赖本概述章节 | 优先级 | 文档状态 | 对应实现/配置入口（示例） |
 |---------------------------|----------|----------------|--------|----------|--------------------------|
 | overview.md               | 架构总览 + 分层 + 约束 | — | 最高 | 已存在 | `docs/architecture/overview.md` |
-| multi_model_routing.md    | 多模型路由、硬件自适应、决策引擎 | 2, 3, 4 | 高 | planned | `infrastructure/model_hub/`（占位）、`config/system/model_configs/router_config.yaml`（占位） |
+| multi_model_routing.md    | 多模型路由、硬件自适应、决策引擎 | 2, 3, 4 | 高 | partial | `infrastructure/model_hub/`、`config/system/model_configs/router_config.yaml` |
 | emotion_nn.md             | 情绪网络、多模态融合、个性化微调 | 2, 3 | 高 | planned | `cognitive/learning/emotion_nn.py`（占位）、`docs/internal_docs/research_papers/emotion_recognition.md`（研究稿） |
 | knowledge_graph.md        | 知识图谱建模、抽取、查询、遗忘机制 | 2, 3 | 高 | partial | `data/databases/graph_db/knowledge_graph.py`（内存图实现）、`data/databases/vector_db/`（向量库实现） |
 | security_architecture.md  | 安全三层设计、审计、隐私、事件响应 | 2, 5 | 高 | partial | `security/`、`docs/security/*`、`config/system/service_configs/api_config.yaml`（认证/限流） |
