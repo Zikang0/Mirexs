@@ -1,13 +1,21 @@
 # config/system/main_config.yaml
 # Mirexs 系统主配置文件
-# 更新日期：2025-11-18
-# 版本：1.0.0
+# 更新日期：2026-03-30
+# 配置Schema版本：2.0.0
+
+# 配置元信息（v2.0 起引入；业务代码不应依赖该段做功能判断）
+meta:
+  schema_version: "2.0.0"
+  last_updated: "2026-03-30"
+  owner: "Mirexs Team"
+  change_notes:
+    - "覆盖原 v1 配置为 v2：统一版本号口径，补齐路由/组件配置入口，修正若干目录与配置加载约定。"
 
 # 系统基本信息
 system:
   name: "Mirexs AI Digital Lifeform"
-  version: "1.0.0"
-  description: "全栈AI数字生命体系统"
+  version: "2.0.0"
+  description: "全栈AI数字生命体系统（2.0）"
   author: "Mirexs Team"
   license: "Apache 2.0"
 
@@ -93,6 +101,26 @@ paths:
   logs_dir: "data/logs"
   config_dir: "config"
   plugins_dir: "plugins"
+
+  # v2：组件/子系统配置统一入口（用于各子系统 get_config('xxx_config') 的查找约定）
+  component_configs_dir: "config/system/component_configs"
+
+  # v2：交互配置（可选；部分模块仍会直接读取 json 文件）
+  keyboard_layouts_dir: "config/keyboard_layouts"
+  shortcuts_dir: "config/shortcuts"
+
+# v2：基础设施层配置（与 infrastructure 层代码对齐；未实现的模块允许保持 disabled）
+infrastructure:
+  model_hub:
+    enabled: true
+    registry_file: "infrastructure/model_hub/model_configs.yaml"
+    router_policy_file: "config/system/model_configs/router_config.yaml"
+    allow_network_download: false
+    eager_load: false
+
+  storage_migration:
+    enabled: false
+    config_file: "infrastructure/storage_migration/migration_config.yaml"
 
 # 资源限制
 limits:
