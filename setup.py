@@ -33,4 +33,29 @@ JSON{
 第 4 步：重启 Docker 服务
 Bashsudo systemctl restart docker
 第 5 步：测试 Docker 加速是否生效（最重要！）
-Bashsudo docker run --rm hello-world
+
+
+
+
+
+sudo apt update && sudo apt install ca-certificates curl -y
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+第2步：把你的用户加入 docker 组（以后不用每次加 sudo）
+sudo usermod -aG docker $USER
+第3步：重启 Docker 服务并测试
+sudo systemctl enable --now docker
+sudo systemctl status docker --no-pager
+第4步：测试 Docker 是否能拉取镜像（关键！用中国加速）
+先确认加速文件还在：
+cat /etc/docker/daemon.json
+然后重启 Docker 并测试：
+sudo systemctl restart docker
+sudo docker run --rm hello-world
+sudo docker run --rm hello-world
+
+
